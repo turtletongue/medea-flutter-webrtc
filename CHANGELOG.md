@@ -6,26 +6,6 @@ All user visible changes to this project will be documented in this file. This p
 
 
 
-## master
-
-## BC Breaks
-
-- Visibility of fields `id`, `source`, `track_events_tx` and `senders` from VideoTrack and AudioTrack is changed from public to private. ([#208])
-
-### Added
-
-- `VideoTrack.id()` method for getting `VideoTrackId`. ([#208])
-- `VideoTrack.source()` method for getting `VideoSource`. ([#208])
-- `VideoTrack.add_transceiver()`, `VideoTrack.remove_transceiver()` and `VideoTrack.remove_peer()` for managing senders of `VideoTrack`. ([#208])
-- `AudioTrack.id()` method for getting `AudioTrackId`. ([#208])
-- `AudioTrack.source()` method for getting `AudioSource`. ([#208])
-- `AudioTrack.add_transceiver()`, `AudioTrack.remove_transceiver()` and `AudioTrack.remove_peer()` for managing senders of `AudioTrack`. ([#208])
-
-[#208]: https://github.com/instrumentisto/medea-flutter-webrtc/pull/208
-
-
-
-
 ## [0.15.0] · 2025-06-24
 [0.15.0]: https://github.com/instrumentisto/medea-flutter-webrtc/tree/0.15.0
 
