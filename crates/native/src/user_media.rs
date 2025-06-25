@@ -114,7 +114,7 @@ impl Webrtc {
                     .video_tracks
                     .remove(&(VideoTrackId::from(track_id), track_origin))
                 {
-                    for id in track.sinks.clone() {
+                    for id in track.interface.sinks.clone() {
                         if let Some(sink) = self.video_sinks.remove(&id) {
                             track.remove_video_sink(sink);
                         }
@@ -358,7 +358,7 @@ impl Webrtc {
 
         self.video_tracks
             .get(&(id, track_origin))
-            .map(|t| *t.width.wait().read().unwrap())
+            .map(|t| *t.interface.width.wait().read().unwrap())
     }
 
     /// Returns the [height] property of the media track by its ID and origin.
@@ -376,7 +376,7 @@ impl Webrtc {
 
         self.video_tracks
             .get(&(id, track_origin))
-            .map(|t| *t.height.wait().read().unwrap())
+            .map(|t| *t.interface.height.wait().read().unwrap())
     }
 
     /// Changes the [enabled][1] property of the media track by its ID.
@@ -546,9 +546,9 @@ impl Webrtc {
                 let track = self.audio_tracks.get_mut(&(id, track_origin));
 
                 if let Some(mut track) = track {
-                    obs.set_audio_track(&track.inner);
+                    obs.set_audio_track(&track.interface.inner);
                     track.set_track_events_tx(track_events_tx);
-                    track.inner.register_observer(obs);
+                    track.interface.inner.register_observer(obs);
                 }
             }
             api::MediaType::Video => {
@@ -556,9 +556,9 @@ impl Webrtc {
                 let track = self.video_tracks.get_mut(&(id, track_origin));
 
                 if let Some(mut track) = track {
-                    obs.set_video_track(&track.inner);
+                    obs.set_video_track(&track.interface.inner);
                     track.set_track_events_tx(track_events_tx);
-                    track.inner.register_observer(obs);
+                    track.interface.inner.register_observer(obs);
                 }
             }
         }
@@ -980,34 +980,36 @@ pub enum MediaTrackSource<T> {
     Remote { mid: String, peer: Weak<PeerConnection> },
 }
 
+/// Interface of a [`MediaStreamTrack`][1].
+///
+/// [1]: https://w3.org/TR/mediacapture-streams#dom-mediastreamtrack
+pub trait TrackInterface {
+    /// Returns the [readyState][0] property of the underlying interface.
+    ///
+    /// [0]: https://w3.org/TR/mediacapture-streams#dfn-readystate
+    fn state(&self) -> api::TrackState;
+
+    /// Changes the [enabled][1] property of the underlying interface.
+    ///
+    /// [1]: https://w3.org/TR/mediacapture-streams#track-enabled
+    fn set_enabled(&self, enabled: bool);
+}
+
 /// Representation of a [`sys::VideoTrackInterface`].
 #[derive(AsRef)]
-pub struct VideoTrack {
-    /// ID of this [`VideoTrack`].
+pub struct Video {
+    /// ID of this [`Video`].
     id: VideoTrackId,
 
-    /// Indicator whether this is a remote or a local track.
-    track_origin: TrackOrigin,
+    /// [`MediaTrackSource`] that is used by this [`Video`].
+    source: MediaTrackSource<VideoSource>,
 
     /// Underlying [`sys::VideoTrackInterface`].
     #[as_ref]
     inner: sys::VideoTrackInterface,
 
-    /// [`VideoSource`] that is used by this [`VideoTrack`].
-    source: MediaTrackSource<VideoSource>,
-
-    /// [`api::TrackKind::kVideo`].
-    kind: api::MediaType,
-
     /// List of the [`VideoSink`]s attached to this [`VideoTrack`].
     sinks: Vec<VideoSinkId>,
-
-    /// `StreamSink` which can be used by this [`VideoTrack`] to emit
-    /// [`api::TrackEvent`]s to Flutter side.
-    track_events_tx: Option<StreamSink<api::TrackEvent>>,
-
-    /// Peers and transceivers sending this [`VideoTrack`].
-    senders: HashMap<Arc<PeerConnection>, HashSet<Arc<RtpTransceiver>>>,
 
     /// Tracks changes in video `height` and `width`.
     sink: Option<VideoSink>,
@@ -1017,6 +1019,209 @@ pub struct VideoTrack {
 
     /// Video height.
     height: Arc<OnceLock<RwLock<i32>>>,
+}
+
+impl TrackInterface for Video {
+    /// Returns the [readyState][0] property of the underlying interface.
+    ///
+    /// [0]: https://w3.org/TR/mediacapture-streams#dfn-readystate
+    fn state(&self) -> api::TrackState {
+        self.inner.state().into()
+    }
+
+    /// Changes the [enabled][1] property of the underlying interface.
+    ///
+    /// [1]: https://w3.org/TR/mediacapture-streams#track-enabled
+    fn set_enabled(&self, enabled: bool) {
+        self.inner.set_enabled(enabled);
+    }
+}
+
+impl Video {
+    /// Adds the provided [`VideoSink`] to this [`Video`].
+    pub fn add_video_sink(&mut self, video_sink: &mut VideoSink) {
+        self.inner.add_or_update_sink(video_sink.as_mut());
+        self.sinks.push(video_sink.id());
+    }
+
+    /// Detaches the provided [`VideoSink`] from this [`Video`].
+    pub fn remove_video_sink(&mut self, mut video_sink: VideoSink) {
+        self.sinks.retain(|&sink| sink != video_sink.id());
+        self.inner.remove_sink(video_sink.as_mut());
+    }
+}
+
+impl Drop for Video {
+    fn drop(&mut self) {
+        let sink = self.sink.take().unwrap();
+        self.remove_video_sink(sink);
+    }
+}
+
+/// Representation of a [`sys::AudioTrackInterface`].
+#[derive(AsRef)]
+pub struct Audio {
+    /// ID of this [`Audio`].
+    id: AudioTrackId,
+
+    /// [`AudioSource`] that is used by this [`Audio`].
+    source: MediaTrackSource<AudioSource>,
+
+    /// Underlying [`sys::AudioTrackInterface`].
+    #[as_ref]
+    inner: sys::AudioTrackInterface,
+
+    /// [`AudioLevelObserverId`] related to this [`Audio`].
+    ///
+    /// This ID can be used when this [`Audio`] needs to dispose its
+    /// observer.
+    volume_observer_id: Option<AudioLevelObserverId>,
+}
+
+impl TrackInterface for Audio {
+    /// Returns the [readyState][0] property of the underlying interface.
+    ///
+    /// [0]: https://w3.org/TR/mediacapture-streams#dfn-readystate
+    fn state(&self) -> api::TrackState {
+        self.inner.state().into()
+    }
+
+    /// Changes the [enabled][1] property of the underlying interface.
+    ///
+    /// [1]: https://w3.org/TR/mediacapture-streams#track-enabled
+    fn set_enabled(&self, enabled: bool) {
+        self.inner.set_enabled(enabled);
+    }
+}
+
+impl Audio {
+    /// Subscribes this [`Audio`] to audio level updates.
+    ///
+    /// Volume updates will be passed to the `stream_sink` of this
+    /// [`Audio`].
+    pub fn subscribe_to_audio_level(
+        &mut self,
+        track_events_tx: Option<StreamSink<api::TrackEvent>>,
+    ) {
+        if let Some(sink) = track_events_tx {
+            match &self.source {
+                MediaTrackSource::Local(src) => {
+                    let observer = src.subscribe_on_audio_level(
+                        AudioSourceAudioLevelHandler(sink),
+                    );
+                    self.volume_observer_id = Some(observer);
+                }
+                MediaTrackSource::Remote { mid: _, peer: _ } => (),
+            }
+        }
+    }
+
+    /// Unsubscribes this [`Audio`] from audio level updates.
+    pub fn unsubscribe_from_audio_level(&self) {
+        match &self.source {
+            MediaTrackSource::Local(src) => {
+                if let Some(id) = self.volume_observer_id {
+                    src.unsubscribe_audio_level(id);
+                }
+            }
+            MediaTrackSource::Remote { mid: _, peer: _ } => (),
+        }
+    }
+}
+
+impl Drop for Audio {
+    fn drop(&mut self) {
+        self.unsubscribe_from_audio_level();
+    }
+}
+
+/// Representation of a generic track interface.
+pub struct Track<T: TrackInterface> {
+    /// Indicator whether this is a remote or a local track.
+    origin: TrackOrigin,
+
+    /// [`TrackInterface`] of this [`Track`].
+    interface: T,
+
+    /// Media type of this [`Track`].
+    kind: api::MediaType,
+
+    /// `StreamSink` which can be used by this [`Track`] to emit
+    /// [`api::TrackEvent`]s to Flutter side.
+    events_tx: Option<StreamSink<api::TrackEvent>>,
+
+    /// Peers and transceivers sending this [`Track`].
+    senders: HashMap<Arc<PeerConnection>, HashSet<Arc<RtpTransceiver>>>,
+}
+
+impl<T: TrackInterface> Track<T> {
+    /// Returns the [readyState][0] property of the underlying interface.
+    ///
+    /// [0]: https://w3.org/TR/mediacapture-streams#dfn-readystate
+    #[must_use]
+    pub fn state(&self) -> api::TrackState {
+        self.interface.state()
+    }
+
+    /// Changes the [enabled][1] property of the underlying interface.
+    ///
+    /// [1]: https://w3.org/TR/mediacapture-streams#track-enabled
+    pub fn set_enabled(&self, enabled: bool) {
+        self.interface.set_enabled(enabled);
+    }
+
+    /// Emits [`api::TrackEvent::Ended`] to the Flutter side.
+    pub fn notify_on_ended(&mut self) {
+        if let Some(sink) = self.events_tx.take() {
+            _ = sink.add(api::TrackEvent::Ended);
+        }
+    }
+
+    /// Sets the provided `StreamSink` for this [`Track`] to use for
+    /// [`api::TrackEvent`]s emitting.
+    pub fn set_track_events_tx(&mut self, sink: StreamSink<api::TrackEvent>) {
+        drop(self.events_tx.replace(sink));
+    }
+
+    /// Adds transceiver to senders of this [`Track`].
+    pub fn add_transceiver(
+        &mut self,
+        peer: Arc<PeerConnection>,
+        transceiver: Arc<RtpTransceiver>,
+    ) {
+        self.senders.entry(peer).or_default().insert(transceiver);
+    }
+
+    /// Removes transceiver from senders of this [`Track`].
+    pub fn remove_transceiver(
+        &mut self,
+        peer: &Arc<PeerConnection>,
+        transceiver: &Arc<RtpTransceiver>,
+    ) {
+        if let Some(transceivers) = self.senders.get_mut(peer) {
+            transceivers.retain(|current| current != transceiver);
+
+            if !transceivers.is_empty() {
+                return;
+            }
+        }
+
+        self.senders.remove(peer);
+    }
+
+    /// Removes peer and its transceivers from senders of this [`Track`].
+    pub fn remove_peer(&mut self, peer: &Arc<PeerConnection>) {
+        self.senders.remove(peer);
+    }
+}
+
+/// Representation of a [`Video`] track interface.
+pub type VideoTrack = Track<Video>;
+
+impl AsRef<sys::VideoTrackInterface> for VideoTrack {
+    fn as_ref(&self) -> &sys::VideoTrackInterface {
+        self.interface.as_ref()
+    }
 }
 
 /// Tracks changes in video `height` and `width`.
@@ -1044,13 +1249,13 @@ impl VideoTrack {
     /// Returns ID of this [`VideoTrack`].
     #[must_use]
     pub fn id(&self) -> VideoTrackId {
-        self.id.clone()
+        self.interface.id.clone()
     }
 
     /// Returns [`VideoSource`] that is used by this [`VideoTrack`].
     #[must_use]
     pub const fn source(&self) -> &MediaTrackSource<VideoSource> {
-        &self.source
+        &self.interface.source
     }
 
     /// Creates a new [`VideoTrack`].
@@ -1076,29 +1281,25 @@ impl VideoTrack {
         );
 
         let mut res = Self {
-            id: id.clone(),
-            inner: pc.create_video_track(id.into(), &src.inner)?,
-            source: MediaTrackSource::Local(src),
+            interface: Video {
+                id: id.clone(),
+                inner: pc.create_video_track(id.into(), &src.inner)?,
+                sinks: Vec::new(),
+                width,
+                height,
+                sink: None,
+                source: MediaTrackSource::Local(src),
+            },
             kind: api::MediaType::Video,
-            sinks: Vec::new(),
             senders: HashMap::new(),
-            track_events_tx: None,
-            width,
-            height,
-            sink: None,
-            track_origin,
+            events_tx: None,
+            origin: track_origin,
         };
 
         res.add_video_sink(&mut sink);
-        res.sink = Some(sink);
+        res.interface.sink = Some(sink);
 
         Ok(res)
-    }
-
-    /// Sets the provided `StreamSink` for this [`VideoTrack`] to use for
-    /// [`api::TrackEvent`]s emitting.
-    pub fn set_track_events_tx(&mut self, sink: StreamSink<api::TrackEvent>) {
-        drop(self.track_events_tx.replace(sink));
     }
 
     /// Wraps the track of the `transceiver.receiver.track()` into a
@@ -1128,102 +1329,40 @@ impl VideoTrack {
         );
 
         let mut res = Self {
-            id: VideoTrackId(track.id()),
-            inner: track.try_into().unwrap(),
-            // Safe to unwrap since transceiver is guaranteed to be negotiated
-            // at this point.
-            source: MediaTrackSource::Remote {
-                mid: transceiver.mid().unwrap(),
-                peer: Arc::downgrade(peer),
+            interface: Video {
+                id: VideoTrackId(track.id()),
+                inner: track.try_into().unwrap(),
+                sinks: Vec::new(),
+                width,
+                height,
+                sink: None,
+                // Safe to unwrap since transceiver is guaranteed to be negotiated
+                // at this point.
+                source: MediaTrackSource::Remote {
+                    mid: transceiver.mid().unwrap(),
+                    peer: Arc::downgrade(peer),
+                },
             },
             kind: api::MediaType::Video,
-            sinks: Vec::new(),
             senders: HashMap::new(),
-            track_events_tx: None,
-            width,
-            height,
-            sink: None,
-            track_origin,
+            events_tx: None,
+            origin: track_origin,
         };
 
         res.add_video_sink(&mut sink);
-        res.sink = Some(sink);
+        res.interface.sink = Some(sink);
 
         res
     }
 
     /// Adds the provided [`VideoSink`] to this [`VideoTrack`].
     pub fn add_video_sink(&mut self, video_sink: &mut VideoSink) {
-        self.inner.add_or_update_sink(video_sink.as_mut());
-        self.sinks.push(video_sink.id());
+        self.interface.add_video_sink(video_sink);
     }
 
     /// Detaches the provided [`VideoSink`] from this [`VideoTrack`].
-    pub fn remove_video_sink(&mut self, mut video_sink: VideoSink) {
-        self.sinks.retain(|&sink| sink != video_sink.id());
-        self.inner.remove_sink(video_sink.as_mut());
-    }
-
-    /// Changes the [enabled][1] property of the underlying
-    /// [`sys::VideoTrackInterface`].
-    ///
-    /// [1]: https://w3.org/TR/mediacapture-streams#track-enabled
-    pub fn set_enabled(&self, enabled: bool) {
-        self.inner.set_enabled(enabled);
-    }
-
-    /// Returns the [readyState][0] property of the underlying
-    /// [`sys::VideoTrackInterface`].
-    ///
-    /// [0]: https://w3.org/TR/mediacapture-streams#dfn-readystate
-    #[must_use]
-    pub fn state(&self) -> api::TrackState {
-        self.inner.state().into()
-    }
-
-    /// Emits [`api::TrackEvent::Ended`] to the Flutter side.
-    pub fn notify_on_ended(&mut self) {
-        if let Some(sink) = self.track_events_tx.take() {
-            _ = sink.add(api::TrackEvent::Ended);
-        }
-    }
-
-    /// Adds transceiver to senders of this [`VideoTrack`].
-    pub fn add_transceiver(
-        &mut self,
-        peer: Arc<PeerConnection>,
-        transceiver: Arc<RtpTransceiver>,
-    ) {
-        self.senders.entry(peer).or_default().insert(transceiver);
-    }
-
-    /// Removes transceiver from senders of this [`VideoTrack`].
-    pub fn remove_transceiver(
-        &mut self,
-        peer: &Arc<PeerConnection>,
-        transceiver: &Arc<RtpTransceiver>,
-    ) {
-        if let Some(transceivers) = self.senders.get_mut(peer) {
-            transceivers.retain(|current| current != transceiver);
-
-            if !transceivers.is_empty() {
-                return;
-            }
-        }
-
-        self.senders.remove(peer);
-    }
-
-    /// Removes peer and its transceivers from senders of this [`VideoTrack`].
-    pub fn remove_peer(&mut self, peer: &Arc<PeerConnection>) {
-        self.senders.remove(peer);
-    }
-}
-
-impl Drop for VideoTrack {
-    fn drop(&mut self) {
-        let sink = self.sink.take().unwrap();
-        self.remove_video_sink(sink);
+    pub fn remove_video_sink(&mut self, video_sink: VideoSink) {
+        self.interface.remove_video_sink(video_sink);
     }
 }
 
@@ -1237,7 +1376,7 @@ impl From<&VideoTrack> for api::MediaStreamTrack {
             },
             kind: track.kind,
             enabled: true,
-            peer_id: match track.track_origin {
+            peer_id: match track.origin {
                 TrackOrigin::Local => None,
                 TrackOrigin::Remote(peer_id) => Some(peer_id.into()),
             },
@@ -1245,51 +1384,26 @@ impl From<&VideoTrack> for api::MediaStreamTrack {
     }
 }
 
-// TODO: Refactor tracks to Track<Audio|Video> to avoid duplication.
-/// Representation of a [`sys::AudioSourceInterface`].
-#[derive(AsRef)]
-pub struct AudioTrack {
-    /// ID of this [`AudioTrack`].
-    id: AudioTrackId,
+/// Representation of an [`Audio`] track interface.
+pub type AudioTrack = Track<Audio>;
 
-    /// Indicator whether this is a remote or a local track.
-    track_origin: TrackOrigin,
-
-    /// Underlying [`sys::AudioTrackInterface`].
-    #[as_ref]
-    inner: sys::AudioTrackInterface,
-
-    /// [`AudioSource`] that is used by this [`AudioTrack`].
-    source: MediaTrackSource<AudioSource>,
-
-    /// [`api::TrackKind::kAudio`].
-    kind: api::MediaType,
-
-    /// `StreamSink` which can be used by this [`AudioTrack`] to emit
-    /// [`api::TrackEvent`]s to Flutter side.
-    track_events_tx: Option<StreamSink<api::TrackEvent>>,
-
-    /// Peers and transceivers sending this [`VideoTrack`].
-    senders: HashMap<Arc<PeerConnection>, HashSet<Arc<RtpTransceiver>>>,
-
-    /// [`AudioLevelObserverId`] related to this [`AudioTrack`].
-    ///
-    /// This ID can be used when this [`AudioTrack`] needs to dispose its
-    /// observer.
-    volume_observer_id: Option<AudioLevelObserverId>,
+impl AsRef<sys::AudioTrackInterface> for AudioTrack {
+    fn as_ref(&self) -> &sys::AudioTrackInterface {
+        self.interface.as_ref()
+    }
 }
 
 impl AudioTrack {
     /// Returns ID of this [`AudioTrack`].
     #[must_use]
     pub fn id(&self) -> AudioTrackId {
-        self.id.clone()
+        self.interface.id.clone()
     }
 
     /// Returns [`AudioSource`] that is used by this [`AudioTrack`].
     #[must_use]
     pub const fn source(&self) -> &MediaTrackSource<AudioSource> {
-        &self.source
+        &self.interface.source
     }
 
     /// Creates a new [`AudioTrack`].
@@ -1305,14 +1419,16 @@ impl AudioTrack {
     ) -> anyhow::Result<Self> {
         let id = AudioTrackId(next_id().to_string());
         Ok(Self {
-            id: id.clone(),
-            inner: pc.create_audio_track(id.into(), &src.src)?,
-            source: MediaTrackSource::Local(src),
+            interface: Audio {
+                id: id.clone(),
+                inner: pc.create_audio_track(id.into(), &src.src)?,
+                volume_observer_id: None,
+                source: MediaTrackSource::Local(src),
+            },
             kind: api::MediaType::Audio,
             senders: HashMap::new(),
-            track_origin,
-            track_events_tx: None,
-            volume_observer_id: None,
+            origin: track_origin,
+            events_tx: None,
         })
     }
 
@@ -1321,35 +1437,12 @@ impl AudioTrack {
     /// Volume updates will be passed to the `stream_sink` of this
     /// [`AudioTrack`].
     pub fn subscribe_to_audio_level(&mut self) {
-        if let Some(sink) = self.track_events_tx.clone() {
-            match &self.source {
-                MediaTrackSource::Local(src) => {
-                    let observer = src.subscribe_on_audio_level(
-                        AudioSourceAudioLevelHandler(sink),
-                    );
-                    self.volume_observer_id = Some(observer);
-                }
-                MediaTrackSource::Remote { mid: _, peer: _ } => (),
-            }
-        }
+        self.interface.subscribe_to_audio_level(self.events_tx.clone());
     }
 
     /// Unsubscribes this [`AudioTrack`] from audio level updates.
     pub fn unsubscribe_from_audio_level(&self) {
-        match &self.source {
-            MediaTrackSource::Local(src) => {
-                if let Some(id) = self.volume_observer_id {
-                    src.unsubscribe_audio_level(id);
-                }
-            }
-            MediaTrackSource::Remote { mid: _, peer: _ } => (),
-        }
-    }
-
-    /// Sets the provided `stream_sink` for this [`AudioTrack`] to use for
-    /// [`api::TrackEvent`]s emitting.
-    pub fn set_track_events_tx(&mut self, sink: StreamSink<api::TrackEvent>) {
-        drop(self.track_events_tx.replace(sink));
+        self.interface.unsubscribe_from_audio_level();
     }
 
     /// Wraps the track of the `transceiver.receiver.track()` into an
@@ -1361,78 +1454,24 @@ impl AudioTrack {
         let receiver = transceiver.receiver();
         let track = receiver.track();
         Self {
-            id: AudioTrackId(track.id()),
-            inner: track.try_into().unwrap(),
-            // Safe to unwrap since transceiver is guaranteed to be negotiated
-            // at this point.
-            source: MediaTrackSource::Remote {
-                mid: transceiver.mid().unwrap(),
-                peer: Arc::downgrade(peer),
+            interface: Audio {
+                id: AudioTrackId(track.id()),
+                inner: track.try_into().unwrap(),
+                volume_observer_id: None,
+                // Safe to unwrap since transceiver is guaranteed to be negotiated
+                // at this point.
+                source: MediaTrackSource::Remote {
+                    mid: transceiver.mid().unwrap(),
+                    peer: Arc::downgrade(peer),
+                },
             },
             kind: api::MediaType::Audio,
             senders: HashMap::new(),
-            track_origin: TrackOrigin::Remote(peer.id()),
-            track_events_tx: None,
-            volume_observer_id: None,
+            origin: TrackOrigin::Remote(peer.id()),
+            events_tx: None,
         }
-    }
-
-    /// Returns the [readyState][0] property of the underlying
-    /// [`sys::AudioTrackInterface`].
-    ///
-    /// [0]: https://w3.org/TR/mediacapture-streams#dfn-readystate
-    #[must_use]
-    pub fn state(&self) -> api::TrackState {
-        self.inner.state().into()
-    }
-
-    /// Changes the [enabled][1] property of the underlying
-    /// [`sys::AudioTrackInterface`].
-    ///
-    /// [1]: https://w3.org/TR/mediacapture-streams#track-enabled
-    pub fn set_enabled(&self, enabled: bool) {
-        self.inner.set_enabled(enabled);
-    }
-
-    /// Emits [`api::TrackEvent::Ended`] to the Flutter side.
-    pub fn notify_on_ended(&mut self) {
-        if let Some(sink) = self.track_events_tx.take() {
-            _ = sink.add(api::TrackEvent::Ended);
-        }
-    }
-
-    /// Adds transceiver to senders of this [`VideoTrack`].
-    pub fn add_transceiver(
-        &mut self,
-        peer: Arc<PeerConnection>,
-        transceiver: Arc<RtpTransceiver>,
-    ) {
-        self.senders.entry(peer).or_default().insert(transceiver);
-    }
-
-    /// Removes transceiver from senders of this [`VideoTrack`].
-    pub fn remove_transceiver(
-        &mut self,
-        peer: &Arc<PeerConnection>,
-        transceiver: &Arc<RtpTransceiver>,
-    ) {
-        if let Some(transceivers) = self.senders.get_mut(peer) {
-            transceivers.retain(|current| current != transceiver);
-
-            if !transceivers.is_empty() {
-                return;
-            }
-        }
-
-        self.senders.remove(peer);
-    }
-
-    /// Removes peer and its transceivers from senders of this [`VideoTrack`].
-    pub fn remove_peer(&mut self, peer: &Arc<PeerConnection>) {
-        self.senders.remove(peer);
     }
 }
-
 impl From<&AudioTrack> for api::MediaStreamTrack {
     fn from(track: &AudioTrack) -> Self {
         Self {
@@ -1443,17 +1482,11 @@ impl From<&AudioTrack> for api::MediaStreamTrack {
             },
             kind: track.kind,
             enabled: true,
-            peer_id: match track.track_origin {
+            peer_id: match track.origin {
                 TrackOrigin::Local => None,
                 TrackOrigin::Remote(peer_id) => Some(peer_id.into()),
             },
         }
-    }
-}
-
-impl Drop for AudioTrack {
-    fn drop(&mut self) {
-        self.unsubscribe_from_audio_level();
     }
 }
 

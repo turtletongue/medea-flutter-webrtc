@@ -210,9 +210,9 @@ pub use crate::{
         PeerConnection, RtpEncodingParameters, RtpParameters, RtpTransceiver,
     },
     user_media::{
-        AudioDeviceId, AudioDeviceModule, AudioSource, AudioTrack,
-        AudioTrackId, MediaStreamId, VideoDeviceId, VideoDeviceInfo,
-        VideoSource, VideoTrack, VideoTrackId,
+        Audio, AudioDeviceId, AudioDeviceModule, AudioSource, AudioTrack,
+        AudioTrackId, MediaStreamId, Track, TrackInterface, Video,
+        VideoDeviceId, VideoDeviceInfo, VideoSource, VideoTrack, VideoTrackId,
     },
     video_sink::VideoSink,
 };
