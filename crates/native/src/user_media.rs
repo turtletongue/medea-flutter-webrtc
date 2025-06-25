@@ -1004,10 +1004,10 @@ pub struct VideoTrack {
 
     /// `StreamSink` which can be used by this [`VideoTrack`] to emit
     /// [`api::TrackEvent`]s to Flutter side.
-    pub track_events_tx: Option<StreamSink<api::TrackEvent>>,
+    track_events_tx: Option<StreamSink<api::TrackEvent>>,
 
     /// Peers and transceivers sending this [`VideoTrack`].
-    pub senders: HashMap<Arc<PeerConnection>, HashSet<Arc<RtpTransceiver>>>,
+    senders: HashMap<Arc<PeerConnection>, HashSet<Arc<RtpTransceiver>>>,
 
     /// Tracks changes in video `height` and `width`.
     sink: Option<VideoSink>,
@@ -1187,6 +1187,37 @@ impl VideoTrack {
             _ = sink.add(api::TrackEvent::Ended);
         }
     }
+
+    /// Adds transceiver to senders of this [`VideoTrack`].
+    pub fn add_transceiver(
+        &mut self,
+        peer: Arc<PeerConnection>,
+        transceiver: Arc<RtpTransceiver>,
+    ) {
+        self.senders.entry(peer).or_default().insert(transceiver);
+    }
+
+    /// Removes transceiver from senders of this [`VideoTrack`].
+    pub fn remove_transceiver(
+        &mut self,
+        peer: &Arc<PeerConnection>,
+        transceiver: &Arc<RtpTransceiver>,
+    ) {
+        if let Some(transceivers) = self.senders.get_mut(peer) {
+            transceivers.retain(|current| current != transceiver);
+
+            if !transceivers.is_empty() {
+                return;
+            }
+        }
+
+        self.senders.remove(peer);
+    }
+
+    /// Removes peer and its transceivers from senders of this [`VideoTrack`].
+    pub fn remove_peer(&mut self, peer: &Arc<PeerConnection>) {
+        self.senders.remove(peer);
+    }
 }
 
 impl Drop for VideoTrack {
@@ -1236,10 +1267,10 @@ pub struct AudioTrack {
 
     /// `StreamSink` which can be used by this [`AudioTrack`] to emit
     /// [`api::TrackEvent`]s to Flutter side.
-    pub track_events_tx: Option<StreamSink<api::TrackEvent>>,
+    track_events_tx: Option<StreamSink<api::TrackEvent>>,
 
     /// Peers and transceivers sending this [`VideoTrack`].
-    pub senders: HashMap<Arc<PeerConnection>, HashSet<Arc<RtpTransceiver>>>,
+    senders: HashMap<Arc<PeerConnection>, HashSet<Arc<RtpTransceiver>>>,
 
     /// [`AudioLevelObserverId`] related to this [`AudioTrack`].
     ///
@@ -1369,6 +1400,37 @@ impl AudioTrack {
             _ = sink.add(api::TrackEvent::Ended);
         }
     }
+
+    /// Adds transceiver to senders of this [`VideoTrack`].
+    pub fn add_transceiver(
+        &mut self,
+        peer: Arc<PeerConnection>,
+        transceiver: Arc<RtpTransceiver>,
+    ) {
+        self.senders.entry(peer).or_default().insert(transceiver);
+    }
+
+    /// Removes transceiver from senders of this [`VideoTrack`].
+    pub fn remove_transceiver(
+        &mut self,
+        peer: &Arc<PeerConnection>,
+        transceiver: &Arc<RtpTransceiver>,
+    ) {
+        if let Some(transceivers) = self.senders.get_mut(peer) {
+            transceivers.retain(|current| current != transceiver);
+
+            if !transceivers.is_empty() {
+                return;
+            }
+        }
+
+        self.senders.remove(peer);
+    }
+
+    /// Removes peer and its transceivers from senders of this [`VideoTrack`].
+    pub fn remove_peer(&mut self, peer: &Arc<PeerConnection>) {
+        self.senders.remove(peer);
+    }
 }
 
 impl From<&AudioTrack> for api::MediaStreamTrack {
@@ -1402,7 +1464,7 @@ pub struct AudioLevelObserverId(u64);
 
 /// Storage for a [`sys::AudioSourceOnAudioLevelChangeCallback`].
 type ObserverStorage =
-Arc<RwLock<HashMap<AudioLevelObserverId, AudioSourceAudioLevelHandler>>>;
+    Arc<RwLock<HashMap<AudioLevelObserverId, AudioSourceAudioLevelHandler>>>;
 
 /// [`sys::AudioSourceOnAudioLevelChangeCallback`] implementation which
 /// broadcasts all audio level updates to all the underlying
@@ -1587,9 +1649,9 @@ impl VideoSource {
                 device_index,
             )
         }
-            .with_context(|| {
-                format!("Failed to acquire device with ID `{device_id}`")
-            })?;
+        .with_context(|| {
+            format!("Failed to acquire device with ID `{device_id}`")
+        })?;
 
         Ok(Self { inner, device_id })
     }

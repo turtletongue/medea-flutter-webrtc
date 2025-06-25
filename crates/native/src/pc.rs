@@ -41,7 +41,7 @@ impl Webrtc {
         obs.add(api::PeerConnectionEvent::PeerCreated {
             peer: RustOpaque::new(peer),
         })
-            .map_err(|e| anyhow!(e))?;
+        .map_err(|e| anyhow!(e))?;
 
         Ok(())
     }
@@ -81,11 +81,11 @@ impl Webrtc {
     pub fn dispose_peer_connection(&self, this: &Arc<PeerConnection>) {
         // Remove all tracks from this `Peer`'s senders.
         for mut track in self.video_tracks.iter_mut() {
-            track.senders.remove(this);
+            track.remove_peer(this);
         }
 
         for mut track in self.audio_tracks.iter_mut() {
-            track.senders.remove(this);
+            track.remove_peer(this);
         }
 
         let peer = this.inner.lock().unwrap();
@@ -132,26 +132,12 @@ impl Webrtc {
         match transceiver.media_type() {
             sys::MediaType::MEDIA_TYPE_VIDEO => {
                 for mut track in self.video_tracks.iter_mut() {
-                    let mut delete = false;
-                    if let Some(trnscvrs) = track.senders.get_mut(peer) {
-                        trnscvrs.retain(|tr| tr != transceiver);
-                        delete = trnscvrs.is_empty();
-                    }
-                    if delete {
-                        track.senders.remove(peer);
-                    }
+                    track.remove_transceiver(peer, transceiver);
                 }
             }
             sys::MediaType::MEDIA_TYPE_AUDIO => {
                 for mut track in self.audio_tracks.iter_mut() {
-                    let mut delete = false;
-                    if let Some(trnscvrs) = track.senders.get_mut(peer) {
-                        trnscvrs.retain(|tr| tr != transceiver);
-                        delete = trnscvrs.is_empty();
-                    }
-                    if delete {
-                        track.senders.remove(peer);
-                    }
+                    track.remove_transceiver(peer, transceiver);
                 }
             }
             _ => unreachable!(),
@@ -169,12 +155,10 @@ impl Webrtc {
                             anyhow!("Cannot find track with ID `{track_id}`")
                         })?;
 
-                    track
-                        .value_mut()
-                        .senders
-                        .entry(Arc::clone(peer))
-                        .or_default()
-                        .insert(Arc::clone(transceiver));
+                    track.add_transceiver(
+                        Arc::clone(peer),
+                        Arc::clone(transceiver),
+                    );
 
                     sender.replace_video_track(Some(track.as_ref()))
                 }
@@ -187,12 +171,10 @@ impl Webrtc {
                             anyhow!("Cannot find track with ID `{track_id}`")
                         })?;
 
-                    track
-                        .value_mut()
-                        .senders
-                        .entry(Arc::clone(peer))
-                        .or_default()
-                        .insert(Arc::clone(transceiver));
+                    track.add_transceiver(
+                        Arc::clone(peer),
+                        Arc::clone(transceiver),
+                    );
 
                     sender.replace_audio_track(Some(track.as_ref()))
                 }
