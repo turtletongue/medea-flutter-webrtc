@@ -94,7 +94,7 @@ impl Webrtc {
                     .audio_tracks
                     .remove(&(AudioTrackId::from(track_id), track_origin))
                 {
-                    if let MediaTrackSource::Local(src) = &track.source {
+                    if let MediaTrackSource::Local(src) = track.source() {
                         if Arc::strong_count(src) <= 2 {
                             self.audio_sources.remove(&src.device_id);
                             self.audio_device_module
@@ -119,7 +119,7 @@ impl Webrtc {
                             track.remove_video_sink(sink);
                         }
                     }
-                    if let MediaTrackSource::Local(src) = &track.source {
+                    if let MediaTrackSource::Local(src) = track.source() {
                         if Arc::strong_count(src) == 2 {
                             self.video_sources.remove(&src.device_id);
                         }
@@ -156,7 +156,7 @@ impl Webrtc {
 
         let api_track = api::MediaStreamTrack::from(&track);
 
-        self.video_tracks.insert((track.id.clone(), TrackOrigin::Local), track);
+        self.video_tracks.insert((track.id(), TrackOrigin::Local), track);
 
         Ok(api_track)
     }
@@ -264,7 +264,7 @@ impl Webrtc {
 
         let api_track = api::MediaStreamTrack::from(&track);
 
-        self.audio_tracks.insert((track.id.clone(), TrackOrigin::Local), track);
+        self.audio_tracks.insert((track.id(), TrackOrigin::Local), track);
 
         Ok(api_track)
     }
@@ -419,7 +419,7 @@ impl Webrtc {
             api::MediaType::Audio => {
                 let id = AudioTrackId::from(id);
                 let source = self.audio_tracks.get(&(id, track_origin)).map(
-                    |track| match &track.source {
+                    |track| match track.source() {
                         MediaTrackSource::Local(source) => {
                             MediaTrackSource::Local(Arc::clone(source))
                         }
@@ -460,7 +460,7 @@ impl Webrtc {
             api::MediaType::Video => {
                 let id = VideoTrackId::from(id);
                 let source = self.video_tracks.get(&(id, track_origin)).map(
-                    |track| match &track.source {
+                    |track| match track.source() {
                         MediaTrackSource::Local(source) => {
                             MediaTrackSource::Local(Arc::clone(source))
                         }
@@ -581,7 +581,7 @@ impl Webrtc {
             return Ok(());
         };
 
-        let MediaTrackSource::Local(src) = &track.source else {
+        let MediaTrackSource::Local(src) = track.source() else {
             bail!("Cannot change audio processing of remote `AudioTrack`");
         };
 
@@ -615,7 +615,7 @@ impl Webrtc {
             });
         };
 
-        let MediaTrackSource::Local(src) = &track.source else {
+        let MediaTrackSource::Local(src) = track.source() else {
             bail!("Cannot get audio processing of remote `AudioTrack`");
         };
 
@@ -984,7 +984,7 @@ pub enum MediaTrackSource<T> {
 #[derive(AsRef)]
 pub struct VideoTrack {
     /// ID of this [`VideoTrack`].
-    pub id: VideoTrackId,
+    id: VideoTrackId,
 
     /// Indicator whether this is a remote or a local track.
     track_origin: TrackOrigin,
@@ -994,7 +994,7 @@ pub struct VideoTrack {
     inner: sys::VideoTrackInterface,
 
     /// [`VideoSource`] that is used by this [`VideoTrack`].
-    pub source: MediaTrackSource<VideoSource>,
+    source: MediaTrackSource<VideoSource>,
 
     /// [`api::TrackKind::kVideo`].
     kind: api::MediaType,
@@ -1041,6 +1041,18 @@ impl sys::OnFrameCallback for VideoFormatSink {
 }
 
 impl VideoTrack {
+    /// Returns ID of this [`VideoTrack`].
+    #[must_use]
+    pub fn id(&self) -> VideoTrackId {
+        self.id.clone()
+    }
+
+    /// Returns [`VideoSource`] that is used by this [`VideoTrack`].
+    #[must_use]
+    pub const fn source(&self) -> &MediaTrackSource<VideoSource> {
+        &self.source
+    }
+
     /// Creates a new [`VideoTrack`].
     fn create_local(
         pc: &sys::PeerConnectionFactoryInterface,
@@ -1187,8 +1199,8 @@ impl Drop for VideoTrack {
 impl From<&VideoTrack> for api::MediaStreamTrack {
     fn from(track: &VideoTrack) -> Self {
         Self {
-            id: track.id.0.clone(),
-            device_id: match &track.source {
+            id: track.id().0,
+            device_id: match track.source() {
                 MediaTrackSource::Local(src) => src.device_id.to_string(),
                 MediaTrackSource::Remote { .. } => "remote".into(),
             },
@@ -1207,7 +1219,7 @@ impl From<&VideoTrack> for api::MediaStreamTrack {
 #[derive(AsRef)]
 pub struct AudioTrack {
     /// ID of this [`AudioTrack`].
-    pub id: AudioTrackId,
+    id: AudioTrackId,
 
     /// Indicator whether this is a remote or a local track.
     track_origin: TrackOrigin,
@@ -1217,7 +1229,7 @@ pub struct AudioTrack {
     inner: sys::AudioTrackInterface,
 
     /// [`sys::AudioSourceInterface`] that is used by this [`AudioTrack`].
-    pub source: MediaTrackSource<AudioSource>,
+    source: MediaTrackSource<AudioSource>,
 
     /// [`api::TrackKind::kAudio`].
     kind: api::MediaType,
@@ -1237,6 +1249,18 @@ pub struct AudioTrack {
 }
 
 impl AudioTrack {
+    /// Returns ID of this [`AudioTrack`].
+    #[must_use]
+    pub fn id(&self) -> AudioTrackId {
+        self.id.clone()
+    }
+
+    /// Returns [`sys::AudioSourceInterface`] that is used by this [`AudioTrack`].
+    #[must_use]
+    pub const fn source(&self) -> &MediaTrackSource<AudioSource> {
+        &self.source
+    }
+
     /// Creates a new [`AudioTrack`].
     ///
     /// # Errors
@@ -1350,8 +1374,8 @@ impl AudioTrack {
 impl From<&AudioTrack> for api::MediaStreamTrack {
     fn from(track: &AudioTrack) -> Self {
         Self {
-            id: track.id.0.clone(),
-            device_id: match &track.source {
+            id: track.id().0,
+            device_id: match track.source() {
                 MediaTrackSource::Local(local) => local.device_id.to_string(),
                 MediaTrackSource::Remote { mid: _, peer: _ } => "remote".into(),
             },
@@ -1378,7 +1402,7 @@ pub struct AudioLevelObserverId(u64);
 
 /// Storage for a [`sys::AudioSourceOnAudioLevelChangeCallback`].
 type ObserverStorage =
-    Arc<RwLock<HashMap<AudioLevelObserverId, AudioSourceAudioLevelHandler>>>;
+Arc<RwLock<HashMap<AudioLevelObserverId, AudioSourceAudioLevelHandler>>>;
 
 /// [`sys::AudioSourceOnAudioLevelChangeCallback`] implementation which
 /// broadcasts all audio level updates to all the underlying
@@ -1563,9 +1587,9 @@ impl VideoSource {
                 device_index,
             )
         }
-        .with_context(|| {
-            format!("Failed to acquire device with ID `{device_id}`")
-        })?;
+            .with_context(|| {
+                format!("Failed to acquire device with ID `{device_id}`")
+            })?;
 
         Ok(Self { inner, device_id })
     }

@@ -41,7 +41,7 @@ impl Webrtc {
         obs.add(api::PeerConnectionEvent::PeerCreated {
             peer: RustOpaque::new(peer),
         })
-        .map_err(|e| anyhow!(e))?;
+            .map_err(|e| anyhow!(e))?;
 
         Ok(())
     }
@@ -1195,8 +1195,7 @@ impl sys::PeerConnectionEventsHandler for PeerConnectionObserver {
                         let track =
                             VideoTrack::wrap_remote(&transceiver, &peer);
                         let result = api::MediaStreamTrack::from(&track);
-                        video_tracks
-                            .insert((track.id.clone(), track_origin), track);
+                        video_tracks.insert((track.id(), track_origin), track);
 
                         result
                     }
