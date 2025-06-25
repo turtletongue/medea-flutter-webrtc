@@ -730,7 +730,7 @@ mod windows {
             audio_endpoint_enumerator
                 .RegisterEndpointNotificationCallback(&audio_endpoint_callback)
         }
-            .unwrap();
+        .unwrap();
 
         AUDIO_ENDPOINT_ENUMERATOR.swap(
             Box::into_raw(Box::new(audio_endpoint_enumerator)),
