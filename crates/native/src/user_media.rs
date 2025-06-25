@@ -1259,7 +1259,7 @@ pub struct AudioTrack {
     #[as_ref]
     inner: sys::AudioTrackInterface,
 
-    /// [`sys::AudioSourceInterface`] that is used by this [`AudioTrack`].
+    /// [`AudioSource`] that is used by this [`AudioTrack`].
     source: MediaTrackSource<AudioSource>,
 
     /// [`api::TrackKind::kAudio`].
@@ -1286,7 +1286,7 @@ impl AudioTrack {
         self.id.clone()
     }
 
-    /// Returns [`sys::AudioSourceInterface`] that is used by this [`AudioTrack`].
+    /// Returns [`AudioSource`] that is used by this [`AudioTrack`].
     #[must_use]
     pub const fn source(&self) -> &MediaTrackSource<AudioSource> {
         &self.source
