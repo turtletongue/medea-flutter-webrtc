@@ -3,6 +3,7 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
+import 'api/rtc_ice_candidate_stats.dart';
 import 'frb_generated.dart';
 import 'lib.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
@@ -11,7 +12,7 @@ import 'renderer.dart';
 part 'api.freezed.dart';
 
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `TrackKind`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `hash`, `hash`, `hash`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `hash`, `hash`, `hash`
 
 /// Returns all [`VideoCodecInfo`]s of the supported video encoders.
 Future<List<VideoCodecInfo>> videoEncoders() =>
@@ -567,35 +568,6 @@ enum BundlePolicy {
   maxCompat,
 }
 
-/// [RTCIceCandidateType] represents the type of the ICE candidate, as defined
-/// in [Section 15.1 of RFC 5245][1].
-///
-/// [RTCIceCandidateType]: https://w3.org/TR/webrtc#rtcicecandidatetype-enum
-/// [1]: https://tools.ietf.org/html/rfc5245#section-15.1
-enum CandidateType {
-  /// Host candidate, as defined in [Section 4.1.1.1 of RFC 5245][1].
-  ///
-  /// [1]: https://tools.ietf.org/html/rfc5245#section-4.1.1.1
-  host,
-
-  /// Server reflexive candidate, as defined in
-  /// [Section 4.1.1.2 of RFC 5245][1].
-  ///
-  /// [1]: https://tools.ietf.org/html/rfc5245#section-4.1.1.2
-  srflx,
-
-  /// Peer reflexive candidate, as defined in
-  /// [Section 4.1.1.2 of RFC 5245][1].
-  ///
-  /// [1]: https://tools.ietf.org/html/rfc5245#section-4.1.1.2
-  prflx,
-
-  /// Relay candidate, as defined in [Section 7.1.3.2.1 of RFC 5245][1].
-  ///
-  /// [1]: https://tools.ietf.org/html/rfc5245#section-7.1.3.2.1
-  relay,
-}
-
 @freezed
 sealed class GetMediaError with _$GetMediaError {
   const GetMediaError._();
@@ -617,93 +589,6 @@ sealed class GetMediaResult with _$GetMediaResult {
 
   /// Failed to get requested media.
   const factory GetMediaResult.err(GetMediaError field0) = GetMediaResult_Err;
-}
-
-/// Properties of a `candidate` in [Section 15.1 of RFC 5245][1].
-/// It corresponds to an [RTCIceTransport] object.
-///
-/// [`RtcIceCandidateStats::Local`] or [`RtcIceCandidateStats::Remote`] variant.
-///
-/// [Full doc on W3C][2].
-///
-/// [RTCIceTransport]: https://w3.org/TR/webrtc#dom-rtcicetransport
-/// [1]: https://tools.ietf.org/html/rfc5245#section-15.1
-/// [2]: https://w3.org/TR/webrtc-stats#icecandidate-dict%2A
-class IceCandidateStats {
-  /// Unique ID that is associated to the object that was inspected to produce
-  /// the [RTCTransportStats][1] associated with this candidate.
-  ///
-  /// [1]: https://w3.org/TR/webrtc-stats#transportstats-dict%2A
-  final String? transportId;
-
-  /// Address of the candidate, allowing for IPv4 addresses, IPv6 addresses,
-  /// and fully qualified domain names (FQDNs).
-  final String? address;
-
-  /// Port number of the candidate.
-  final int? port;
-
-  /// Valid values for transport is one of `udp` and `tcp`.
-  final Protocol protocol;
-
-  /// Type of the ICE candidate.
-  final CandidateType candidateType;
-
-  /// Calculated as defined in [Section 15.1 of RFC 5245][1].
-  ///
-  /// [1]: https://tools.ietf.org/html/rfc5245#section-15.1
-  final int? priority;
-
-  /// For local candidates this is the URL of the ICE server from which the
-  /// candidate was obtained. It is the same as the [url][2] surfaced in the
-  /// [RTCPeerConnectionIceEvent][1].
-  ///
-  /// [`None`] for remote candidates.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#rtcpeerconnectioniceevent
-  /// [2]: https://w3.org/TR/webrtc#dom-rtcpeerconnectioniceevent-url
-  final String? url;
-
-  /// Protocol used by the endpoint to communicate with the TURN server.
-  ///
-  /// Only present for local candidates.
-  final Protocol? relayProtocol;
-
-  const IceCandidateStats({
-    this.transportId,
-    this.address,
-    this.port,
-    required this.protocol,
-    required this.candidateType,
-    this.priority,
-    this.url,
-    this.relayProtocol,
-  });
-
-  @override
-  int get hashCode =>
-      transportId.hashCode ^
-      address.hashCode ^
-      port.hashCode ^
-      protocol.hashCode ^
-      candidateType.hashCode ^
-      priority.hashCode ^
-      url.hashCode ^
-      relayProtocol.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is IceCandidateStats &&
-          runtimeType == other.runtimeType &&
-          transportId == other.transportId &&
-          address == other.address &&
-          port == other.port &&
-          protocol == other.protocol &&
-          candidateType == other.candidateType &&
-          priority == other.priority &&
-          url == other.url &&
-          relayProtocol == other.relayProtocol;
 }
 
 /// [RTCIceConnectionState][1] representation.
@@ -1116,19 +1001,6 @@ class RtcConfiguration {
           iceTransportPolicy == other.iceTransportPolicy &&
           bundlePolicy == other.bundlePolicy &&
           iceServers == other.iceServers;
-}
-
-@freezed
-sealed class RtcIceCandidateStats with _$RtcIceCandidateStats {
-  const RtcIceCandidateStats._();
-
-  /// [`IceCandidateStats`] of local candidate.
-  const factory RtcIceCandidateStats.local(IceCandidateStats field0) =
-      RtcIceCandidateStats_Local;
-
-  /// [`IceCandidateStats`] of remote candidate.
-  const factory RtcIceCandidateStats.remote(IceCandidateStats field0) =
-      RtcIceCandidateStats_Remote;
 }
 
 /// Description of STUN and TURN servers that can be used by an [ICE Agent][1]

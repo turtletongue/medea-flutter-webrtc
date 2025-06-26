@@ -6,6 +6,7 @@
 import 'api.dart';
 import 'api/media_device_info.dart';
 import 'api/media_display_info.dart';
+import 'api/rtc_ice_candidate_stats.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'frb_generated.dart';
