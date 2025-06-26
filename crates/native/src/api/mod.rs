@@ -3,6 +3,7 @@
 pub mod media_device_info;
 pub mod media_display_info;
 pub mod rtc_ice_candidate_stats;
+pub mod rtp_capabilities;
 
 use std::{
     sync::{
@@ -21,6 +22,10 @@ pub use self::{
     media_display_info::{MediaDisplayInfo, enumerate_displays},
     rtc_ice_candidate_stats::{
         CandidateType, IceCandidateStats, RtcIceCandidateStats,
+    },
+    rtp_capabilities::{
+        RtpCapabilities, get_rtp_receiver_capabilities,
+        get_rtp_sender_capabilities,
     },
 };
 // Re-exporting since it is used in the generated code.
@@ -430,33 +435,6 @@ impl From<sys::IceRole> for IceRole {
             sys::IceRole::Unknown => Self::Unknown,
             sys::IceRole::Controlling => Self::Controlling,
             sys::IceRole::Controlled => Self::Controlled,
-        }
-    }
-}
-
-/// Representation of the static capabilities of an endpoint.
-///
-/// Applications can use these capabilities to construct [`RtpParameters`].
-#[derive(Debug)]
-pub struct RtpCapabilities {
-    /// Supported codecs.
-    pub codecs: Vec<RtpCodecCapability>,
-
-    /// Supported [RTP] header extensions.
-    ///
-    /// [RTP]: https://en.wikipedia.org/wiki/Real-time_Transport_Protocol
-    pub header_extensions: Vec<RtpHeaderExtensionCapability>,
-}
-
-impl From<sys::RtpCapabilities> for RtpCapabilities {
-    fn from(value: sys::RtpCapabilities) -> Self {
-        Self {
-            codecs: value.codecs().into_iter().map(Into::into).collect(),
-            header_extensions: value
-                .header_extensions()
-                .into_iter()
-                .map(Into::into)
-                .collect(),
         }
     }
 }
@@ -2635,34 +2613,6 @@ pub fn sender_get_parameters(
     transceiver: RustOpaque<Arc<RtpTransceiver>>,
 ) -> RtcRtpSendParameters {
     RtcRtpSendParameters::from(transceiver.sender_get_parameters())
-}
-
-/// Returns the capabilities of an [RTP] sender of the provided [`MediaType`].
-///
-/// [RTP]: https://en.wikipedia.org/wiki/Real-time_Transport_Protocol
-#[must_use]
-pub fn get_rtp_sender_capabilities(kind: MediaType) -> RtpCapabilities {
-    RtpCapabilities::from(
-        WEBRTC
-            .lock()
-            .unwrap()
-            .peer_connection_factory
-            .get_rtp_sender_capabilities(kind.into()),
-    )
-}
-
-/// Returns the capabilities of an [RTP] receiver of the provided [`MediaType`].
-///
-/// [RTP]: https://en.wikipedia.org/wiki/Real-time_Transport_Protocol
-#[must_use]
-pub fn get_rtp_receiver_capabilities(kind: MediaType) -> RtpCapabilities {
-    RtpCapabilities::from(
-        WEBRTC
-            .lock()
-            .unwrap()
-            .peer_connection_factory
-            .get_rtp_receiver_capabilities(kind.into()),
-    )
 }
 
 /// Sets [`RtpParameters`] into the provided [`RtpTransceiver`]'s `sender`.
