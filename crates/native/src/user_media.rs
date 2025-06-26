@@ -1047,7 +1047,7 @@ impl VideoTrack {
         self.id.clone()
     }
 
-    /// Returns [`VideoSource`] that is used by this [`VideoTrack`].
+    /// Returns the [`VideoSource`] that is used by this [`VideoTrack`].
     #[must_use]
     pub const fn source(&self) -> &MediaTrackSource<VideoSource> {
         &self.source
@@ -1188,7 +1188,7 @@ impl VideoTrack {
         }
     }
 
-    /// Adds transceiver to senders of this [`VideoTrack`].
+    /// Adds the provided [`RtpTransceiver`] to senders of this [`VideoTrack`].
     pub fn add_transceiver(
         &mut self,
         peer: Arc<PeerConnection>,
@@ -1197,7 +1197,8 @@ impl VideoTrack {
         self.senders.entry(peer).or_default().insert(transceiver);
     }
 
-    /// Removes transceiver from senders of this [`VideoTrack`].
+    /// Removes the specified [`RtpTransceiver`] from senders of this
+    /// [`VideoTrack`].
     pub fn remove_transceiver(
         &mut self,
         peer: &Arc<PeerConnection>,
@@ -1214,7 +1215,8 @@ impl VideoTrack {
         self.senders.remove(peer);
     }
 
-    /// Removes peer and its transceivers from senders of this [`VideoTrack`].
+    /// Removes the specified [`PeerConnection`] and its [`RtpTransceiver`]s
+    /// from senders of this [`VideoTrack`].
     pub fn remove_peer(&mut self, peer: &Arc<PeerConnection>) {
         self.senders.remove(peer);
     }
@@ -1286,7 +1288,7 @@ impl AudioTrack {
         self.id.clone()
     }
 
-    /// Returns [`AudioSource`] that is used by this [`AudioTrack`].
+    /// Returns the [`AudioSource`] that is used by this [`AudioTrack`].
     #[must_use]
     pub const fn source(&self) -> &MediaTrackSource<AudioSource> {
         &self.source
@@ -1401,7 +1403,7 @@ impl AudioTrack {
         }
     }
 
-    /// Adds transceiver to senders of this [`VideoTrack`].
+    /// Adds the provided [`RtpTransceiver`] to senders of this [`VideoTrack`].
     pub fn add_transceiver(
         &mut self,
         peer: Arc<PeerConnection>,
@@ -1410,7 +1412,8 @@ impl AudioTrack {
         self.senders.entry(peer).or_default().insert(transceiver);
     }
 
-    /// Removes transceiver from senders of this [`VideoTrack`].
+    /// Removes the specified [`RtpTransceiver`] from senders of this
+    /// [`VideoTrack`].
     pub fn remove_transceiver(
         &mut self,
         peer: &Arc<PeerConnection>,
@@ -1427,7 +1430,8 @@ impl AudioTrack {
         self.senders.remove(peer);
     }
 
-    /// Removes peer and its transceivers from senders of this [`VideoTrack`].
+    /// Removes the specified [`PeerConnection`] and its [`RtpTransceiver`]s
+    /// from senders of this [`VideoTrack`].
     pub fn remove_peer(&mut self, peer: &Arc<PeerConnection>) {
         self.senders.remove(peer);
     }
