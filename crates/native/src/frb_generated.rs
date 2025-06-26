@@ -1030,17 +1030,17 @@ impl SseDecode for crate::api::BundlePolicy {
     }
 }
 
-impl SseDecode for crate::api::CandidateType {
+impl SseDecode for crate::api::rtc_ice_candidate_stats::CandidateType {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
     ) -> Self {
         let mut inner = <i32>::sse_decode(deserializer);
         return match inner {
-            0 => crate::api::CandidateType::Host,
-            1 => crate::api::CandidateType::Srflx,
-            2 => crate::api::CandidateType::Prflx,
-            3 => crate::api::CandidateType::Relay,
+            0 => crate::api::rtc_ice_candidate_stats::CandidateType::Host,
+            1 => crate::api::rtc_ice_candidate_stats::CandidateType::Srflx,
+            2 => crate::api::rtc_ice_candidate_stats::CandidateType::Prflx,
+            3 => crate::api::rtc_ice_candidate_stats::CandidateType::Relay,
             _ => unreachable!("Invalid variant for CandidateType: {}", inner),
         };
     }
@@ -1121,7 +1121,7 @@ impl SseDecode for i64 {
     }
 }
 
-impl SseDecode for crate::api::IceCandidateStats {
+impl SseDecode for crate::api::rtc_ice_candidate_stats::IceCandidateStats {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
@@ -1131,12 +1131,14 @@ impl SseDecode for crate::api::IceCandidateStats {
         let mut var_port = <Option<i32>>::sse_decode(deserializer);
         let mut var_protocol = <crate::api::Protocol>::sse_decode(deserializer);
         let mut var_candidateType =
-            <crate::api::CandidateType>::sse_decode(deserializer);
+            <crate::api::rtc_ice_candidate_stats::CandidateType>::sse_decode(
+                deserializer,
+            );
         let mut var_priority = <Option<i32>>::sse_decode(deserializer);
         let mut var_url = <Option<String>>::sse_decode(deserializer);
         let mut var_relayProtocol =
             <Option<crate::api::Protocol>>::sse_decode(deserializer);
-        return crate::api::IceCandidateStats {
+        return crate::api::rtc_ice_candidate_stats::IceCandidateStats {
             transport_id: var_transportId,
             address: var_address,
             port: var_port,
@@ -1936,7 +1938,7 @@ impl SseDecode for crate::api::RtcConfiguration {
     }
 }
 
-impl SseDecode for crate::api::RtcIceCandidateStats {
+impl SseDecode for crate::api::rtc_ice_candidate_stats::RtcIceCandidateStats {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
@@ -1944,14 +1946,12 @@ impl SseDecode for crate::api::RtcIceCandidateStats {
         let mut tag_ = <i32>::sse_decode(deserializer);
         match tag_ {
             0 => {
-                let mut var_field0 =
-                    <crate::api::IceCandidateStats>::sse_decode(deserializer);
-                return crate::api::RtcIceCandidateStats::Local(var_field0);
+                let mut var_field0 = <crate::api::rtc_ice_candidate_stats::IceCandidateStats>::sse_decode(deserializer);
+                return crate::api::rtc_ice_candidate_stats::RtcIceCandidateStats::Local(var_field0);
             }
             1 => {
-                let mut var_field0 =
-                    <crate::api::IceCandidateStats>::sse_decode(deserializer);
-                return crate::api::RtcIceCandidateStats::Remote(var_field0);
+                let mut var_field0 = <crate::api::rtc_ice_candidate_stats::IceCandidateStats>::sse_decode(deserializer);
+                return crate::api::rtc_ice_candidate_stats::RtcIceCandidateStats::Remote(var_field0);
             }
             _ => {
                 unimplemented!("");
@@ -2254,10 +2254,7 @@ impl SseDecode for crate::api::RtcStatsType {
                 };
             }
             1 => {
-                let mut var_field0 =
-                    <crate::api::RtcIceCandidateStats>::sse_decode(
-                        deserializer,
-                    );
+                let mut var_field0 = <crate::api::rtc_ice_candidate_stats::RtcIceCandidateStats>::sse_decode(deserializer);
                 return crate::api::RtcStatsType::RtcIceCandidateStats(
                     var_field0,
                 );
@@ -3212,7 +3209,9 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::BundlePolicy>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::CandidateType {
+impl flutter_rust_bridge::IntoDart
+    for crate::api::rtc_ice_candidate_stats::CandidateType
+{
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         match self {
             Self::Host => 0.into_dart(),
@@ -3224,13 +3223,17 @@ impl flutter_rust_bridge::IntoDart for crate::api::CandidateType {
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::CandidateType
+    for crate::api::rtc_ice_candidate_stats::CandidateType
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::CandidateType>
-    for crate::api::CandidateType
+impl
+    flutter_rust_bridge::IntoIntoDart<
+        crate::api::rtc_ice_candidate_stats::CandidateType,
+    > for crate::api::rtc_ice_candidate_stats::CandidateType
 {
-    fn into_into_dart(self) -> crate::api::CandidateType {
+    fn into_into_dart(
+        self,
+    ) -> crate::api::rtc_ice_candidate_stats::CandidateType {
         self
     }
 }
@@ -3289,7 +3292,9 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::GetMediaResult>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::IceCandidateStats {
+impl flutter_rust_bridge::IntoDart
+    for crate::api::rtc_ice_candidate_stats::IceCandidateStats
+{
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
             self.transport_id.into_into_dart().into_dart(),
@@ -3305,13 +3310,17 @@ impl flutter_rust_bridge::IntoDart for crate::api::IceCandidateStats {
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::IceCandidateStats
+    for crate::api::rtc_ice_candidate_stats::IceCandidateStats
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::IceCandidateStats>
-    for crate::api::IceCandidateStats
+impl
+    flutter_rust_bridge::IntoIntoDart<
+        crate::api::rtc_ice_candidate_stats::IceCandidateStats,
+    > for crate::api::rtc_ice_candidate_stats::IceCandidateStats
 {
-    fn into_into_dart(self) -> crate::api::IceCandidateStats {
+    fn into_into_dart(
+        self,
+    ) -> crate::api::rtc_ice_candidate_stats::IceCandidateStats {
         self
     }
 }
@@ -3703,29 +3712,29 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::RtcConfiguration>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::RtcIceCandidateStats {
+impl flutter_rust_bridge::IntoDart
+    for crate::api::rtc_ice_candidate_stats::RtcIceCandidateStats
+{
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-        match self {
-            crate::api::RtcIceCandidateStats::Local(field0) => {
-                [0.into_dart(), field0.into_into_dart().into_dart()].into_dart()
-            }
-            crate::api::RtcIceCandidateStats::Remote(field0) => {
-                [1.into_dart(), field0.into_into_dart().into_dart()].into_dart()
-            }
-            _ => {
-                unimplemented!("");
-            }
-        }
+        match self {crate::api::rtc_ice_candidate_stats::RtcIceCandidateStats::Local(field0) => { [0.into_dart(),
+field0.into_into_dart().into_dart()].into_dart() }
+crate::api::rtc_ice_candidate_stats::RtcIceCandidateStats::Remote(field0) => { [1.into_dart(),
+field0.into_into_dart().into_dart()].into_dart() }
+ _ => { unimplemented!(""); }}
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::RtcIceCandidateStats
+    for crate::api::rtc_ice_candidate_stats::RtcIceCandidateStats
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::RtcIceCandidateStats>
-    for crate::api::RtcIceCandidateStats
+impl
+    flutter_rust_bridge::IntoIntoDart<
+        crate::api::rtc_ice_candidate_stats::RtcIceCandidateStats,
+    > for crate::api::rtc_ice_candidate_stats::RtcIceCandidateStats
 {
-    fn into_into_dart(self) -> crate::api::RtcIceCandidateStats {
+    fn into_into_dart(
+        self,
+    ) -> crate::api::rtc_ice_candidate_stats::RtcIceCandidateStats {
         self
     }
 }
@@ -4855,7 +4864,7 @@ impl SseEncode for crate::api::BundlePolicy {
     }
 }
 
-impl SseEncode for crate::api::CandidateType {
+impl SseEncode for crate::api::rtc_ice_candidate_stats::CandidateType {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
@@ -4863,10 +4872,10 @@ impl SseEncode for crate::api::CandidateType {
     ) {
         <i32>::sse_encode(
             match self {
-                crate::api::CandidateType::Host => 0,
-                crate::api::CandidateType::Srflx => 1,
-                crate::api::CandidateType::Prflx => 2,
-                crate::api::CandidateType::Relay => 3,
+                crate::api::rtc_ice_candidate_stats::CandidateType::Host => 0,
+                crate::api::rtc_ice_candidate_stats::CandidateType::Srflx => 1,
+                crate::api::rtc_ice_candidate_stats::CandidateType::Prflx => 2,
+                crate::api::rtc_ice_candidate_stats::CandidateType::Relay => 3,
                 _ => {
                     unimplemented!("");
                 }
@@ -4952,7 +4961,7 @@ impl SseEncode for i64 {
     }
 }
 
-impl SseEncode for crate::api::IceCandidateStats {
+impl SseEncode for crate::api::rtc_ice_candidate_stats::IceCandidateStats {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
@@ -4962,7 +4971,7 @@ impl SseEncode for crate::api::IceCandidateStats {
         <Option<String>>::sse_encode(self.address, serializer);
         <Option<i32>>::sse_encode(self.port, serializer);
         <crate::api::Protocol>::sse_encode(self.protocol, serializer);
-        <crate::api::CandidateType>::sse_encode(
+        <crate::api::rtc_ice_candidate_stats::CandidateType>::sse_encode(
             self.candidate_type,
             serializer,
         );
@@ -5742,25 +5751,17 @@ impl SseEncode for crate::api::RtcConfiguration {
     }
 }
 
-impl SseEncode for crate::api::RtcIceCandidateStats {
+impl SseEncode for crate::api::rtc_ice_candidate_stats::RtcIceCandidateStats {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
         serializer: &mut flutter_rust_bridge::for_generated::SseSerializer,
     ) {
-        match self {
-            crate::api::RtcIceCandidateStats::Local(field0) => {
-                <i32>::sse_encode(0, serializer);
-                <crate::api::IceCandidateStats>::sse_encode(field0, serializer);
-            }
-            crate::api::RtcIceCandidateStats::Remote(field0) => {
-                <i32>::sse_encode(1, serializer);
-                <crate::api::IceCandidateStats>::sse_encode(field0, serializer);
-            }
-            _ => {
-                unimplemented!("");
-            }
-        }
+        match self {crate::api::rtc_ice_candidate_stats::RtcIceCandidateStats::Local(field0) => { <i32>::sse_encode(0, serializer); <crate::api::rtc_ice_candidate_stats::IceCandidateStats>::sse_encode(field0, serializer);
+ }
+crate::api::rtc_ice_candidate_stats::RtcIceCandidateStats::Remote(field0) => { <i32>::sse_encode(1, serializer); <crate::api::rtc_ice_candidate_stats::IceCandidateStats>::sse_encode(field0, serializer);
+ }
+ _ => { unimplemented!(""); }}
     }
 }
 
@@ -6021,9 +6022,7 @@ impl SseEncode for crate::api::RtcStatsType {
             }
             crate::api::RtcStatsType::RtcIceCandidateStats(field0) => {
                 <i32>::sse_encode(1, serializer);
-                <crate::api::RtcIceCandidateStats>::sse_encode(
-                    field0, serializer,
-                );
+                <crate::api::rtc_ice_candidate_stats::RtcIceCandidateStats>::sse_encode(field0, serializer);
             }
             crate::api::RtcStatsType::RtcOutboundRtpStreamStats {
                 track_id,
