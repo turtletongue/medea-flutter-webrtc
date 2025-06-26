@@ -14,7 +14,7 @@ import 'renderer.dart';
 part 'api.freezed.dart';
 
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `TrackKind`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `hash`, `hash`, `hash`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `hash`, `hash`, `hash`
 
 /// Returns all [`VideoCodecInfo`]s of the supported video encoders.
 Future<List<VideoCodecInfo>> videoEncoders() =>
@@ -191,18 +191,6 @@ Future<RtcRtpSendParameters> senderGetParameters({
   required ArcRtpTransceiver transceiver,
 }) =>
     RustLib.instance.api.crateApiSenderGetParameters(transceiver: transceiver);
-
-/// Returns the capabilities of an [RTP] sender of the provided [`MediaType`].
-///
-/// [RTP]: https://en.wikipedia.org/wiki/Real-time_Transport_Protocol
-Future<RtpCapabilities> getRtpSenderCapabilities({required MediaType kind}) =>
-    RustLib.instance.api.crateApiGetRtpSenderCapabilities(kind: kind);
-
-/// Returns the capabilities of an [RTP] receiver of the provided [`MediaType`].
-///
-/// [RTP]: https://en.wikipedia.org/wiki/Real-time_Transport_Protocol
-Future<RtpCapabilities> getRtpReceiverCapabilities({required MediaType kind}) =>
-    RustLib.instance.api.crateApiGetRtpReceiverCapabilities(kind: kind);
 
 /// Sets [`RtpParameters`] into the provided [`RtpTransceiver`]'s `sender`.
 Future<void> senderSetParameters({
@@ -1916,32 +1904,6 @@ enum RtcpFeedbackType {
 
   /// Transport wide congestion control.
   transportCc,
-}
-
-/// Representation of the static capabilities of an endpoint.
-///
-/// Applications can use these capabilities to construct [`RtpParameters`].
-class RtpCapabilities {
-  /// Supported codecs.
-  final List<RtpCodecCapability> codecs;
-
-  /// Supported [RTP] header extensions.
-  ///
-  /// [RTP]: https://en.wikipedia.org/wiki/Real-time_Transport_Protocol
-  final List<RtpHeaderExtensionCapability> headerExtensions;
-
-  const RtpCapabilities({required this.codecs, required this.headerExtensions});
-
-  @override
-  int get hashCode => codecs.hashCode ^ headerExtensions.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is RtpCapabilities &&
-          runtimeType == other.runtimeType &&
-          codecs == other.codecs &&
-          headerExtensions == other.headerExtensions;
 }
 
 /// Representation of static capabilities of an endpoint's implementation of a

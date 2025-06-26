@@ -12,6 +12,7 @@ import 'api.dart';
 import 'api/media_device_info.dart';
 import 'api/media_display_info.dart';
 import 'api/rtc_ice_candidate_stats.dart';
+import 'api/rtp_capabilities.dart';
 import 'frb_generated.dart';
 import 'lib.dart';
 import 'renderer.dart';
@@ -70,7 +71,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.10.0';
 
   @override
-  int get rustContentHash => -1008398479;
+  int get rustContentHash => -902908128;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -157,11 +158,11 @@ abstract class RustLibApi extends BaseApi {
     required ArcPeerConnection peer,
   });
 
-  Future<RtpCapabilities> crateApiGetRtpReceiverCapabilities({
+  Future<RtpCapabilities> crateApiRtpCapabilitiesGetRtpReceiverCapabilities({
     required MediaType kind,
   });
 
-  Future<RtpCapabilities> crateApiGetRtpSenderCapabilities({
+  Future<RtpCapabilities> crateApiRtpCapabilitiesGetRtpSenderCapabilities({
     required MediaType kind,
   });
 
@@ -910,7 +911,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "get_peer_stats", argNames: ["peer"]);
 
   @override
-  Future<RtpCapabilities> crateApiGetRtpReceiverCapabilities({
+  Future<RtpCapabilities> crateApiRtpCapabilitiesGetRtpReceiverCapabilities({
     required MediaType kind,
   }) {
     return handler.executeNormal(
@@ -929,21 +930,22 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_rtp_capabilities,
           decodeErrorData: null,
         ),
-        constMeta: kCrateApiGetRtpReceiverCapabilitiesConstMeta,
+        constMeta: kCrateApiRtpCapabilitiesGetRtpReceiverCapabilitiesConstMeta,
         argValues: [kind],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiGetRtpReceiverCapabilitiesConstMeta =>
+  TaskConstMeta
+  get kCrateApiRtpCapabilitiesGetRtpReceiverCapabilitiesConstMeta =>
       const TaskConstMeta(
         debugName: "get_rtp_receiver_capabilities",
         argNames: ["kind"],
       );
 
   @override
-  Future<RtpCapabilities> crateApiGetRtpSenderCapabilities({
+  Future<RtpCapabilities> crateApiRtpCapabilitiesGetRtpSenderCapabilities({
     required MediaType kind,
   }) {
     return handler.executeNormal(
@@ -962,14 +964,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_rtp_capabilities,
           decodeErrorData: null,
         ),
-        constMeta: kCrateApiGetRtpSenderCapabilitiesConstMeta,
+        constMeta: kCrateApiRtpCapabilitiesGetRtpSenderCapabilitiesConstMeta,
         argValues: [kind],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiGetRtpSenderCapabilitiesConstMeta =>
+  TaskConstMeta get kCrateApiRtpCapabilitiesGetRtpSenderCapabilitiesConstMeta =>
       const TaskConstMeta(
         debugName: "get_rtp_sender_capabilities",
         argNames: ["kind"],
