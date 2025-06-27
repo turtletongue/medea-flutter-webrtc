@@ -13,7 +13,6 @@ pub use self::{
     media_track_state::TrackState, media_type::MediaType,
     track_event::TrackEvent,
 };
-
 #[cfg(doc)]
 use crate::PeerConnection;
 use crate::{
