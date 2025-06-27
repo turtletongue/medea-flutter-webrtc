@@ -13,6 +13,7 @@ import 'api.dart';
 import 'api/media_device_info.dart';
 import 'api/media_display_info.dart';
 import 'api/rtc_ice_candidate_stats.dart';
+import 'api/rtc_session_description.dart';
 import 'api/rtc_stats.dart';
 import 'api/rtc_stats/ice_role.dart';
 import 'api/rtc_stats/rtc_inbound_rtp_stream_media_type.dart';

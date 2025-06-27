@@ -42,7 +42,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.10.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -835450150;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 2086621418;
 
 // Section: executor
 
@@ -575,7 +575,7 @@ let api_codecs = <Vec<crate::api::rtp_codec_capability::RtpCodecCapability>>::ss
                     })())
                 } })
 }
-fn wire__crate__api__set_local_description_impl(
+fn wire__crate__api__rtc_session_description__set_local_description_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -585,10 +585,10 @@ fn wire__crate__api__set_local_description_impl(
             let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
             let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_peer = <RustOpaqueMoi<Arc < PeerConnection >>>::sse_decode(&mut deserializer);
-let api_kind = <crate::api::SdpType>::sse_decode(&mut deserializer);
+let api_kind = <crate::api::rtc_session_description::SdpType>::sse_decode(&mut deserializer);
 let api_sdp = <String>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
                     transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>((move ||  {
-                         let output_ok = crate::api::set_local_description(api_peer, api_kind, api_sdp)?;   Ok(output_ok)
+                         let output_ok = crate::api::rtc_session_description::set_local_description(api_peer, api_kind, api_sdp)?;   Ok(output_ok)
                     })())
                 } })
 }
@@ -622,7 +622,7 @@ fn wire__crate__api__set_on_device_changed_impl(
                     })())
                 } })
 }
-fn wire__crate__api__set_remote_description_impl(
+fn wire__crate__api__rtc_session_description__set_remote_description_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -632,10 +632,10 @@ fn wire__crate__api__set_remote_description_impl(
             let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
             let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_peer = <RustOpaqueMoi<Arc < PeerConnection >>>::sse_decode(&mut deserializer);
-let api_kind = <crate::api::SdpType>::sse_decode(&mut deserializer);
+let api_kind = <crate::api::rtc_session_description::SdpType>::sse_decode(&mut deserializer);
 let api_sdp = <String>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
                     transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>((move ||  {
-                         let output_ok = crate::api::set_remote_description(api_peer, api_kind, api_sdp)?;   Ok(output_ok)
+                         let output_ok = crate::api::rtc_session_description::set_remote_description(api_peer, api_kind, api_sdp)?;   Ok(output_ok)
                     })())
                 } })
 }
@@ -2093,14 +2093,17 @@ impl SseDecode for crate::api::RtcRtpTransceiver {
     }
 }
 
-impl SseDecode for crate::api::RtcSessionDescription {
+impl SseDecode for crate::api::rtc_session_description::RtcSessionDescription {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
     ) -> Self {
         let mut var_sdp = <String>::sse_decode(deserializer);
-        let mut var_kind = <crate::api::SdpType>::sse_decode(deserializer);
-        return crate::api::RtcSessionDescription {
+        let mut var_kind =
+            <crate::api::rtc_session_description::SdpType>::sse_decode(
+                deserializer,
+            );
+        return crate::api::rtc_session_description::RtcSessionDescription {
             sdp: var_sdp,
             kind: var_kind,
         };
@@ -2457,17 +2460,17 @@ impl SseDecode for crate::api::ScalabilityMode {
     }
 }
 
-impl SseDecode for crate::api::SdpType {
+impl SseDecode for crate::api::rtc_session_description::SdpType {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
     ) -> Self {
         let mut inner = <i32>::sse_decode(deserializer);
         return match inner {
-            0 => crate::api::SdpType::Offer,
-            1 => crate::api::SdpType::PrAnswer,
-            2 => crate::api::SdpType::Answer,
-            3 => crate::api::SdpType::Rollback,
+            0 => crate::api::rtc_session_description::SdpType::Offer,
+            1 => crate::api::rtc_session_description::SdpType::PrAnswer,
+            2 => crate::api::rtc_session_description::SdpType::Answer,
+            3 => crate::api::rtc_session_description::SdpType::Rollback,
             _ => unreachable!("Invalid variant for SdpType: {}", inner),
         };
     }
@@ -2698,10 +2701,10 @@ fn pde_ffi_dispatcher_primary_impl(
 31 => wire__crate__api__set_audio_level_observer_enabled_impl(port, ptr, rust_vec_len, data_len),
 32 => wire__crate__api__set_audio_playout_device_impl(port, ptr, rust_vec_len, data_len),
 33 => wire__crate__api__rtp_codec_capability__set_codec_preferences_impl(port, ptr, rust_vec_len, data_len),
-34 => wire__crate__api__set_local_description_impl(port, ptr, rust_vec_len, data_len),
+34 => wire__crate__api__rtc_session_description__set_local_description_impl(port, ptr, rust_vec_len, data_len),
 35 => wire__crate__api__set_microphone_volume_impl(port, ptr, rust_vec_len, data_len),
 36 => wire__crate__api__set_on_device_changed_impl(port, ptr, rust_vec_len, data_len),
-37 => wire__crate__api__set_remote_description_impl(port, ptr, rust_vec_len, data_len),
+37 => wire__crate__api__rtc_session_description__set_remote_description_impl(port, ptr, rust_vec_len, data_len),
 38 => wire__crate__api__set_track_enabled_impl(port, ptr, rust_vec_len, data_len),
 39 => wire__crate__api__set_transceiver_direction_impl(port, ptr, rust_vec_len, data_len),
 40 => wire__crate__api__set_transceiver_recv_impl(port, ptr, rust_vec_len, data_len),
@@ -3534,7 +3537,9 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::RtcRtpTransceiver>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::RtcSessionDescription {
+impl flutter_rust_bridge::IntoDart
+    for crate::api::rtc_session_description::RtcSessionDescription
+{
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
             self.sdp.into_into_dart().into_dart(),
@@ -3544,13 +3549,17 @@ impl flutter_rust_bridge::IntoDart for crate::api::RtcSessionDescription {
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::RtcSessionDescription
+    for crate::api::rtc_session_description::RtcSessionDescription
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::RtcSessionDescription>
-    for crate::api::RtcSessionDescription
+impl
+    flutter_rust_bridge::IntoIntoDart<
+        crate::api::rtc_session_description::RtcSessionDescription,
+    > for crate::api::rtc_session_description::RtcSessionDescription
 {
-    fn into_into_dart(self) -> crate::api::RtcSessionDescription {
+    fn into_into_dart(
+        self,
+    ) -> crate::api::rtc_session_description::RtcSessionDescription {
         self
     }
 }
@@ -3921,7 +3930,9 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::ScalabilityMode>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::SdpType {
+impl flutter_rust_bridge::IntoDart
+    for crate::api::rtc_session_description::SdpType
+{
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         match self {
             Self::Offer => 0.into_dart(),
@@ -3933,13 +3944,15 @@ impl flutter_rust_bridge::IntoDart for crate::api::SdpType {
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::SdpType
+    for crate::api::rtc_session_description::SdpType
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::SdpType>
-    for crate::api::SdpType
+impl
+    flutter_rust_bridge::IntoIntoDart<
+        crate::api::rtc_session_description::SdpType,
+    > for crate::api::rtc_session_description::SdpType
 {
-    fn into_into_dart(self) -> crate::api::SdpType {
+    fn into_into_dart(self) -> crate::api::rtc_session_description::SdpType {
         self
     }
 }
@@ -5336,14 +5349,16 @@ impl SseEncode for crate::api::RtcRtpTransceiver {
     }
 }
 
-impl SseEncode for crate::api::RtcSessionDescription {
+impl SseEncode for crate::api::rtc_session_description::RtcSessionDescription {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
         serializer: &mut flutter_rust_bridge::for_generated::SseSerializer,
     ) {
         <String>::sse_encode(self.sdp, serializer);
-        <crate::api::SdpType>::sse_encode(self.kind, serializer);
+        <crate::api::rtc_session_description::SdpType>::sse_encode(
+            self.kind, serializer,
+        );
     }
 }
 
@@ -5630,7 +5645,7 @@ impl SseEncode for crate::api::ScalabilityMode {
     }
 }
 
-impl SseEncode for crate::api::SdpType {
+impl SseEncode for crate::api::rtc_session_description::SdpType {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
@@ -5638,10 +5653,10 @@ impl SseEncode for crate::api::SdpType {
     ) {
         <i32>::sse_encode(
             match self {
-                crate::api::SdpType::Offer => 0,
-                crate::api::SdpType::PrAnswer => 1,
-                crate::api::SdpType::Answer => 2,
-                crate::api::SdpType::Rollback => 3,
+                crate::api::rtc_session_description::SdpType::Offer => 0,
+                crate::api::rtc_session_description::SdpType::PrAnswer => 1,
+                crate::api::rtc_session_description::SdpType::Answer => 2,
+                crate::api::rtc_session_description::SdpType::Rollback => 3,
                 _ => {
                     unimplemented!("");
                 }
