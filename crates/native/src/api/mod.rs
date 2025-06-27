@@ -5,6 +5,7 @@ pub mod media_display_info;
 pub mod rtc_ice_candidate_stats;
 pub mod rtp_capabilities;
 pub mod rtp_codec_capability;
+pub mod rtp_header_extension_capability;
 
 use std::{
     sync::{
@@ -29,6 +30,7 @@ pub use self::{
         get_rtp_sender_capabilities,
     },
     rtp_codec_capability::{RtpCodecCapability, set_codec_preferences},
+    rtp_header_extension_capability::RtpHeaderExtensionCapability,
 };
 // Re-exporting since it is used in the generated code.
 pub use crate::{
@@ -737,41 +739,6 @@ impl From<sys::ScalabilityMode> for ScalabilityMode {
             sys::ScalabilityMode::kS3T3 => Self::S3T3,
             sys::ScalabilityMode::kS3T3h => Self::S3T3h,
             _ => unreachable!(),
-        }
-    }
-}
-
-/// Representation of capabilities/preferences of an implementation for a header
-/// extension of [`RtpCapabilities`].
-#[derive(Debug)]
-pub struct RtpHeaderExtensionCapability {
-    /// [URI] of this extension, as defined in [RFC 8285].
-    ///
-    /// [RFC 8285]: https://tools.ietf.org/html/rfc8285
-    /// [URI]: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
-    pub uri: String,
-
-    /// Preferred value of ID that goes in the packet.
-    pub preferred_id: Option<i32>,
-
-    /// If [`true`], it's preferred that the value in the header is encrypted.
-    pub preferred_encrypted: bool,
-
-    /// Direction of the extension.
-    ///
-    /// [`RtpTransceiverDirection::Stopped`] value is only used with
-    /// `RtpTransceiverInterface::SetHeaderExtensionsToNegotiate()` and
-    /// `SetHeaderExtensionsToNegotiate()`.
-    pub direction: RtpTransceiverDirection,
-}
-
-impl From<sys::RtpHeaderExtensionCapability> for RtpHeaderExtensionCapability {
-    fn from(value: sys::RtpHeaderExtensionCapability) -> Self {
-        Self {
-            uri: value.uri(),
-            preferred_id: value.preferred_id(),
-            preferred_encrypted: value.preferred_encrypted(),
-            direction: value.direction().into(),
         }
     }
 }
