@@ -25,7 +25,10 @@ use flutter_rust_bridge::for_generated::FLUTTER_RUST_BRIDGE_RUNTIME_VERSION;
 use libwebrtc_sys as sys;
 
 pub use self::{
-    audio_processing_config::{AudioProcessingConfig, NoiseSuppressionLevel},
+    audio_processing_config::{
+        AudioProcessingConfig, NoiseSuppressionLevel,
+        get_audio_processing_config,
+    },
     media_device_info::{MediaDeviceInfo, MediaDeviceKind, enumerate_devices},
     media_display_info::{MediaDisplayInfo, enumerate_displays},
     media_stream_constraints::{
@@ -1531,14 +1534,6 @@ pub fn update_audio_processing(
     conf: AudioProcessingConstraints,
 ) -> anyhow::Result<()> {
     WEBRTC.lock().unwrap().apply_audio_processing_config(track_id, &conf)
-}
-
-/// Returns the current [`AudioProcessingConfig`] for the specified local audio
-/// track.
-pub fn get_audio_processing_config(
-    track_id: String,
-) -> anyhow::Result<AudioProcessingConfig> {
-    WEBRTC.lock().unwrap().get_audio_processing_config(track_id)
 }
 
 /// Sets the provided `OnDeviceChangeCallback` as the callback to be called

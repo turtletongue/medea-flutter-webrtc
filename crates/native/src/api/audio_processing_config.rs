@@ -4,6 +4,7 @@ use libwebrtc_sys as sys;
 
 #[cfg(doc)]
 use crate::api::MediaStreamTrack;
+use crate::api::WEBRTC;
 
 /// Audio processing configuration for some local audio [`MediaStreamTrack`].
 #[expect(clippy::struct_excessive_bools, reason = "that's ok")]
@@ -66,4 +67,12 @@ impl From<sys::NoiseSuppressionLevel> for NoiseSuppressionLevel {
             _ => unreachable!(),
         }
     }
+}
+
+/// Returns the current [`AudioProcessingConfig`] for the specified local audio
+/// track.
+pub fn get_audio_processing_config(
+    track_id: String,
+) -> anyhow::Result<AudioProcessingConfig> {
+    WEBRTC.lock().unwrap().get_audio_processing_config(track_id)
 }
