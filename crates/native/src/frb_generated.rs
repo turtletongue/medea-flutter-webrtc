@@ -42,7 +42,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.10.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1351990350;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 614362317;
 
 // Section: executor
 
@@ -281,7 +281,7 @@ fn wire__crate__api__media_display_info__enumerate_displays_impl(
                     })())
                 } })
 }
-fn wire__crate__api__get_audio_processing_config_impl(
+fn wire__crate__api__audio_processing_config__get_audio_processing_config_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -292,7 +292,7 @@ fn wire__crate__api__get_audio_processing_config_impl(
             let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_track_id = <String>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
                     transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>((move ||  {
-                         let output_ok = crate::api::get_audio_processing_config(api_track_id)?;   Ok(output_ok)
+                         let output_ok = crate::api::audio_processing_config::get_audio_processing_config(api_track_id)?;   Ok(output_ok)
                     })())
                 } })
 }
@@ -2641,7 +2641,7 @@ fn pde_ffi_dispatcher_primary_impl(
 12 => wire__crate__api__enable_fake_media_impl(port, ptr, rust_vec_len, data_len),
 13 => wire__crate__api__media_device_info__enumerate_devices_impl(port, ptr, rust_vec_len, data_len),
 14 => wire__crate__api__media_display_info__enumerate_displays_impl(port, ptr, rust_vec_len, data_len),
-15 => wire__crate__api__get_audio_processing_config_impl(port, ptr, rust_vec_len, data_len),
+15 => wire__crate__api__audio_processing_config__get_audio_processing_config_impl(port, ptr, rust_vec_len, data_len),
 16 => wire__crate__api__get_media_impl(port, ptr, rust_vec_len, data_len),
 17 => wire__crate__api__rtc_stats__get_peer_stats_impl(port, ptr, rust_vec_len, data_len),
 18 => wire__crate__api__rtp_capabilities__get_rtp_receiver_capabilities_impl(port, ptr, rust_vec_len, data_len),

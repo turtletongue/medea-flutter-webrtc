@@ -85,7 +85,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.10.0';
 
   @override
-  int get rustContentHash => 1351990350;
+  int get rustContentHash => 614362317;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -160,7 +160,8 @@ abstract class RustLibApi extends BaseApi {
 
   Future<List<MediaDisplayInfo>> crateApiMediaDisplayInfoEnumerateDisplays();
 
-  Future<AudioProcessingConfig> crateApiGetAudioProcessingConfig({
+  Future<AudioProcessingConfig>
+  crateApiAudioProcessingConfigGetAudioProcessingConfig({
     required String trackId,
   });
 
@@ -831,7 +832,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "enumerate_displays", argNames: []);
 
   @override
-  Future<AudioProcessingConfig> crateApiGetAudioProcessingConfig({
+  Future<AudioProcessingConfig>
+  crateApiAudioProcessingConfigGetAudioProcessingConfig({
     required String trackId,
   }) {
     return handler.executeNormal(
@@ -850,14 +852,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_audio_processing_config,
           decodeErrorData: sse_decode_AnyhowException,
         ),
-        constMeta: kCrateApiGetAudioProcessingConfigConstMeta,
+        constMeta:
+            kCrateApiAudioProcessingConfigGetAudioProcessingConfigConstMeta,
         argValues: [trackId],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiGetAudioProcessingConfigConstMeta =>
+  TaskConstMeta
+  get kCrateApiAudioProcessingConfigGetAudioProcessingConfigConstMeta =>
       const TaskConstMeta(
         debugName: "get_audio_processing_config",
         argNames: ["trackId"],

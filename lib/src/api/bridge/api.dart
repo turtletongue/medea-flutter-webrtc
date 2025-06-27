@@ -332,12 +332,6 @@ Future<void> updateAudioProcessing({
   conf: conf,
 );
 
-/// Returns the current [`AudioProcessingConfig`] for the specified local audio
-/// track.
-Future<AudioProcessingConfig> getAudioProcessingConfig({
-  required String trackId,
-}) => RustLib.instance.api.crateApiGetAudioProcessingConfig(trackId: trackId);
-
 /// Sets the provided `OnDeviceChangeCallback` as the callback to be called
 /// whenever a set of available media devices changes.
 ///
