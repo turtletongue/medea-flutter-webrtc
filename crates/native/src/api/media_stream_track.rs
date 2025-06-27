@@ -2,15 +2,16 @@
 //!
 //! [1]: https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack
 
-mod media_type;
-mod track_event;
-mod track_state;
+pub mod media_track_state;
+pub mod media_type;
+pub mod track_event;
 
 #[cfg(doc)]
 use libwebrtc_sys as sys;
 
 pub use self::{
-    media_type::MediaType, track_event::TrackEvent, track_state::TrackState,
+    media_track_state::TrackState, media_type::MediaType,
+    track_event::TrackEvent,
 };
 
 #[cfg(doc)]
