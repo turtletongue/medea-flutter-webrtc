@@ -1,6 +1,9 @@
 export 'api.dart';
 export 'api/media_device_info.dart';
 export 'api/media_display_info.dart';
+export 'api/media_stream_constraints.dart';
+export 'api/media_stream_constraints/audio_constraints.dart';
+export 'api/media_stream_constraints/video_constraints.dart';
 export 'api/rtc_ice_candidate_stats.dart';
 export 'api/rtc_session_description.dart';
 export 'api/rtc_stats.dart';

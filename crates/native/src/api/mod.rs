@@ -2,6 +2,7 @@
 
 pub mod media_device_info;
 pub mod media_display_info;
+mod media_stream_constraints;
 pub mod rtc_ice_candidate_stats;
 pub mod rtc_session_description;
 pub mod rtc_stats;
@@ -24,6 +25,9 @@ use libwebrtc_sys as sys;
 pub use self::{
     media_device_info::{MediaDeviceInfo, MediaDeviceKind, enumerate_devices},
     media_display_info::{MediaDisplayInfo, enumerate_displays},
+    media_stream_constraints::{
+        AudioConstraints, MediaStreamConstraints, VideoConstraints,
+    },
     rtc_ice_candidate_stats::{
         CandidateType, IceCandidateStats, RtcIceCandidateStats,
     },
@@ -862,80 +866,6 @@ impl From<sys::MediaType> for MediaType {
             _ => unreachable!(),
         }
     }
-}
-
-/// [MediaStreamConstraints], used to instruct what sort of
-/// [`MediaStreamTrack`]s to return by the [`Webrtc::get_media()`].
-///
-/// [1]: https://w3.org/TR/mediacapture-streams#dom-mediastreamconstraints
-#[derive(Debug)]
-pub struct MediaStreamConstraints {
-    /// Specifies the nature and settings of the audio [`MediaStreamTrack`].
-    pub audio: Option<AudioConstraints>,
-
-    /// Specifies the nature and settings of the video [`MediaStreamTrack`].
-    pub video: Option<VideoConstraints>,
-}
-
-/// Nature and settings of the video [`MediaStreamTrack`] returned by
-/// [`Webrtc::get_media()`].
-#[derive(Debug)]
-pub struct VideoConstraints {
-    /// Identifier of the device generating the content of the
-    /// [`MediaStreamTrack`].
-    ///
-    /// The first device will be chosen if an empty [`String`] is provided.
-    pub device_id: Option<String>,
-
-    /// Width in pixels.
-    pub width: u32,
-
-    /// Height in pixels.
-    pub height: u32,
-
-    /// Exact frame rate (frames per second).
-    pub frame_rate: u32,
-
-    /// Indicator whether the request video track should be acquired via screen
-    /// capturing.
-    pub is_display: bool,
-}
-
-/// Nature and settings of the audio [`MediaStreamTrack`] returned by
-/// [`Webrtc::get_media()`].
-#[derive(Debug)]
-pub struct AudioConstraints {
-    /// Identifier of the device generating the content of the
-    /// [`MediaStreamTrack`].
-    ///
-    /// First device will be chosen if an empty [`String`] is provided.
-    pub device_id: Option<String>,
-
-    /// Audio processing configuration constraints of the [`MediaStreamTrack`].
-    pub processing: AudioProcessingConstraints,
-}
-
-/// Constraints of an [`AudioProcessingConfig`].
-#[derive(Debug, Default)]
-pub struct AudioProcessingConstraints {
-    /// Indicator whether the audio volume level should be automatically tuned
-    /// to maintain a steady overall volume level.
-    pub auto_gain_control: Option<bool>,
-
-    /// Indicator whether a high-pass filter should be enabled to eliminate
-    /// low-frequency noise.
-    pub high_pass_filter: Option<bool>,
-
-    /// Indicator whether noise suppression should be enabled to reduce
-    /// background sounds.
-    pub noise_suppression: Option<bool>,
-
-    /// Level of aggressiveness for noise suppression.
-    pub noise_suppression_level: Option<NoiseSuppressionLevel>,
-
-    /// Indicator whether echo cancellation should be enabled to prevent
-    /// feedback.
-    pub echo_cancellation: Option<bool>,
 }
 
 /// Audio processing configuration for some local audio [`MediaStreamTrack`].
