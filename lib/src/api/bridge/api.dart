@@ -3,18 +3,16 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
-import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
-import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
-
 import 'api/rtc_ice_candidate_stats.dart';
 import 'frb_generated.dart';
 import 'lib.dart';
+import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
 import 'renderer.dart';
-
 part 'api.freezed.dart';
 
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `TrackKind`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `hash`, `hash`, `hash`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `hash`, `hash`, `hash`
 
 /// Returns all [`VideoCodecInfo`]s of the supported video encoders.
 Future<List<VideoCodecInfo>> videoEncoders() =>
@@ -160,16 +158,6 @@ Future<List<RtcStats>> getPeerStats({required ArcPeerConnection peer}) =>
 /// its receiver to no longer receive.
 Future<void> stopTransceiver({required ArcRtpTransceiver transceiver}) =>
     RustLib.instance.api.crateApiStopTransceiver(transceiver: transceiver);
-
-/// Changes the preferred [`RtpTransceiver`] codecs to the provided
-/// [`Vec`]`<`[`RtpCodecCapability`]`>`.
-Future<void> setCodecPreferences({
-  required ArcRtpTransceiver transceiver,
-  required List<RtpCodecCapability> codecs,
-}) => RustLib.instance.api.crateApiSetCodecPreferences(
-  transceiver: transceiver,
-  codecs: codecs,
-);
 
 /// Replaces the specified [`AudioTrack`] (or [`VideoTrack`]) on the
 /// [`sys::RtpTransceiverInterface`]'s `sender`.
@@ -1904,96 +1892,6 @@ enum RtcpFeedbackType {
 
   /// Transport wide congestion control.
   transportCc,
-}
-
-/// Representation of static capabilities of an endpoint's implementation of a
-/// codec.
-class RtpCodecCapability {
-  /// Default payload type for the codec.
-  ///
-  /// Mainly needed for codecs that have statically assigned payload types.
-  final int? preferredPayloadType;
-
-  /// List of [`ScalabilityMode`]s supported by the video codec.
-  final List<ScalabilityMode> scalabilityModes;
-
-  /// Built [MIME "type/subtype"][0] string from `name` and `kind`.
-  ///
-  /// [0]: https://en.wikipedia.org/wiki/Media_type
-  final String mimeType;
-
-  /// Used to identify the codec. Equivalent to [MIME subtype][0].
-  ///
-  /// [0]: https://en.wikipedia.org/wiki/Media_type#Subtypes
-  final String name;
-
-  /// [`MediaType`] of this codec. Equivalent to [MIME] top-level type.
-  ///
-  /// [MIME]: https://en.wikipedia.org/wiki/Media_type
-  final MediaType kind;
-
-  /// If [`None`], the implementation default is used.
-  final int? clockRate;
-
-  /// Number of audio channels used.
-  ///
-  /// [`None`] for video codecs.
-  ///
-  /// If [`None`] for audio, the implementation default is used.
-  final int? numChannels;
-
-  /// Codec-specific parameters that must be signaled to the remote party.
-  ///
-  /// Corresponds to `a=fmtp` parameters in [SDP].
-  ///
-  /// Contrary to ORTC, these parameters are named using all lowercase
-  /// strings. This helps make the mapping to [SDP] simpler, if an application
-  /// is using [SDP]. Boolean values are represented by the string "1".
-  ///
-  /// [SDP]: https://en.wikipedia.org/wiki/Session_Description_Protocol
-  final List<(String, String)> parameters;
-
-  /// Feedback mechanisms to be used for this codec.
-  final List<RtcpFeedback> feedback;
-
-  const RtpCodecCapability({
-    this.preferredPayloadType,
-    required this.scalabilityModes,
-    required this.mimeType,
-    required this.name,
-    required this.kind,
-    this.clockRate,
-    this.numChannels,
-    required this.parameters,
-    required this.feedback,
-  });
-
-  @override
-  int get hashCode =>
-      preferredPayloadType.hashCode ^
-      scalabilityModes.hashCode ^
-      mimeType.hashCode ^
-      name.hashCode ^
-      kind.hashCode ^
-      clockRate.hashCode ^
-      numChannels.hashCode ^
-      parameters.hashCode ^
-      feedback.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is RtpCodecCapability &&
-          runtimeType == other.runtimeType &&
-          preferredPayloadType == other.preferredPayloadType &&
-          scalabilityModes == other.scalabilityModes &&
-          mimeType == other.mimeType &&
-          name == other.name &&
-          kind == other.kind &&
-          clockRate == other.clockRate &&
-          numChannels == other.numChannels &&
-          parameters == other.parameters &&
-          feedback == other.feedback;
 }
 
 /// Representation of capabilities/preferences of an implementation for a header

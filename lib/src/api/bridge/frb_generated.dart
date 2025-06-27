@@ -3,22 +3,20 @@
 
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
-import 'dart:async';
-import 'dart:convert';
-
-import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
-
 import 'api.dart';
 import 'api/media_device_info.dart';
 import 'api/media_display_info.dart';
 import 'api/rtc_ice_candidate_stats.dart';
 import 'api/rtp_capabilities.dart';
+import 'api/rtp_codec_capability.dart';
+import 'dart:async';
+import 'dart:convert';
 import 'frb_generated.dart';
-import 'lib.dart';
-import 'renderer.dart';
-
 import 'frb_generated.io.dart'
     if (dart.library.js_interop) 'frb_generated.web.dart';
+import 'lib.dart';
+import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+import 'renderer.dart';
 
 /// Main entrypoint of the Rust API
 class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
@@ -71,7 +69,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.10.0';
 
   @override
-  int get rustContentHash => -902908128;
+  int get rustContentHash => 413992552;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -215,7 +213,7 @@ abstract class RustLibApi extends BaseApi {
 
   Future<void> crateApiSetAudioPlayoutDevice({required String deviceId});
 
-  Future<void> crateApiSetCodecPreferences({
+  Future<void> crateApiRtpCodecCapabilitySetCodecPreferences({
     required ArcRtpTransceiver transceiver,
     required List<RtpCodecCapability> codecs,
   });
@@ -1399,7 +1397,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<void> crateApiSetCodecPreferences({
+  Future<void> crateApiRtpCodecCapabilitySetCodecPreferences({
     required ArcRtpTransceiver transceiver,
     required List<RtpCodecCapability> codecs,
   }) {
@@ -1420,14 +1418,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: null,
         ),
-        constMeta: kCrateApiSetCodecPreferencesConstMeta,
+        constMeta: kCrateApiRtpCodecCapabilitySetCodecPreferencesConstMeta,
         argValues: [transceiver, codecs],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiSetCodecPreferencesConstMeta =>
+  TaskConstMeta get kCrateApiRtpCodecCapabilitySetCodecPreferencesConstMeta =>
       const TaskConstMeta(
         debugName: "set_codec_preferences",
         argNames: ["transceiver", "codecs"],
