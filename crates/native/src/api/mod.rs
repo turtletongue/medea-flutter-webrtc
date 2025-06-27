@@ -3,7 +3,7 @@
 pub mod media_device_info;
 pub mod media_display_info;
 pub mod rtc_ice_candidate_stats;
-mod rtc_session_description;
+pub mod rtc_session_description;
 pub mod rtc_stats;
 pub mod rtp_capabilities;
 pub mod rtp_codec_capability;
