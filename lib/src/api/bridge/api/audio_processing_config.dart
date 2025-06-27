@@ -9,6 +9,13 @@ import '../frb_generated.dart';
 
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `fmt`, `fmt`, `from`, `from`
 
+/// Returns the current [`AudioProcessingConfig`] for the specified local audio
+/// track.
+Future<AudioProcessingConfig> getAudioProcessingConfig({
+  required String trackId,
+}) => RustLib.instance.api
+    .crateApiAudioProcessingConfigGetAudioProcessingConfig(trackId: trackId);
+
 /// Audio processing configuration for some local audio [`MediaStreamTrack`].
 class AudioProcessingConfig {
   /// Indicator whether the audio volume level should be automatically tuned
