@@ -6,7 +6,8 @@ pub mod audio_constraints;
 pub mod video_constraints;
 
 pub use self::{
-    audio_constraints::AudioConstraints, video_constraints::VideoConstraints,
+    audio_constraints::{AudioConstraints, AudioProcessingConstraints},
+    video_constraints::VideoConstraints,
 };
 #[cfg(doc)]
 use crate::{Webrtc, api::MediaStreamTrack};

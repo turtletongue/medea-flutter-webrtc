@@ -26,7 +26,8 @@ pub use self::{
     media_device_info::{MediaDeviceInfo, MediaDeviceKind, enumerate_devices},
     media_display_info::{MediaDisplayInfo, enumerate_displays},
     media_stream_constraints::{
-        AudioConstraints, MediaStreamConstraints, VideoConstraints,
+        AudioConstraints, AudioProcessingConstraints, MediaStreamConstraints,
+        VideoConstraints,
     },
     rtc_ice_candidate_stats::{
         CandidateType, IceCandidateStats, RtcIceCandidateStats,
