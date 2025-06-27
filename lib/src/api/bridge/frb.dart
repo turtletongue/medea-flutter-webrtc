@@ -12,6 +12,7 @@ export 'api/rtc_stats/rtc_inbound_rtp_stream_media_type.dart';
 export 'api/rtc_stats/rtc_media_source_stats_media_type.dart';
 export 'api/rtc_stats/rtc_outbound_rtp_stream_media_type.dart';
 export 'api/rtc_stats/rtc_stats_ice_candidate_pair_state.dart';
+export 'api/rtcp_feedback.dart';
 export 'api/rtp_capabilities.dart';
 export 'api/rtp_codec_capability.dart';
 export 'api/rtp_header_extension_capability.dart';
