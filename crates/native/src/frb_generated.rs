@@ -30,7 +30,7 @@ use flutter_rust_bridge::for_generated::byteorder::{
     NativeEndian, ReadBytesExt, WriteBytesExt,
 };
 use flutter_rust_bridge::for_generated::{
-    Lifetimeable, Lockable, transform_result_dco,
+    transform_result_dco, Lifetimeable, Lockable,
 };
 use flutter_rust_bridge::{Handler, IntoIntoDart};
 
@@ -2115,7 +2115,7 @@ impl SseDecode for crate::api::rtc_stats::RtcStats {
         let mut var_id = <String>::sse_decode(deserializer);
         let mut var_timestampUs = <i64>::sse_decode(deserializer);
         let mut var_kind =
-            <crate::api::rtc_stats::Type>::sse_decode(deserializer);
+            <crate::api::rtc_stats::RtcStatsType>::sse_decode(deserializer);
         return crate::api::rtc_stats::RtcStats {
             id: var_id,
             timestamp_us: var_timestampUs,
@@ -2124,26 +2124,20 @@ impl SseDecode for crate::api::rtc_stats::RtcStats {
     }
 }
 
-impl SseDecode
-    for crate::api::rtc_stats::ice_candidate_pair_state::IceCandidatePairState
-{
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(
-        deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
-    ) -> Self {
-        let mut inner = <i32>::sse_decode(deserializer);
+impl SseDecode for crate::api::rtc_stats::rtc_stats_ice_candidate_pair_state::RtcStatsIceCandidatePairState {
+                    // Codec=Sse (Serialization based), see doc to use other codecs
+                    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {let mut inner = <i32>::sse_decode(deserializer);
         return match inner {
-            0 => crate::api::rtc_stats::ice_candidate_pair_state::IceCandidatePairState::Frozen,
-1 => crate::api::rtc_stats::ice_candidate_pair_state::IceCandidatePairState::Waiting,
-2 => crate::api::rtc_stats::ice_candidate_pair_state::IceCandidatePairState::InProgress,
-3 => crate::api::rtc_stats::ice_candidate_pair_state::IceCandidatePairState::Failed,
-4 => crate::api::rtc_stats::ice_candidate_pair_state::IceCandidatePairState::Succeeded,
+            0 => crate::api::rtc_stats::rtc_stats_ice_candidate_pair_state::RtcStatsIceCandidatePairState::Frozen,
+1 => crate::api::rtc_stats::rtc_stats_ice_candidate_pair_state::RtcStatsIceCandidatePairState::Waiting,
+2 => crate::api::rtc_stats::rtc_stats_ice_candidate_pair_state::RtcStatsIceCandidatePairState::InProgress,
+3 => crate::api::rtc_stats::rtc_stats_ice_candidate_pair_state::RtcStatsIceCandidatePairState::Failed,
+4 => crate::api::rtc_stats::rtc_stats_ice_candidate_pair_state::RtcStatsIceCandidatePairState::Succeeded,
             _ => unreachable!("Invalid variant for RtcStatsIceCandidatePairState: {}", inner),
-        };
-    }
-}
+        };}
+                }
 
-impl SseDecode for crate::api::rtc_stats::Type {
+impl SseDecode for crate::api::rtc_stats::RtcStatsType {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
@@ -2154,16 +2148,11 @@ impl SseDecode for crate::api::rtc_stats::Type {
                 let mut var_trackIdentifier =
                     <Option<String>>::sse_decode(deserializer);
                 let mut var_kind = <crate::api::rtc_stats::rtc_media_source_stats_media_type::RtcMediaSourceStatsMediaType>::sse_decode(deserializer);
-                return crate::api::rtc_stats::Type::RtcMediaSourceStats {
-                    track_identifier: var_trackIdentifier,
-                    kind: var_kind,
-                };
+                return crate::api::rtc_stats::RtcStatsType::RtcMediaSourceStats{track_identifier: var_trackIdentifier, kind: var_kind};
             }
             1 => {
                 let mut var_field0 = <crate::api::rtc_ice_candidate_stats::RtcIceCandidateStats>::sse_decode(deserializer);
-                return crate::api::rtc_stats::Type::RtcIceCandidateStats(
-                    var_field0,
-                );
+                return crate::api::rtc_stats::RtcStatsType::RtcIceCandidateStats(var_field0);
             }
             2 => {
                 let mut var_trackId =
@@ -2174,7 +2163,7 @@ impl SseDecode for crate::api::rtc_stats::Type {
                     <Option<u32>>::sse_decode(deserializer);
                 let mut var_mediaSourceId =
                     <Option<String>>::sse_decode(deserializer);
-                return crate::api::rtc_stats::Type::RtcOutboundRtpStreamStats{track_id: var_trackId, media_type: var_mediaType, bytes_sent: var_bytesSent, packets_sent: var_packetsSent, media_source_id: var_mediaSourceId};
+                return crate::api::rtc_stats::RtcStatsType::RtcOutboundRtpStreamStats{track_id: var_trackId, media_type: var_mediaType, bytes_sent: var_bytesSent, packets_sent: var_packetsSent, media_source_id: var_mediaSourceId};
             }
             3 => {
                 let mut var_remoteId =
@@ -2191,19 +2180,10 @@ impl SseDecode for crate::api::rtc_stats::Type {
                 let mut var_jitterBufferEmittedCount =
                     <Option<u64>>::sse_decode(deserializer);
                 let mut var_mediaType = <Option<crate::api::rtc_stats::rtc_inbound_rtp_stream_media_type::RtcInboundRtpStreamMediaType>>::sse_decode(deserializer);
-                return crate::api::rtc_stats::Type::RtcInboundRtpStreamStats {
-                    remote_id: var_remoteId,
-                    bytes_received: var_bytesReceived,
-                    packets_received: var_packetsReceived,
-                    packets_lost: var_packetsLost,
-                    jitter: var_jitter,
-                    total_decode_time: var_totalDecodeTime,
-                    jitter_buffer_emitted_count: var_jitterBufferEmittedCount,
-                    media_type: var_mediaType,
-                };
+                return crate::api::rtc_stats::RtcStatsType::RtcInboundRtpStreamStats{remote_id: var_remoteId, bytes_received: var_bytesReceived, packets_received: var_packetsReceived, packets_lost: var_packetsLost, jitter: var_jitter, total_decode_time: var_totalDecodeTime, jitter_buffer_emitted_count: var_jitterBufferEmittedCount, media_type: var_mediaType};
             }
             4 => {
-                let mut var_state = <crate::api::rtc_stats::ice_candidate_pair_state::IceCandidatePairState>::sse_decode(deserializer);
+                let mut var_state = <crate::api::rtc_stats::rtc_stats_ice_candidate_pair_state::RtcStatsIceCandidatePairState>::sse_decode(deserializer);
                 let mut var_nominated =
                     <Option<bool>>::sse_decode(deserializer);
                 let mut var_bytesSent = <Option<u64>>::sse_decode(deserializer);
@@ -2215,15 +2195,7 @@ impl SseDecode for crate::api::rtc_stats::Type {
                     <Option<f64>>::sse_decode(deserializer);
                 let mut var_availableOutgoingBitrate =
                     <Option<f64>>::sse_decode(deserializer);
-                return crate::api::rtc_stats::Type::RtcIceCandidatePairStats {
-                    state: var_state,
-                    nominated: var_nominated,
-                    bytes_sent: var_bytesSent,
-                    bytes_received: var_bytesReceived,
-                    total_round_trip_time: var_totalRoundTripTime,
-                    current_round_trip_time: var_currentRoundTripTime,
-                    available_outgoing_bitrate: var_availableOutgoingBitrate,
-                };
+                return crate::api::rtc_stats::RtcStatsType::RtcIceCandidatePairStats{state: var_state, nominated: var_nominated, bytes_sent: var_bytesSent, bytes_received: var_bytesReceived, total_round_trip_time: var_totalRoundTripTime, current_round_trip_time: var_currentRoundTripTime, available_outgoing_bitrate: var_availableOutgoingBitrate};
             }
             5 => {
                 let mut var_packetsSent =
@@ -2238,13 +2210,7 @@ impl SseDecode for crate::api::rtc_stats::Type {
                 >>::sse_decode(
                     deserializer
                 );
-                return crate::api::rtc_stats::Type::RtcTransportStats {
-                    packets_sent: var_packetsSent,
-                    packets_received: var_packetsReceived,
-                    bytes_sent: var_bytesSent,
-                    bytes_received: var_bytesReceived,
-                    ice_role: var_iceRole,
-                };
+                return crate::api::rtc_stats::RtcStatsType::RtcTransportStats{packets_sent: var_packetsSent, packets_received: var_packetsReceived, bytes_sent: var_bytesSent, bytes_received: var_bytesReceived, ice_role: var_iceRole};
             }
             6 => {
                 let mut var_localId =
@@ -2258,7 +2224,7 @@ impl SseDecode for crate::api::rtc_stats::Type {
                     <Option<u64>>::sse_decode(deserializer);
                 let mut var_roundTripTimeMeasurements =
                     <Option<i32>>::sse_decode(deserializer);
-                return crate::api::rtc_stats::Type::RtcRemoteInboundRtpStreamStats{local_id: var_localId, jitter: var_jitter, round_trip_time: var_roundTripTime, fraction_lost: var_fractionLost, reports_received: var_reportsReceived, round_trip_time_measurements: var_roundTripTimeMeasurements};
+                return crate::api::rtc_stats::RtcStatsType::RtcRemoteInboundRtpStreamStats{local_id: var_localId, jitter: var_jitter, round_trip_time: var_roundTripTime, fraction_lost: var_fractionLost, reports_received: var_reportsReceived, round_trip_time_measurements: var_roundTripTimeMeasurements};
             }
             7 => {
                 let mut var_localId =
@@ -2267,10 +2233,10 @@ impl SseDecode for crate::api::rtc_stats::Type {
                     <Option<f64>>::sse_decode(deserializer);
                 let mut var_reportsSent =
                     <Option<u64>>::sse_decode(deserializer);
-                return crate::api::rtc_stats::Type::RtcRemoteOutboundRtpStreamStats{local_id: var_localId, remote_timestamp: var_remoteTimestamp, reports_sent: var_reportsSent};
+                return crate::api::rtc_stats::RtcStatsType::RtcRemoteOutboundRtpStreamStats{local_id: var_localId, remote_timestamp: var_remoteTimestamp, reports_sent: var_reportsSent};
             }
             8 => {
-                return crate::api::rtc_stats::Type::Unimplemented;
+                return crate::api::rtc_stats::RtcStatsType::Unimplemented;
             }
             _ => {
                 unimplemented!("");
@@ -3611,168 +3577,84 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::rtc_stats::RtcStats>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart
-    for crate::api::rtc_stats::ice_candidate_pair_state::IceCandidatePairState
-{
-    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-        match self {
-            Self::Frozen => 0.into_dart(),
-            Self::Waiting => 1.into_dart(),
-            Self::InProgress => 2.into_dart(),
-            Self::Failed => 3.into_dart(),
-            Self::Succeeded => 4.into_dart(),
-            _ => unreachable!(),
+impl flutter_rust_bridge::IntoDart for crate::api::rtc_stats::rtc_stats_ice_candidate_pair_state::RtcStatsIceCandidatePairState {
+                fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+                    match self {
+                    Self::Frozen => 0.into_dart(),
+Self::Waiting => 1.into_dart(),
+Self::InProgress => 2.into_dart(),
+Self::Failed => 3.into_dart(),
+Self::Succeeded => 4.into_dart(),
+                    _ => unreachable!(),
+                }
+                }
+            }
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::api::rtc_stats::rtc_stats_ice_candidate_pair_state::RtcStatsIceCandidatePairState {}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::rtc_stats::rtc_stats_ice_candidate_pair_state::RtcStatsIceCandidatePairState> for crate::api::rtc_stats::rtc_stats_ice_candidate_pair_state::RtcStatsIceCandidatePairState {
+            fn into_into_dart(self) -> crate::api::rtc_stats::rtc_stats_ice_candidate_pair_state::RtcStatsIceCandidatePairState {
+                self
+            }
         }
-    }
-}
-impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::rtc_stats::ice_candidate_pair_state::IceCandidatePairState
-{
-}
-impl
-    flutter_rust_bridge::IntoIntoDart<
-        crate::api::rtc_stats::ice_candidate_pair_state::IceCandidatePairState,
-    >
-    for crate::api::rtc_stats::ice_candidate_pair_state::IceCandidatePairState
-{
-    fn into_into_dart(
-        self,
-    ) -> crate::api::rtc_stats::ice_candidate_pair_state::IceCandidatePairState
-    {
-        self
-    }
-}
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::rtc_stats::Type {
+impl flutter_rust_bridge::IntoDart for crate::api::rtc_stats::RtcStatsType {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-        match self {
-            crate::api::rtc_stats::Type::RtcMediaSourceStats {
-                track_identifier,
-                kind,
-            } => [
-                0.into_dart(),
-                track_identifier.into_into_dart().into_dart(),
-                kind.into_into_dart().into_dart(),
-            ]
-            .into_dart(),
-            crate::api::rtc_stats::Type::RtcIceCandidateStats(field0) => {
-                [1.into_dart(), field0.into_into_dart().into_dart()].into_dart()
-            }
-            crate::api::rtc_stats::Type::RtcOutboundRtpStreamStats {
-                track_id,
-                media_type,
-                bytes_sent,
-                packets_sent,
-                media_source_id,
-            } => [
-                2.into_dart(),
-                track_id.into_into_dart().into_dart(),
-                media_type.into_into_dart().into_dart(),
-                bytes_sent.into_into_dart().into_dart(),
-                packets_sent.into_into_dart().into_dart(),
-                media_source_id.into_into_dart().into_dart(),
-            ]
-            .into_dart(),
-            crate::api::rtc_stats::Type::RtcInboundRtpStreamStats {
-                remote_id,
-                bytes_received,
-                packets_received,
-                packets_lost,
-                jitter,
-                total_decode_time,
-                jitter_buffer_emitted_count,
-                media_type,
-            } => [
-                3.into_dart(),
-                remote_id.into_into_dart().into_dart(),
-                bytes_received.into_into_dart().into_dart(),
-                packets_received.into_into_dart().into_dart(),
-                packets_lost.into_into_dart().into_dart(),
-                jitter.into_into_dart().into_dart(),
-                total_decode_time.into_into_dart().into_dart(),
-                jitter_buffer_emitted_count.into_into_dart().into_dart(),
-                media_type.into_into_dart().into_dart(),
-            ]
-            .into_dart(),
-            crate::api::rtc_stats::Type::RtcIceCandidatePairStats {
-                state,
-                nominated,
-                bytes_sent,
-                bytes_received,
-                total_round_trip_time,
-                current_round_trip_time,
-                available_outgoing_bitrate,
-            } => [
-                4.into_dart(),
-                state.into_into_dart().into_dart(),
-                nominated.into_into_dart().into_dart(),
-                bytes_sent.into_into_dart().into_dart(),
-                bytes_received.into_into_dart().into_dart(),
-                total_round_trip_time.into_into_dart().into_dart(),
-                current_round_trip_time.into_into_dart().into_dart(),
-                available_outgoing_bitrate.into_into_dart().into_dart(),
-            ]
-            .into_dart(),
-            crate::api::rtc_stats::Type::RtcTransportStats {
-                packets_sent,
-                packets_received,
-                bytes_sent,
-                bytes_received,
-                ice_role,
-            } => [
-                5.into_dart(),
-                packets_sent.into_into_dart().into_dart(),
-                packets_received.into_into_dart().into_dart(),
-                bytes_sent.into_into_dart().into_dart(),
-                bytes_received.into_into_dart().into_dart(),
-                ice_role.into_into_dart().into_dart(),
-            ]
-            .into_dart(),
-            crate::api::rtc_stats::Type::RtcRemoteInboundRtpStreamStats {
-                local_id,
-                jitter,
-                round_trip_time,
-                fraction_lost,
-                reports_received,
-                round_trip_time_measurements,
-            } => [
-                6.into_dart(),
-                local_id.into_into_dart().into_dart(),
-                jitter.into_into_dart().into_dart(),
-                round_trip_time.into_into_dart().into_dart(),
-                fraction_lost.into_into_dart().into_dart(),
-                reports_received.into_into_dart().into_dart(),
-                round_trip_time_measurements.into_into_dart().into_dart(),
-            ]
-            .into_dart(),
-            crate::api::rtc_stats::Type::RtcRemoteOutboundRtpStreamStats {
-                local_id,
-                remote_timestamp,
-                reports_sent,
-            } => [
-                7.into_dart(),
-                local_id.into_into_dart().into_dart(),
-                remote_timestamp.into_into_dart().into_dart(),
-                reports_sent.into_into_dart().into_dart(),
-            ]
-            .into_dart(),
-            crate::api::rtc_stats::Type::Unimplemented => {
-                [8.into_dart()].into_dart()
-            }
-            _ => {
-                unimplemented!("");
-            }
-        }
+        match self {crate::api::rtc_stats::RtcStatsType::RtcMediaSourceStats{track_identifier,kind} => { [0.into_dart(),
+track_identifier.into_into_dart().into_dart(),
+kind.into_into_dart().into_dart()].into_dart() }
+crate::api::rtc_stats::RtcStatsType::RtcIceCandidateStats(field0) => { [1.into_dart(),
+field0.into_into_dart().into_dart()].into_dart() }
+crate::api::rtc_stats::RtcStatsType::RtcOutboundRtpStreamStats{track_id,media_type,bytes_sent,packets_sent,media_source_id} => { [2.into_dart(),
+track_id.into_into_dart().into_dart(),
+media_type.into_into_dart().into_dart(),
+bytes_sent.into_into_dart().into_dart(),
+packets_sent.into_into_dart().into_dart(),
+media_source_id.into_into_dart().into_dart()].into_dart() }
+crate::api::rtc_stats::RtcStatsType::RtcInboundRtpStreamStats{remote_id,bytes_received,packets_received,packets_lost,jitter,total_decode_time,jitter_buffer_emitted_count,media_type} => { [3.into_dart(),
+remote_id.into_into_dart().into_dart(),
+bytes_received.into_into_dart().into_dart(),
+packets_received.into_into_dart().into_dart(),
+packets_lost.into_into_dart().into_dart(),
+jitter.into_into_dart().into_dart(),
+total_decode_time.into_into_dart().into_dart(),
+jitter_buffer_emitted_count.into_into_dart().into_dart(),
+media_type.into_into_dart().into_dart()].into_dart() }
+crate::api::rtc_stats::RtcStatsType::RtcIceCandidatePairStats{state,nominated,bytes_sent,bytes_received,total_round_trip_time,current_round_trip_time,available_outgoing_bitrate} => { [4.into_dart(),
+state.into_into_dart().into_dart(),
+nominated.into_into_dart().into_dart(),
+bytes_sent.into_into_dart().into_dart(),
+bytes_received.into_into_dart().into_dart(),
+total_round_trip_time.into_into_dart().into_dart(),
+current_round_trip_time.into_into_dart().into_dart(),
+available_outgoing_bitrate.into_into_dart().into_dart()].into_dart() }
+crate::api::rtc_stats::RtcStatsType::RtcTransportStats{packets_sent,packets_received,bytes_sent,bytes_received,ice_role} => { [5.into_dart(),
+packets_sent.into_into_dart().into_dart(),
+packets_received.into_into_dart().into_dart(),
+bytes_sent.into_into_dart().into_dart(),
+bytes_received.into_into_dart().into_dart(),
+ice_role.into_into_dart().into_dart()].into_dart() }
+crate::api::rtc_stats::RtcStatsType::RtcRemoteInboundRtpStreamStats{local_id,jitter,round_trip_time,fraction_lost,reports_received,round_trip_time_measurements} => { [6.into_dart(),
+local_id.into_into_dart().into_dart(),
+jitter.into_into_dart().into_dart(),
+round_trip_time.into_into_dart().into_dart(),
+fraction_lost.into_into_dart().into_dart(),
+reports_received.into_into_dart().into_dart(),
+round_trip_time_measurements.into_into_dart().into_dart()].into_dart() }
+crate::api::rtc_stats::RtcStatsType::RtcRemoteOutboundRtpStreamStats{local_id,remote_timestamp,reports_sent} => { [7.into_dart(),
+local_id.into_into_dart().into_dart(),
+remote_timestamp.into_into_dart().into_dart(),
+reports_sent.into_into_dart().into_dart()].into_dart() }
+crate::api::rtc_stats::RtcStatsType::Unimplemented => { [8.into_dart()].into_dart() }
+ _ => { unimplemented!(""); }}
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::rtc_stats::Type
+    for crate::api::rtc_stats::RtcStatsType
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::rtc_stats::Type>
-    for crate::api::rtc_stats::Type
+impl flutter_rust_bridge::IntoIntoDart<crate::api::rtc_stats::RtcStatsType>
+    for crate::api::rtc_stats::RtcStatsType
 {
-    fn into_into_dart(self) -> crate::api::rtc_stats::Type {
+    fn into_into_dart(self) -> crate::api::rtc_stats::RtcStatsType {
         self
     }
 }
@@ -5473,156 +5355,75 @@ impl SseEncode for crate::api::rtc_stats::RtcStats {
     ) {
         <String>::sse_encode(self.id, serializer);
         <i64>::sse_encode(self.timestamp_us, serializer);
-        <crate::api::rtc_stats::Type>::sse_encode(self.kind, serializer);
+        <crate::api::rtc_stats::RtcStatsType>::sse_encode(
+            self.kind, serializer,
+        );
     }
 }
 
-impl SseEncode
-    for crate::api::rtc_stats::ice_candidate_pair_state::IceCandidatePairState
-{
+impl SseEncode for crate::api::rtc_stats::rtc_stats_ice_candidate_pair_state::RtcStatsIceCandidatePairState {
+                    // Codec=Sse (Serialization based), see doc to use other codecs
+                    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {<i32>::sse_encode(match self {crate::api::rtc_stats::rtc_stats_ice_candidate_pair_state::RtcStatsIceCandidatePairState::Frozen => { 0 }
+crate::api::rtc_stats::rtc_stats_ice_candidate_pair_state::RtcStatsIceCandidatePairState::Waiting => { 1 }
+crate::api::rtc_stats::rtc_stats_ice_candidate_pair_state::RtcStatsIceCandidatePairState::InProgress => { 2 }
+crate::api::rtc_stats::rtc_stats_ice_candidate_pair_state::RtcStatsIceCandidatePairState::Failed => { 3 }
+crate::api::rtc_stats::rtc_stats_ice_candidate_pair_state::RtcStatsIceCandidatePairState::Succeeded => { 4 }
+ _ => { unimplemented!(""); }}, serializer);}
+                }
+
+impl SseEncode for crate::api::rtc_stats::RtcStatsType {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
         serializer: &mut flutter_rust_bridge::for_generated::SseSerializer,
     ) {
-        <i32>::sse_encode(match self {crate::api::rtc_stats::ice_candidate_pair_state::IceCandidatePairState::Frozen => { 0 }
-crate::api::rtc_stats::ice_candidate_pair_state::IceCandidatePairState::Waiting => { 1 }
-crate::api::rtc_stats::ice_candidate_pair_state::IceCandidatePairState::InProgress => { 2 }
-crate::api::rtc_stats::ice_candidate_pair_state::IceCandidatePairState::Failed => { 3 }
-crate::api::rtc_stats::ice_candidate_pair_state::IceCandidatePairState::Succeeded => { 4 }
- _ => { unimplemented!(""); }}, serializer);
-    }
-}
-
-impl SseEncode for crate::api::rtc_stats::Type {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(
-        self,
-        serializer: &mut flutter_rust_bridge::for_generated::SseSerializer,
-    ) {
-        match self {
-            crate::api::rtc_stats::Type::RtcMediaSourceStats {
-                track_identifier,
-                kind,
-            } => {
-                <i32>::sse_encode(0, serializer);
-                <Option<String>>::sse_encode(track_identifier, serializer);
-                <crate::api::rtc_stats::rtc_media_source_stats_media_type::RtcMediaSourceStatsMediaType>::sse_encode(kind, serializer);
-            }
-            crate::api::rtc_stats::Type::RtcIceCandidateStats(field0) => {
-                <i32>::sse_encode(1, serializer);
-                <crate::api::rtc_ice_candidate_stats::RtcIceCandidateStats>::sse_encode(field0, serializer);
-            }
-            crate::api::rtc_stats::Type::RtcOutboundRtpStreamStats {
-                track_id,
-                media_type,
-                bytes_sent,
-                packets_sent,
-                media_source_id,
-            } => {
-                <i32>::sse_encode(2, serializer);
-                <Option<String>>::sse_encode(track_id, serializer);
-                <crate::api::rtc_stats::rtc_outbound_rtp_stream_media_type::RtcOutboundRtpStreamStatsMediaType>::sse_encode(media_type, serializer);
-                <Option<u64>>::sse_encode(bytes_sent, serializer);
-                <Option<u32>>::sse_encode(packets_sent, serializer);
-                <Option<String>>::sse_encode(media_source_id, serializer);
-            }
-            crate::api::rtc_stats::Type::RtcInboundRtpStreamStats {
-                remote_id,
-                bytes_received,
-                packets_received,
-                packets_lost,
-                jitter,
-                total_decode_time,
-                jitter_buffer_emitted_count,
-                media_type,
-            } => {
-                <i32>::sse_encode(3, serializer);
-                <Option<String>>::sse_encode(remote_id, serializer);
-                <Option<u64>>::sse_encode(bytes_received, serializer);
-                <Option<u32>>::sse_encode(packets_received, serializer);
-                <Option<u64>>::sse_encode(packets_lost, serializer);
-                <Option<f64>>::sse_encode(jitter, serializer);
-                <Option<f64>>::sse_encode(total_decode_time, serializer);
-                <Option<u64>>::sse_encode(
-                    jitter_buffer_emitted_count,
-                    serializer,
-                );
-                <Option<crate::api::rtc_stats::rtc_inbound_rtp_stream_media_type::RtcInboundRtpStreamMediaType>>::sse_encode(media_type, serializer);
-            }
-            crate::api::rtc_stats::Type::RtcIceCandidatePairStats {
-                state,
-                nominated,
-                bytes_sent,
-                bytes_received,
-                total_round_trip_time,
-                current_round_trip_time,
-                available_outgoing_bitrate,
-            } => {
-                <i32>::sse_encode(4, serializer);
-                <crate::api::rtc_stats::ice_candidate_pair_state::IceCandidatePairState>::sse_encode(state, serializer);
-                <Option<bool>>::sse_encode(nominated, serializer);
-                <Option<u64>>::sse_encode(bytes_sent, serializer);
-                <Option<u64>>::sse_encode(bytes_received, serializer);
-                <Option<f64>>::sse_encode(total_round_trip_time, serializer);
-                <Option<f64>>::sse_encode(current_round_trip_time, serializer);
-                <Option<f64>>::sse_encode(
-                    available_outgoing_bitrate,
-                    serializer,
-                );
-            }
-            crate::api::rtc_stats::Type::RtcTransportStats {
-                packets_sent,
-                packets_received,
-                bytes_sent,
-                bytes_received,
-                ice_role,
-            } => {
-                <i32>::sse_encode(5, serializer);
-                <Option<u64>>::sse_encode(packets_sent, serializer);
-                <Option<u64>>::sse_encode(packets_received, serializer);
-                <Option<u64>>::sse_encode(bytes_sent, serializer);
-                <Option<u64>>::sse_encode(bytes_received, serializer);
-                <Option<crate::api::rtc_stats::ice_role::IceRole>>::sse_encode(
-                    ice_role, serializer,
-                );
-            }
-            crate::api::rtc_stats::Type::RtcRemoteInboundRtpStreamStats {
-                local_id,
-                jitter,
-                round_trip_time,
-                fraction_lost,
-                reports_received,
-                round_trip_time_measurements,
-            } => {
-                <i32>::sse_encode(6, serializer);
-                <Option<String>>::sse_encode(local_id, serializer);
-                <Option<f64>>::sse_encode(jitter, serializer);
-                <Option<f64>>::sse_encode(round_trip_time, serializer);
-                <Option<f64>>::sse_encode(fraction_lost, serializer);
-                <Option<u64>>::sse_encode(reports_received, serializer);
-                <Option<i32>>::sse_encode(
-                    round_trip_time_measurements,
-                    serializer,
-                );
-            }
-            crate::api::rtc_stats::Type::RtcRemoteOutboundRtpStreamStats {
-                local_id,
-                remote_timestamp,
-                reports_sent,
-            } => {
-                <i32>::sse_encode(7, serializer);
-                <Option<String>>::sse_encode(local_id, serializer);
-                <Option<f64>>::sse_encode(remote_timestamp, serializer);
-                <Option<u64>>::sse_encode(reports_sent, serializer);
-            }
-            crate::api::rtc_stats::Type::Unimplemented => {
-                <i32>::sse_encode(8, serializer);
-            }
-            _ => {
-                unimplemented!("");
-            }
-        }
+        match self {crate::api::rtc_stats::RtcStatsType::RtcMediaSourceStats{track_identifier,kind} => { <i32>::sse_encode(0, serializer); <Option<String>>::sse_encode(track_identifier, serializer);
+<crate::api::rtc_stats::rtc_media_source_stats_media_type::RtcMediaSourceStatsMediaType>::sse_encode(kind, serializer);
+ }
+crate::api::rtc_stats::RtcStatsType::RtcIceCandidateStats(field0) => { <i32>::sse_encode(1, serializer); <crate::api::rtc_ice_candidate_stats::RtcIceCandidateStats>::sse_encode(field0, serializer);
+ }
+crate::api::rtc_stats::RtcStatsType::RtcOutboundRtpStreamStats{track_id,media_type,bytes_sent,packets_sent,media_source_id} => { <i32>::sse_encode(2, serializer); <Option<String>>::sse_encode(track_id, serializer);
+<crate::api::rtc_stats::rtc_outbound_rtp_stream_media_type::RtcOutboundRtpStreamStatsMediaType>::sse_encode(media_type, serializer);
+<Option<u64>>::sse_encode(bytes_sent, serializer);
+<Option<u32>>::sse_encode(packets_sent, serializer);
+<Option<String>>::sse_encode(media_source_id, serializer);
+ }
+crate::api::rtc_stats::RtcStatsType::RtcInboundRtpStreamStats{remote_id,bytes_received,packets_received,packets_lost,jitter,total_decode_time,jitter_buffer_emitted_count,media_type} => { <i32>::sse_encode(3, serializer); <Option<String>>::sse_encode(remote_id, serializer);
+<Option<u64>>::sse_encode(bytes_received, serializer);
+<Option<u32>>::sse_encode(packets_received, serializer);
+<Option<u64>>::sse_encode(packets_lost, serializer);
+<Option<f64>>::sse_encode(jitter, serializer);
+<Option<f64>>::sse_encode(total_decode_time, serializer);
+<Option<u64>>::sse_encode(jitter_buffer_emitted_count, serializer);
+<Option<crate::api::rtc_stats::rtc_inbound_rtp_stream_media_type::RtcInboundRtpStreamMediaType>>::sse_encode(media_type, serializer);
+ }
+crate::api::rtc_stats::RtcStatsType::RtcIceCandidatePairStats{state,nominated,bytes_sent,bytes_received,total_round_trip_time,current_round_trip_time,available_outgoing_bitrate} => { <i32>::sse_encode(4, serializer); <crate::api::rtc_stats::rtc_stats_ice_candidate_pair_state::RtcStatsIceCandidatePairState>::sse_encode(state, serializer);
+<Option<bool>>::sse_encode(nominated, serializer);
+<Option<u64>>::sse_encode(bytes_sent, serializer);
+<Option<u64>>::sse_encode(bytes_received, serializer);
+<Option<f64>>::sse_encode(total_round_trip_time, serializer);
+<Option<f64>>::sse_encode(current_round_trip_time, serializer);
+<Option<f64>>::sse_encode(available_outgoing_bitrate, serializer);
+ }
+crate::api::rtc_stats::RtcStatsType::RtcTransportStats{packets_sent,packets_received,bytes_sent,bytes_received,ice_role} => { <i32>::sse_encode(5, serializer); <Option<u64>>::sse_encode(packets_sent, serializer);
+<Option<u64>>::sse_encode(packets_received, serializer);
+<Option<u64>>::sse_encode(bytes_sent, serializer);
+<Option<u64>>::sse_encode(bytes_received, serializer);
+<Option<crate::api::rtc_stats::ice_role::IceRole>>::sse_encode(ice_role, serializer);
+ }
+crate::api::rtc_stats::RtcStatsType::RtcRemoteInboundRtpStreamStats{local_id,jitter,round_trip_time,fraction_lost,reports_received,round_trip_time_measurements} => { <i32>::sse_encode(6, serializer); <Option<String>>::sse_encode(local_id, serializer);
+<Option<f64>>::sse_encode(jitter, serializer);
+<Option<f64>>::sse_encode(round_trip_time, serializer);
+<Option<f64>>::sse_encode(fraction_lost, serializer);
+<Option<u64>>::sse_encode(reports_received, serializer);
+<Option<i32>>::sse_encode(round_trip_time_measurements, serializer);
+ }
+crate::api::rtc_stats::RtcStatsType::RtcRemoteOutboundRtpStreamStats{local_id,remote_timestamp,reports_sent} => { <i32>::sse_encode(7, serializer); <Option<String>>::sse_encode(local_id, serializer);
+<Option<f64>>::sse_encode(remote_timestamp, serializer);
+<Option<u64>>::sse_encode(reports_sent, serializer);
+ }
+crate::api::rtc_stats::RtcStatsType::Unimplemented => { <i32>::sse_encode(8, serializer);  }
+ _ => { unimplemented!(""); }}
     }
 }
 
@@ -6057,7 +5858,7 @@ mod io {
         NativeEndian, ReadBytesExt, WriteBytesExt,
     };
     use flutter_rust_bridge::for_generated::{
-        Lifetimeable, Lockable, transform_result_dco,
+        transform_result_dco, Lifetimeable, Lockable,
     };
     use flutter_rust_bridge::{Handler, IntoIntoDart};
 

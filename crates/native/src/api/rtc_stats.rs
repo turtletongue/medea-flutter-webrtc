@@ -5,21 +5,22 @@
 //! [Stats object]: https://w3.org/TR/webrtc-stats#dfn-stats-object
 //! [1]: https://w3.org/TR/webrtc#rtcstats-dictionary
 
-pub mod ice_candidate_pair_state;
 pub mod ice_role;
 pub mod rtc_inbound_rtp_stream_media_type;
 pub mod rtc_media_source_stats_media_type;
 pub mod rtc_outbound_rtp_stream_media_type;
+pub mod rtc_stats_ice_candidate_pair_state;
 
 use std::sync::{Arc, mpsc};
 
 use libwebrtc_sys as sys;
 
 pub use self::{
-    ice_candidate_pair_state::IceCandidatePairState, ice_role::IceRole,
+    ice_role::IceRole,
     rtc_inbound_rtp_stream_media_type::RtcInboundRtpStreamMediaType,
     rtc_media_source_stats_media_type::RtcMediaSourceStatsMediaType,
     rtc_outbound_rtp_stream_media_type::RtcOutboundRtpStreamStatsMediaType,
+    rtc_stats_ice_candidate_pair_state::RtcStatsIceCandidatePairState,
 };
 use crate::{
     PeerConnection,
@@ -32,7 +33,7 @@ use crate::{
 /// [List of all RTCStats types on W3C][1].
 ///
 /// [1]: https://w3.org/TR/webrtc-stats#rtctatstype-%2A
-pub enum Type {
+pub enum RtcStatsType {
     /// Statistics for the media produced by a [MediaStreamTrack][1] that is
     /// currently attached to an [RTCRtpSender]. This reflects the media that is
     /// fed to the encoder after [getUserMedia()] constraints have been applied
@@ -181,7 +182,7 @@ pub enum Type {
     RtcIceCandidatePairStats {
         /// State of the checklist for the local and remote candidates in a
         /// pair.
-        state: IceCandidatePairState,
+        state: RtcStatsIceCandidatePairState,
 
         /// Related to updating the nominated flag described in
         /// [Section 7.1.3.2.4 of RFC 5245][1].
@@ -368,7 +369,7 @@ pub enum Type {
     Unimplemented,
 }
 
-impl From<sys::RtcStatsType> for Type {
+impl From<sys::RtcStatsType> for RtcStatsType {
     #[expect(clippy::too_many_lines, reason = "trivial code")]
     fn from(kind: sys::RtcStatsType) -> Self {
         use sys::RtcStatsType as T;
@@ -505,14 +506,14 @@ pub struct RtcStats {
 
     /// Actual stats of these [`RtcStats`].
     ///
-    /// All possible stats are described in the [`Type`] enum.
-    pub kind: Type,
+    /// All possible stats are described in the [`RtcStatsType`] enum.
+    pub kind: RtcStatsType,
 }
 
 impl From<sys::RtcStats> for RtcStats {
     fn from(stats: sys::RtcStats) -> Self {
         let sys::RtcStats { id, timestamp_us, kind } = stats;
-        Self { id, timestamp_us, kind: Type::from(kind) }
+        Self { id, timestamp_us, kind: RtcStatsType::from(kind) }
     }
 }
 
