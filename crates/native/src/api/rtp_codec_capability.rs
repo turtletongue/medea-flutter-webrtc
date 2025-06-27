@@ -4,9 +4,11 @@ use std::sync::Arc;
 
 use libwebrtc_sys as sys;
 
-use crate::RtpTransceiver;
-use crate::api::{MediaType, RtcpFeedback, ScalabilityMode};
-use crate::frb_generated::RustOpaque;
+use crate::{
+    RtpTransceiver,
+    api::{MediaType, RtcpFeedback, ScalabilityMode},
+    frb_generated::RustOpaque,
+};
 
 /// Representation of static capabilities of an endpoint's implementation of a
 /// codec.
