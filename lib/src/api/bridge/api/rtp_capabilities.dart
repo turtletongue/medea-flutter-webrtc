@@ -8,6 +8,7 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import '../api.dart';
 import '../frb_generated.dart';
 import 'rtp_codec_capability.dart';
+import 'rtp_header_extension_capability.dart';
 
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`, `from`
 
