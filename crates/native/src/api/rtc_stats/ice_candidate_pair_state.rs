@@ -8,10 +8,10 @@ use libwebrtc_sys as sys;
 /// candidates in the pair. The state is assigned once the check list for each
 /// media stream has been computed. There are five potential values that the
 /// state can have.
-pub enum RtcStatsIceCandidatePairState {
+pub enum IceCandidatePairState {
     /// Check for this pair hasn't been performed, and it can't yet be performed
     /// until some other check succeeds, allowing this pair to unfreeze and move
-    /// into the [`RtcStatsIceCandidatePairState::Waiting`] state.
+    /// into the [`IceCandidatePairState::Waiting`] state.
     Frozen,
 
     /// Check has not been performed for this pair, and can be performed as soon
@@ -29,9 +29,7 @@ pub enum RtcStatsIceCandidatePairState {
     Succeeded,
 }
 
-impl From<sys::RTCStatsIceCandidatePairState>
-    for RtcStatsIceCandidatePairState
-{
+impl From<sys::RTCStatsIceCandidatePairState> for IceCandidatePairState {
     fn from(state: sys::RTCStatsIceCandidatePairState) -> Self {
         match state {
             sys::RTCStatsIceCandidatePairState::kFrozen => Self::Frozen,

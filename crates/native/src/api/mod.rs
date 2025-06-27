@@ -27,9 +27,10 @@ pub use self::{
         CandidateType, IceCandidateStats, RtcIceCandidateStats,
     },
     rtc_stats::{
-        IceRole, RtcInboundRtpStreamMediaType, RtcMediaSourceStatsMediaType,
-        RtcOutboundRtpStreamStatsMediaType, RtcStats,
-        RtcStatsIceCandidatePairState, RtcStatsType, get_peer_stats,
+        IceCandidatePairState as RtcStatsIceCandidatePairState, IceRole,
+        RtcInboundRtpStreamMediaType, RtcMediaSourceStatsMediaType,
+        RtcOutboundRtpStreamStatsMediaType, RtcStats, Type as RtcStatsType,
+        get_peer_stats,
     },
     rtp_capabilities::{
         RtpCapabilities, get_rtp_receiver_capabilities,
