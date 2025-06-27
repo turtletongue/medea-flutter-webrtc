@@ -12,6 +12,12 @@ import 'api.dart';
 import 'api/media_device_info.dart';
 import 'api/media_display_info.dart';
 import 'api/rtc_ice_candidate_stats.dart';
+import 'api/rtc_stats.dart';
+import 'api/rtc_stats/ice_role.dart';
+import 'api/rtc_stats/rtc_inbound_rtp_stream_media_type.dart';
+import 'api/rtc_stats/rtc_media_source_stats_media_type.dart';
+import 'api/rtc_stats/rtc_outbound_rtp_stream_media_type.dart';
+import 'api/rtc_stats/rtc_stats_ice_candidate_pair_state.dart';
 import 'api/rtp_capabilities.dart';
 import 'api/rtp_codec_capability.dart';
 import 'api/rtp_header_extension_capability.dart';
@@ -73,7 +79,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.10.0';
 
   @override
-  int get rustContentHash => 413992552;
+  int get rustContentHash => -835450150;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -156,7 +162,7 @@ abstract class RustLibApi extends BaseApi {
     required MediaStreamConstraints constraints,
   });
 
-  Future<List<RtcStats>> crateApiGetPeerStats({
+  Future<List<RtcStats>> crateApiRtcStatsGetPeerStats({
     required ArcPeerConnection peer,
   });
 
@@ -883,7 +889,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "get_media", argNames: ["constraints"]);
 
   @override
-  Future<List<RtcStats>> crateApiGetPeerStats({
+  Future<List<RtcStats>> crateApiRtcStatsGetPeerStats({
     required ArcPeerConnection peer,
   }) {
     return handler.executeNormal(
@@ -902,14 +908,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_list_rtc_stats,
           decodeErrorData: sse_decode_AnyhowException,
         ),
-        constMeta: kCrateApiGetPeerStatsConstMeta,
+        constMeta: kCrateApiRtcStatsGetPeerStatsConstMeta,
         argValues: [peer],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiGetPeerStatsConstMeta =>
+  TaskConstMeta get kCrateApiRtcStatsGetPeerStatsConstMeta =>
       const TaskConstMeta(debugName: "get_peer_stats", argNames: ["peer"]);
 
   @override
