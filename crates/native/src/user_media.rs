@@ -1336,8 +1336,8 @@ impl VideoTrack {
                 width,
                 height,
                 sink: None,
-                // Safe to unwrap since transceiver is guaranteed to be negotiated
-                // at this point.
+                // Safe to unwrap since transceiver is guaranteed
+                // to be negotiated at this point.
                 source: MediaTrackSource::Remote {
                     mid: transceiver.mid().unwrap(),
                     peer: Arc::downgrade(peer),
@@ -1458,8 +1458,8 @@ impl AudioTrack {
                 id: AudioTrackId(track.id()),
                 inner: track.try_into().unwrap(),
                 volume_observer_id: None,
-                // Safe to unwrap since transceiver is guaranteed to be negotiated
-                // at this point.
+                // Safe to unwrap since transceiver is guaranteed
+                // to be negotiated at this point.
                 source: MediaTrackSource::Remote {
                     mid: transceiver.mid().unwrap(),
                     peer: Arc::downgrade(peer),
