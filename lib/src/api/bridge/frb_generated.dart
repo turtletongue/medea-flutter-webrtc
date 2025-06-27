@@ -12,6 +12,7 @@ import 'api.dart';
 import 'api/media_device_info.dart';
 import 'api/media_display_info.dart';
 import 'api/rtc_ice_candidate_stats.dart';
+import 'api/rtc_session_description.dart';
 import 'api/rtc_stats.dart';
 import 'api/rtc_stats/ice_role.dart';
 import 'api/rtc_stats/rtc_inbound_rtp_stream_media_type.dart';
@@ -79,7 +80,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.10.0';
 
   @override
-  int get rustContentHash => -835450150;
+  int get rustContentHash => 2086621418;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -228,7 +229,7 @@ abstract class RustLibApi extends BaseApi {
     required List<RtpCodecCapability> codecs,
   });
 
-  Future<void> crateApiSetLocalDescription({
+  Future<void> crateApiRtcSessionDescriptionSetLocalDescription({
     required ArcPeerConnection peer,
     required SdpType kind,
     required String sdp,
@@ -238,7 +239,7 @@ abstract class RustLibApi extends BaseApi {
 
   Stream<void> crateApiSetOnDeviceChanged();
 
-  Future<void> crateApiSetRemoteDescription({
+  Future<void> crateApiRtcSessionDescriptionSetRemoteDescription({
     required ArcPeerConnection peer,
     required SdpType kind,
     required String sdp,
@@ -1442,7 +1443,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<void> crateApiSetLocalDescription({
+  Future<void> crateApiRtcSessionDescriptionSetLocalDescription({
     required ArcPeerConnection peer,
     required SdpType kind,
     required String sdp,
@@ -1465,14 +1466,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: sse_decode_AnyhowException,
         ),
-        constMeta: kCrateApiSetLocalDescriptionConstMeta,
+        constMeta: kCrateApiRtcSessionDescriptionSetLocalDescriptionConstMeta,
         argValues: [peer, kind, sdp],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiSetLocalDescriptionConstMeta =>
+  TaskConstMeta
+  get kCrateApiRtcSessionDescriptionSetLocalDescriptionConstMeta =>
       const TaskConstMeta(
         debugName: "set_local_description",
         argNames: ["peer", "kind", "sdp"],
@@ -1542,7 +1544,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "set_on_device_changed", argNames: ["cb"]);
 
   @override
-  Future<void> crateApiSetRemoteDescription({
+  Future<void> crateApiRtcSessionDescriptionSetRemoteDescription({
     required ArcPeerConnection peer,
     required SdpType kind,
     required String sdp,
@@ -1565,14 +1567,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: sse_decode_AnyhowException,
         ),
-        constMeta: kCrateApiSetRemoteDescriptionConstMeta,
+        constMeta: kCrateApiRtcSessionDescriptionSetRemoteDescriptionConstMeta,
         argValues: [peer, kind, sdp],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiSetRemoteDescriptionConstMeta =>
+  TaskConstMeta
+  get kCrateApiRtcSessionDescriptionSetRemoteDescriptionConstMeta =>
       const TaskConstMeta(
         debugName: "set_remote_description",
         argNames: ["peer", "kind", "sdp"],

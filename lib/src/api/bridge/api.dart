@@ -6,6 +6,7 @@
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
 
+import 'api/rtc_session_description.dart';
 import 'frb_generated.dart';
 import 'lib.dart';
 import 'renderer.dart';
@@ -13,7 +14,7 @@ import 'renderer.dart';
 part 'api.freezed.dart';
 
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `TrackKind`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `hash`, `hash`, `hash`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `hash`, `hash`, `hash`
 
 /// Returns all [`VideoCodecInfo`]s of the supported video encoders.
 Future<List<VideoCodecInfo>> videoEncoders() =>
@@ -64,29 +65,6 @@ Future<RtcSessionDescription> createAnswer({
   voiceActivityDetection: voiceActivityDetection,
   iceRestart: iceRestart,
   useRtpMux: useRtpMux,
-);
-
-/// Changes the local description associated with the connection.
-Future<void> setLocalDescription({
-  required ArcPeerConnection peer,
-  required SdpType kind,
-  required String sdp,
-}) => RustLib.instance.api.crateApiSetLocalDescription(
-  peer: peer,
-  kind: kind,
-  sdp: sdp,
-);
-
-/// Sets the specified session description as the remote peer's current offer or
-/// answer.
-Future<void> setRemoteDescription({
-  required ArcPeerConnection peer,
-  required SdpType kind,
-  required String sdp,
-}) => RustLib.instance.api.crateApiSetRemoteDescription(
-  peer: peer,
-  kind: kind,
-  sdp: sdp,
 );
 
 /// Creates a new [`RtcRtpTransceiver`] and adds it to the set of transceivers
@@ -1126,30 +1104,6 @@ class RtcRtpTransceiver {
           direction == other.direction;
 }
 
-/// [RTCSessionDescription] representation.
-///
-/// [RTCSessionDescription]: https://w3.org/TR/webrtc#dom-rtcsessiondescription
-class RtcSessionDescription {
-  /// String representation of the SDP.
-  final String sdp;
-
-  /// Type of this [`RtcSessionDescription`].
-  final SdpType kind;
-
-  const RtcSessionDescription({required this.sdp, required this.kind});
-
-  @override
-  int get hashCode => sdp.hashCode ^ kind.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is RtcSessionDescription &&
-          runtimeType == other.runtimeType &&
-          sdp == other.sdp &&
-          kind == other.kind;
-}
-
 /// Representation of a track event, sent when a new [`MediaStreamTrack`] is
 /// added to an [`RtcRtpTransceiver`] as part of a [`PeerConnection`].
 class RtcTrackEvent {
@@ -1490,31 +1444,6 @@ enum ScalabilityMode {
   ///
   /// [0]: https://w3.org/TR/webrtc-svc#S3T3*
   s3T3H,
-}
-
-/// [RTCSdpType] representation.
-///
-/// [RTCSdpType]: https://w3.org/TR/webrtc#dom-rtcsdptype
-enum SdpType {
-  /// [RTCSdpType.offer][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcsdptype-offer
-  offer,
-
-  /// [RTCSdpType.pranswer][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcsdptype-pranswer
-  prAnswer,
-
-  /// [RTCSdpType.answer][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcsdptype-answer
-  answer,
-
-  /// [RTCSdpType.rollback][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcsdptype-rollback
-  rollback,
 }
 
 /// [RTCSignalingState] representation.
