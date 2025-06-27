@@ -8,7 +8,7 @@ export 'api/media_stream_constraints/video_constraints.dart';
 export 'api/media_stream_track.dart';
 export 'api/media_stream_track/media_type.dart';
 export 'api/media_stream_track/track_event.dart';
-export 'api/media_stream_track/track_state.dart';
+export 'api/media_stream_track/media_track_state.dart';
 export 'api/rtc_ice_candidate_stats.dart';
 export 'api/rtc_session_description.dart';
 export 'api/rtc_stats.dart';
