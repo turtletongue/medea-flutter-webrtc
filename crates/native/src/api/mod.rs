@@ -2,7 +2,7 @@
 
 pub mod media_device_info;
 pub mod media_display_info;
-mod media_stream_constraints;
+pub mod media_stream_constraints;
 pub mod rtc_ice_candidate_stats;
 pub mod rtc_session_description;
 pub mod rtc_stats;
