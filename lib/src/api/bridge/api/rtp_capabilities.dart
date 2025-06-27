@@ -7,6 +7,7 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 import '../api.dart';
 import '../frb_generated.dart';
+import 'media_stream_track/media_type.dart';
 import 'rtcp_feedback.dart';
 import 'rtp_codec_capability.dart';
 import 'rtp_header_extension_capability.dart';
