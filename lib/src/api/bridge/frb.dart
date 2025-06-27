@@ -1,4 +1,5 @@
 export 'api.dart';
+export 'api/audio_processing_config.dart';
 export 'api/media_device_info.dart';
 export 'api/media_display_info.dart';
 export 'api/media_stream_constraints.dart';
