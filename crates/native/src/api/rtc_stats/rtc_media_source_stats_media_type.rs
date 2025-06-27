@@ -5,6 +5,9 @@
 
 use libwebrtc_sys as sys;
 
+#[cfg(doc)]
+use crate::api::RtcStatsType;
+
 /// Fields of [`RtcStatsType::RtcMediaSourceStats`] variant.
 pub enum RtcMediaSourceStatsMediaType {
     /// Video source fields.

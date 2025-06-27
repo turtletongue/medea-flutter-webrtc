@@ -4,6 +4,9 @@
 
 use libwebrtc_sys as sys;
 
+#[cfg(doc)]
+use crate::api::RtcStatsType;
+
 /// Fields of [`RtcStatsType::RtcOutboundRtpStreamStats`] variant.
 pub enum RtcOutboundRtpStreamStatsMediaType {
     /// `audio` media type fields.
