@@ -11,6 +11,9 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'api.dart';
 import 'api/media_device_info.dart';
 import 'api/media_display_info.dart';
+import 'api/media_stream_constraints.dart';
+import 'api/media_stream_constraints/audio_constraints.dart';
+import 'api/media_stream_constraints/video_constraints.dart';
 import 'api/rtc_ice_candidate_stats.dart';
 import 'api/rtc_session_description.dart';
 import 'api/rtc_stats.dart';
@@ -80,7 +83,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.10.0';
 
   @override
-  int get rustContentHash => 2086621418;
+  int get rustContentHash => 1351990350;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -105,7 +108,7 @@ abstract class RustLibApi extends BaseApi {
   });
 
   Future<AudioProcessingConstraints>
-  crateApiAudioProcessingConstraintsDefault();
+  crateApiMediaStreamConstraintsAudioConstraintsAudioProcessingConstraintsDefault();
 
   Future<MediaStreamTrack?> crateApiCloneTrack({
     required String trackId,
@@ -419,7 +422,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @override
   Future<AudioProcessingConstraints>
-  crateApiAudioProcessingConstraintsDefault() {
+  crateApiMediaStreamConstraintsAudioConstraintsAudioProcessingConstraintsDefault() {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
@@ -435,14 +438,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_audio_processing_constraints,
           decodeErrorData: null,
         ),
-        constMeta: kCrateApiAudioProcessingConstraintsDefaultConstMeta,
+        constMeta:
+            kCrateApiMediaStreamConstraintsAudioConstraintsAudioProcessingConstraintsDefaultConstMeta,
         argValues: [],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiAudioProcessingConstraintsDefaultConstMeta =>
+  TaskConstMeta
+  get kCrateApiMediaStreamConstraintsAudioConstraintsAudioProcessingConstraintsDefaultConstMeta =>
       const TaskConstMeta(
         debugName: "audio_processing_constraints_default",
         argNames: [],
