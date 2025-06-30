@@ -7,6 +7,7 @@ pub mod media_stream_constraints;
 pub mod media_stream_track;
 pub mod rtc_ice_candidate_stats;
 pub mod rtc_rtp_encoding_parameters;
+pub mod rtc_rtp_send_parameters;
 pub mod rtc_session_description;
 pub mod rtc_stats;
 pub mod rtcp_feedback;
@@ -48,6 +49,7 @@ pub use self::{
         CandidateType, IceCandidateStats, RtcIceCandidateStats,
     },
     rtc_rtp_encoding_parameters::RtcRtpEncodingParameters,
+    rtc_rtp_send_parameters::RtcRtpSendParameters,
     rtc_session_description::{
         RtcSessionDescription, SdpType, set_local_description,
         set_remote_description,
@@ -770,37 +772,6 @@ pub struct RtcRtpTransceiver {
     ///
     /// [1]: https://w3.org/TR/webrtc#dom-rtcrtptransceiver-direction
     pub direction: RtpTransceiverDirection,
-}
-
-/// Representation of [RTCRtpSendParameters][0].
-///
-/// [0]: https://w3.org/TR/webrtc#dom-rtcrtpsendparameters
-pub struct RtcRtpSendParameters {
-    /// Sequence containing parameters for sending [RTP] encodings of media.
-    ///
-    /// [RTP]: https://en.wikipedia.org/wiki/Real-time_Transport_Protocol
-    pub encodings:
-        Vec<(RtcRtpEncodingParameters, RustOpaque<Arc<RtpEncodingParameters>>)>,
-
-    /// Reference to the Rust side [`RtpParameters`].
-    pub inner: RustOpaque<Arc<RtpParameters>>,
-}
-
-impl From<RtpParameters> for RtcRtpSendParameters {
-    fn from(v: RtpParameters) -> Self {
-        let encodings = v
-            .get_encodings()
-            .into_iter()
-            .map(|e| {
-                (
-                    RtcRtpEncodingParameters::from(&e),
-                    RustOpaque::new(Arc::new(RtpEncodingParameters::from(e))),
-                )
-            })
-            .collect();
-
-        Self { encodings, inner: RustOpaque::new(Arc::new(v)) }
-    }
 }
 
 /// Representation of a track event, sent when a new [`MediaStreamTrack`] is
