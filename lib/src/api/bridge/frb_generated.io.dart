@@ -21,6 +21,7 @@ import 'api/media_stream_track/media_track_state.dart';
 import 'api/media_stream_track/media_type.dart';
 import 'api/media_stream_track/track_event.dart';
 import 'api/rtc_ice_candidate_stats.dart';
+import 'api/rtc_rtp_encoding_parameters.dart';
 import 'api/rtc_session_description.dart';
 import 'api/rtc_stats.dart';
 import 'api/rtc_stats/ice_role.dart';
