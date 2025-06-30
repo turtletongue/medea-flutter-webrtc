@@ -10,6 +10,7 @@ export 'api/media_stream_track/media_type.dart';
 export 'api/media_stream_track/track_event.dart';
 export 'api/media_stream_track/media_track_state.dart';
 export 'api/rtc_ice_candidate_stats.dart';
+export 'api/rtc_rtp_encoding_parameters.dart';
 export 'api/rtc_session_description.dart';
 export 'api/rtc_stats.dart';
 export 'api/rtc_stats/ice_role.dart';
