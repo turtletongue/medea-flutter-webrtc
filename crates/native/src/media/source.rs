@@ -6,8 +6,7 @@ use std::{
 };
 
 use anyhow::Context as _;
-use derive_more::with_trait::Into as _;
-use derive_more::{AsRef, Display, From};
+use derive_more::{AsRef, Display, From, with_trait::Into as _};
 use libwebrtc_sys as sys;
 
 use crate::{
