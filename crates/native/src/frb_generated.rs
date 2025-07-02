@@ -1441,7 +1441,7 @@ impl SseDecode for Vec<crate::api::RtpHeaderExtensionCapability> {
     }
 }
 
-impl SseDecode for Vec<crate::api::ScalabilityMode> {
+impl SseDecode for Vec<crate::api::rtp_codec_capability::ScalabilityMode> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
@@ -1449,7 +1449,11 @@ impl SseDecode for Vec<crate::api::ScalabilityMode> {
         let mut len_ = <i32>::sse_decode(deserializer);
         let mut ans_ = vec![];
         for idx_ in 0..len_ {
-            ans_.push(<crate::api::ScalabilityMode>::sse_decode(deserializer));
+            ans_.push(
+                <crate::api::rtp_codec_capability::ScalabilityMode>::sse_decode(
+                    deserializer,
+                ),
+            );
         }
         return ans_;
     }
@@ -2487,8 +2491,9 @@ impl SseDecode for crate::api::rtp_codec_capability::RtpCodecCapability {
     ) -> Self {
         let mut var_preferredPayloadType =
             <Option<i32>>::sse_decode(deserializer);
-        let mut var_scalabilityModes =
-            <Vec<crate::api::ScalabilityMode>>::sse_decode(deserializer);
+        let mut var_scalabilityModes = <Vec<
+            crate::api::rtp_codec_capability::ScalabilityMode,
+        >>::sse_decode(deserializer);
         let mut var_mimeType = <String>::sse_decode(deserializer);
         let mut var_name = <String>::sse_decode(deserializer);
         let mut var_kind = <crate::api::MediaType>::sse_decode(deserializer);
@@ -2569,47 +2574,49 @@ impl SseDecode for crate::api::RtpTransceiverInit {
     }
 }
 
-impl SseDecode for crate::api::ScalabilityMode {
+impl SseDecode for crate::api::rtp_codec_capability::ScalabilityMode {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
     ) -> Self {
         let mut inner = <i32>::sse_decode(deserializer);
         return match inner {
-            0 => crate::api::ScalabilityMode::L1T1,
-            1 => crate::api::ScalabilityMode::L1T2,
-            2 => crate::api::ScalabilityMode::L1T3,
-            3 => crate::api::ScalabilityMode::L2T1,
-            4 => crate::api::ScalabilityMode::L2T1h,
-            5 => crate::api::ScalabilityMode::L2t1Key,
-            6 => crate::api::ScalabilityMode::L2T2,
-            7 => crate::api::ScalabilityMode::L2T2h,
-            8 => crate::api::ScalabilityMode::L2T2Key,
-            9 => crate::api::ScalabilityMode::L2T2KeyShift,
-            10 => crate::api::ScalabilityMode::L2T3,
-            11 => crate::api::ScalabilityMode::L2T3h,
-            12 => crate::api::ScalabilityMode::L2T3Key,
-            13 => crate::api::ScalabilityMode::L3T1,
-            14 => crate::api::ScalabilityMode::L3T1h,
-            15 => crate::api::ScalabilityMode::L3T1Key,
-            16 => crate::api::ScalabilityMode::L3T2,
-            17 => crate::api::ScalabilityMode::L3T2h,
-            18 => crate::api::ScalabilityMode::L3T2Key,
-            19 => crate::api::ScalabilityMode::L3T3,
-            20 => crate::api::ScalabilityMode::L3T3h,
-            21 => crate::api::ScalabilityMode::L3T3Key,
-            22 => crate::api::ScalabilityMode::S2T1,
-            23 => crate::api::ScalabilityMode::S2T1h,
-            24 => crate::api::ScalabilityMode::S2T2,
-            25 => crate::api::ScalabilityMode::S2T2h,
-            26 => crate::api::ScalabilityMode::S2T3,
-            27 => crate::api::ScalabilityMode::S2T3h,
-            28 => crate::api::ScalabilityMode::S3T1,
-            29 => crate::api::ScalabilityMode::S3T1h,
-            30 => crate::api::ScalabilityMode::S3T2,
-            31 => crate::api::ScalabilityMode::S3T2h,
-            32 => crate::api::ScalabilityMode::S3T3,
-            33 => crate::api::ScalabilityMode::S3T3h,
+            0 => crate::api::rtp_codec_capability::ScalabilityMode::L1T1,
+            1 => crate::api::rtp_codec_capability::ScalabilityMode::L1T2,
+            2 => crate::api::rtp_codec_capability::ScalabilityMode::L1T3,
+            3 => crate::api::rtp_codec_capability::ScalabilityMode::L2T1,
+            4 => crate::api::rtp_codec_capability::ScalabilityMode::L2T1h,
+            5 => crate::api::rtp_codec_capability::ScalabilityMode::L2t1Key,
+            6 => crate::api::rtp_codec_capability::ScalabilityMode::L2T2,
+            7 => crate::api::rtp_codec_capability::ScalabilityMode::L2T2h,
+            8 => crate::api::rtp_codec_capability::ScalabilityMode::L2T2Key,
+            9 => {
+                crate::api::rtp_codec_capability::ScalabilityMode::L2T2KeyShift
+            }
+            10 => crate::api::rtp_codec_capability::ScalabilityMode::L2T3,
+            11 => crate::api::rtp_codec_capability::ScalabilityMode::L2T3h,
+            12 => crate::api::rtp_codec_capability::ScalabilityMode::L2T3Key,
+            13 => crate::api::rtp_codec_capability::ScalabilityMode::L3T1,
+            14 => crate::api::rtp_codec_capability::ScalabilityMode::L3T1h,
+            15 => crate::api::rtp_codec_capability::ScalabilityMode::L3T1Key,
+            16 => crate::api::rtp_codec_capability::ScalabilityMode::L3T2,
+            17 => crate::api::rtp_codec_capability::ScalabilityMode::L3T2h,
+            18 => crate::api::rtp_codec_capability::ScalabilityMode::L3T2Key,
+            19 => crate::api::rtp_codec_capability::ScalabilityMode::L3T3,
+            20 => crate::api::rtp_codec_capability::ScalabilityMode::L3T3h,
+            21 => crate::api::rtp_codec_capability::ScalabilityMode::L3T3Key,
+            22 => crate::api::rtp_codec_capability::ScalabilityMode::S2T1,
+            23 => crate::api::rtp_codec_capability::ScalabilityMode::S2T1h,
+            24 => crate::api::rtp_codec_capability::ScalabilityMode::S2T2,
+            25 => crate::api::rtp_codec_capability::ScalabilityMode::S2T2h,
+            26 => crate::api::rtp_codec_capability::ScalabilityMode::S2T3,
+            27 => crate::api::rtp_codec_capability::ScalabilityMode::S2T3h,
+            28 => crate::api::rtp_codec_capability::ScalabilityMode::S3T1,
+            29 => crate::api::rtp_codec_capability::ScalabilityMode::S3T1h,
+            30 => crate::api::rtp_codec_capability::ScalabilityMode::S3T2,
+            31 => crate::api::rtp_codec_capability::ScalabilityMode::S3T2h,
+            32 => crate::api::rtp_codec_capability::ScalabilityMode::S3T3,
+            33 => crate::api::rtp_codec_capability::ScalabilityMode::S3T3h,
             _ => unreachable!("Invalid variant for ScalabilityMode: {}", inner),
         };
     }
@@ -4202,7 +4209,9 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::RtpTransceiverInit>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::ScalabilityMode {
+impl flutter_rust_bridge::IntoDart
+    for crate::api::rtp_codec_capability::ScalabilityMode
+{
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         match self {
             Self::L1T1 => 0.into_dart(),
@@ -4244,13 +4253,17 @@ impl flutter_rust_bridge::IntoDart for crate::api::ScalabilityMode {
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::ScalabilityMode
+    for crate::api::rtp_codec_capability::ScalabilityMode
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::ScalabilityMode>
-    for crate::api::ScalabilityMode
+impl
+    flutter_rust_bridge::IntoIntoDart<
+        crate::api::rtp_codec_capability::ScalabilityMode,
+    > for crate::api::rtp_codec_capability::ScalabilityMode
 {
-    fn into_into_dart(self) -> crate::api::ScalabilityMode {
+    fn into_into_dart(
+        self,
+    ) -> crate::api::rtp_codec_capability::ScalabilityMode {
         self
     }
 }
@@ -5065,7 +5078,7 @@ impl SseEncode for Vec<crate::api::RtpHeaderExtensionCapability> {
     }
 }
 
-impl SseEncode for Vec<crate::api::ScalabilityMode> {
+impl SseEncode for Vec<crate::api::rtp_codec_capability::ScalabilityMode> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
@@ -5073,7 +5086,9 @@ impl SseEncode for Vec<crate::api::ScalabilityMode> {
     ) {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
-            <crate::api::ScalabilityMode>::sse_encode(item, serializer);
+            <crate::api::rtp_codec_capability::ScalabilityMode>::sse_encode(
+                item, serializer,
+            );
         }
     }
 }
@@ -6041,7 +6056,7 @@ impl SseEncode for crate::api::rtp_codec_capability::RtpCodecCapability {
         serializer: &mut flutter_rust_bridge::for_generated::SseSerializer,
     ) {
         <Option<i32>>::sse_encode(self.preferred_payload_type, serializer);
-        <Vec<crate::api::ScalabilityMode>>::sse_encode(
+        <Vec<crate::api::rtp_codec_capability::ScalabilityMode>>::sse_encode(
             self.scalability_modes,
             serializer,
         );
@@ -6110,54 +6125,47 @@ impl SseEncode for crate::api::RtpTransceiverInit {
     }
 }
 
-impl SseEncode for crate::api::ScalabilityMode {
+impl SseEncode for crate::api::rtp_codec_capability::ScalabilityMode {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
         serializer: &mut flutter_rust_bridge::for_generated::SseSerializer,
     ) {
-        <i32>::sse_encode(
-            match self {
-                crate::api::ScalabilityMode::L1T1 => 0,
-                crate::api::ScalabilityMode::L1T2 => 1,
-                crate::api::ScalabilityMode::L1T3 => 2,
-                crate::api::ScalabilityMode::L2T1 => 3,
-                crate::api::ScalabilityMode::L2T1h => 4,
-                crate::api::ScalabilityMode::L2t1Key => 5,
-                crate::api::ScalabilityMode::L2T2 => 6,
-                crate::api::ScalabilityMode::L2T2h => 7,
-                crate::api::ScalabilityMode::L2T2Key => 8,
-                crate::api::ScalabilityMode::L2T2KeyShift => 9,
-                crate::api::ScalabilityMode::L2T3 => 10,
-                crate::api::ScalabilityMode::L2T3h => 11,
-                crate::api::ScalabilityMode::L2T3Key => 12,
-                crate::api::ScalabilityMode::L3T1 => 13,
-                crate::api::ScalabilityMode::L3T1h => 14,
-                crate::api::ScalabilityMode::L3T1Key => 15,
-                crate::api::ScalabilityMode::L3T2 => 16,
-                crate::api::ScalabilityMode::L3T2h => 17,
-                crate::api::ScalabilityMode::L3T2Key => 18,
-                crate::api::ScalabilityMode::L3T3 => 19,
-                crate::api::ScalabilityMode::L3T3h => 20,
-                crate::api::ScalabilityMode::L3T3Key => 21,
-                crate::api::ScalabilityMode::S2T1 => 22,
-                crate::api::ScalabilityMode::S2T1h => 23,
-                crate::api::ScalabilityMode::S2T2 => 24,
-                crate::api::ScalabilityMode::S2T2h => 25,
-                crate::api::ScalabilityMode::S2T3 => 26,
-                crate::api::ScalabilityMode::S2T3h => 27,
-                crate::api::ScalabilityMode::S3T1 => 28,
-                crate::api::ScalabilityMode::S3T1h => 29,
-                crate::api::ScalabilityMode::S3T2 => 30,
-                crate::api::ScalabilityMode::S3T2h => 31,
-                crate::api::ScalabilityMode::S3T3 => 32,
-                crate::api::ScalabilityMode::S3T3h => 33,
-                _ => {
-                    unimplemented!("");
-                }
-            },
-            serializer,
-        );
+        <i32>::sse_encode(match self {crate::api::rtp_codec_capability::ScalabilityMode::L1T1 => { 0 }
+crate::api::rtp_codec_capability::ScalabilityMode::L1T2 => { 1 }
+crate::api::rtp_codec_capability::ScalabilityMode::L1T3 => { 2 }
+crate::api::rtp_codec_capability::ScalabilityMode::L2T1 => { 3 }
+crate::api::rtp_codec_capability::ScalabilityMode::L2T1h => { 4 }
+crate::api::rtp_codec_capability::ScalabilityMode::L2t1Key => { 5 }
+crate::api::rtp_codec_capability::ScalabilityMode::L2T2 => { 6 }
+crate::api::rtp_codec_capability::ScalabilityMode::L2T2h => { 7 }
+crate::api::rtp_codec_capability::ScalabilityMode::L2T2Key => { 8 }
+crate::api::rtp_codec_capability::ScalabilityMode::L2T2KeyShift => { 9 }
+crate::api::rtp_codec_capability::ScalabilityMode::L2T3 => { 10 }
+crate::api::rtp_codec_capability::ScalabilityMode::L2T3h => { 11 }
+crate::api::rtp_codec_capability::ScalabilityMode::L2T3Key => { 12 }
+crate::api::rtp_codec_capability::ScalabilityMode::L3T1 => { 13 }
+crate::api::rtp_codec_capability::ScalabilityMode::L3T1h => { 14 }
+crate::api::rtp_codec_capability::ScalabilityMode::L3T1Key => { 15 }
+crate::api::rtp_codec_capability::ScalabilityMode::L3T2 => { 16 }
+crate::api::rtp_codec_capability::ScalabilityMode::L3T2h => { 17 }
+crate::api::rtp_codec_capability::ScalabilityMode::L3T2Key => { 18 }
+crate::api::rtp_codec_capability::ScalabilityMode::L3T3 => { 19 }
+crate::api::rtp_codec_capability::ScalabilityMode::L3T3h => { 20 }
+crate::api::rtp_codec_capability::ScalabilityMode::L3T3Key => { 21 }
+crate::api::rtp_codec_capability::ScalabilityMode::S2T1 => { 22 }
+crate::api::rtp_codec_capability::ScalabilityMode::S2T1h => { 23 }
+crate::api::rtp_codec_capability::ScalabilityMode::S2T2 => { 24 }
+crate::api::rtp_codec_capability::ScalabilityMode::S2T2h => { 25 }
+crate::api::rtp_codec_capability::ScalabilityMode::S2T3 => { 26 }
+crate::api::rtp_codec_capability::ScalabilityMode::S2T3h => { 27 }
+crate::api::rtp_codec_capability::ScalabilityMode::S3T1 => { 28 }
+crate::api::rtp_codec_capability::ScalabilityMode::S3T1h => { 29 }
+crate::api::rtp_codec_capability::ScalabilityMode::S3T2 => { 30 }
+crate::api::rtp_codec_capability::ScalabilityMode::S3T2h => { 31 }
+crate::api::rtp_codec_capability::ScalabilityMode::S3T3 => { 32 }
+crate::api::rtp_codec_capability::ScalabilityMode::S3T3h => { 33 }
+ _ => { unimplemented!(""); }}, serializer);
     }
 }
 
