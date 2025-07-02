@@ -35,3 +35,4 @@ export 'api/rtp_capabilities.dart';
 export 'api/rtp_codec_capability.dart';
 export 'api/rtp_header_extension_capability.dart';
 export 'api/rtp_transceiver_init.dart';
+export 'api/video_codec_info.dart';
