@@ -8,7 +8,6 @@ pub use self::{
     bundle_policy::BundlePolicy, ice_transports_type::IceTransportsType,
     rtc_ice_server::RtcIceServer,
 };
-use crate::PeerConnection;
 #[cfg(doc)]
 use crate::PeerConnection;
 
