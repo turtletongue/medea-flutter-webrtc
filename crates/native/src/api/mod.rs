@@ -22,7 +22,7 @@ pub use self::{
     media_device_info::{MediaDeviceInfo, MediaDeviceKind, enumerate_devices},
     media_display_info::{MediaDisplayInfo, enumerate_displays},
     rtc_ice_candidate_stats::{
-        CandidateType, IceCandidateStats, RtcIceCandidateStats,
+        CandidateType, IceCandidateStats, Protocol, RtcIceCandidateStats,
     },
     rtp_capabilities::{
         RtpCapabilities, get_rtp_receiver_capabilities,
@@ -380,30 +380,6 @@ impl From<sys::RTCStatsIceCandidatePairState>
             sys::RTCStatsIceCandidatePairState::kFailed => Self::Failed,
             sys::RTCStatsIceCandidatePairState::kSucceeded => Self::Succeeded,
             _ => unreachable!(),
-        }
-    }
-}
-
-/// Transport protocols used in [WebRTC].
-///
-/// [WebRTC]: https://w3.org/TR/webrtc
-pub enum Protocol {
-    /// [Transmission Control Protocol][1].
-    ///
-    /// [1]: https://en.wikipedia.org/wiki/Transmission_Control_Protocol
-    Tcp,
-
-    /// [User Datagram Protocol][1].
-    ///
-    /// [1]: https://en.wikipedia.org/wiki/User_Datagram_Protocol
-    Udp,
-}
-
-impl From<sys::Protocol> for Protocol {
-    fn from(protocol: sys::Protocol) -> Self {
-        match protocol {
-            sys::Protocol::Tcp => Self::Tcp,
-            sys::Protocol::Udp => Self::Udp,
         }
     }
 }

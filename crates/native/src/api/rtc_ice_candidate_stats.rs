@@ -4,8 +4,6 @@
 
 use libwebrtc_sys as sys;
 
-use crate::api::Protocol;
-
 /// [RTCIceCandidateType] represents the type of the ICE candidate, as defined
 /// in [Section 15.1 of RFC 5245][1].
 ///
@@ -44,6 +42,30 @@ impl From<sys::CandidateType> for CandidateType {
             sys::CandidateType::kPrflx => Self::Prflx,
             sys::CandidateType::kRelay => Self::Relay,
             _ => unreachable!(),
+        }
+    }
+}
+
+/// Transport protocols used in [WebRTC].
+///
+/// [WebRTC]: https://w3.org/TR/webrtc
+pub enum Protocol {
+    /// [Transmission Control Protocol][1].
+    ///
+    /// [1]: https://en.wikipedia.org/wiki/Transmission_Control_Protocol
+    Tcp,
+
+    /// [User Datagram Protocol][1].
+    ///
+    /// [1]: https://en.wikipedia.org/wiki/User_Datagram_Protocol
+    Udp,
+}
+
+impl From<sys::Protocol> for Protocol {
+    fn from(protocol: sys::Protocol) -> Self {
+        match protocol {
+            sys::Protocol::Tcp => Self::Tcp,
+            sys::Protocol::Udp => Self::Udp,
         }
     }
 }
