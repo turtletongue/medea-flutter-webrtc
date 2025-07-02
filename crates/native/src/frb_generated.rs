@@ -162,7 +162,7 @@ fn wire__crate__api__create_peer_connection_impl(
     FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "create_peer_connection", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
             let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
             let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_cb = <StreamSink<crate::api::PeerConnectionEvent,flutter_rust_bridge::for_generated::SseCodec>>::sse_decode(&mut deserializer);
+            let api_cb = <StreamSink<crate::api::peer_connection_event::PeerConnectionEvent,flutter_rust_bridge::for_generated::SseCodec>>::sse_decode(&mut deserializer);
 let api_configuration = <crate::api::RtcConfiguration>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
                     transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>((move ||  {
                          let output_ok = crate::api::create_peer_connection(api_cb, api_configuration)?;   Ok(output_ok)
@@ -883,7 +883,7 @@ impl SseDecode for RustOpaqueMoi<Arc<RtpTransceiver>> {
 
 impl SseDecode
     for StreamSink<
-        crate::api::PeerConnectionEvent,
+        crate::api::peer_connection_event::PeerConnectionEvent,
         flutter_rust_bridge::for_generated::SseCodec,
     >
 {
@@ -1141,44 +1141,31 @@ impl SseDecode for crate::api::rtc_ice_candidate_stats::IceCandidateStats {
     }
 }
 
-impl SseDecode for crate::api::IceConnectionState {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(
-        deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
-    ) -> Self {
-        let mut inner = <i32>::sse_decode(deserializer);
+impl SseDecode for crate::api::peer_connection_event::ice_connection_state::IceConnectionState {
+                    // Codec=Sse (Serialization based), see doc to use other codecs
+                    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {let mut inner = <i32>::sse_decode(deserializer);
         return match inner {
-            0 => crate::api::IceConnectionState::New,
-            1 => crate::api::IceConnectionState::Checking,
-            2 => crate::api::IceConnectionState::Connected,
-            3 => crate::api::IceConnectionState::Completed,
-            4 => crate::api::IceConnectionState::Failed,
-            5 => crate::api::IceConnectionState::Disconnected,
-            6 => crate::api::IceConnectionState::Closed,
-            _ => unreachable!(
-                "Invalid variant for IceConnectionState: {}",
-                inner
-            ),
-        };
-    }
-}
+            0 => crate::api::peer_connection_event::ice_connection_state::IceConnectionState::New,
+1 => crate::api::peer_connection_event::ice_connection_state::IceConnectionState::Checking,
+2 => crate::api::peer_connection_event::ice_connection_state::IceConnectionState::Connected,
+3 => crate::api::peer_connection_event::ice_connection_state::IceConnectionState::Completed,
+4 => crate::api::peer_connection_event::ice_connection_state::IceConnectionState::Failed,
+5 => crate::api::peer_connection_event::ice_connection_state::IceConnectionState::Disconnected,
+6 => crate::api::peer_connection_event::ice_connection_state::IceConnectionState::Closed,
+            _ => unreachable!("Invalid variant for IceConnectionState: {}", inner),
+        };}
+                }
 
-impl SseDecode for crate::api::IceGatheringState {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(
-        deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
-    ) -> Self {
-        let mut inner = <i32>::sse_decode(deserializer);
+impl SseDecode for crate::api::peer_connection_event::ice_gathering_state::IceGatheringState {
+                    // Codec=Sse (Serialization based), see doc to use other codecs
+                    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {let mut inner = <i32>::sse_decode(deserializer);
         return match inner {
-            0 => crate::api::IceGatheringState::New,
-            1 => crate::api::IceGatheringState::Gathering,
-            2 => crate::api::IceGatheringState::Complete,
-            _ => {
-                unreachable!("Invalid variant for IceGatheringState: {}", inner)
-            }
-        };
-    }
-}
+            0 => crate::api::peer_connection_event::ice_gathering_state::IceGatheringState::New,
+1 => crate::api::peer_connection_event::ice_gathering_state::IceGatheringState::Gathering,
+2 => crate::api::peer_connection_event::ice_gathering_state::IceGatheringState::Complete,
+            _ => unreachable!("Invalid variant for IceGatheringState: {}", inner),
+        };}
+                }
 
 impl SseDecode for crate::api::rtc_stats::ice_role::IceRole {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -1751,7 +1738,7 @@ impl SseDecode for Option<crate::api::media_stream_constraints::video_constraint
             }}
                 }
 
-impl SseDecode for crate::api::PeerConnectionEvent {
+impl SseDecode for crate::api::peer_connection_event::PeerConnectionEvent {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
@@ -1763,24 +1750,17 @@ impl SseDecode for crate::api::PeerConnectionEvent {
                     <RustOpaqueMoi<Arc<PeerConnection>>>::sse_decode(
                         deserializer,
                     );
-                return crate::api::PeerConnectionEvent::PeerCreated {
-                    peer: var_peer,
-                };
+                return crate::api::peer_connection_event::PeerConnectionEvent::PeerCreated{peer: var_peer};
             }
             1 => {
                 let mut var_sdpMid = <String>::sse_decode(deserializer);
                 let mut var_sdpMlineIndex = <i32>::sse_decode(deserializer);
                 let mut var_candidate = <String>::sse_decode(deserializer);
-                return crate::api::PeerConnectionEvent::IceCandidate {
-                    sdp_mid: var_sdpMid,
-                    sdp_mline_index: var_sdpMlineIndex,
-                    candidate: var_candidate,
-                };
+                return crate::api::peer_connection_event::PeerConnectionEvent::IceCandidate{sdp_mid: var_sdpMid, sdp_mline_index: var_sdpMlineIndex, candidate: var_candidate};
             }
             2 => {
-                let mut var_field0 =
-                    <crate::api::IceGatheringState>::sse_decode(deserializer);
-                return crate::api::PeerConnectionEvent::IceGatheringStateChange(var_field0);
+                let mut var_field0 = <crate::api::peer_connection_event::ice_gathering_state::IceGatheringState>::sse_decode(deserializer);
+                return crate::api::peer_connection_event::PeerConnectionEvent::IceGatheringStateChange(var_field0);
             }
             3 => {
                 let mut var_address = <String>::sse_decode(deserializer);
@@ -1788,40 +1768,26 @@ impl SseDecode for crate::api::PeerConnectionEvent {
                 let mut var_url = <String>::sse_decode(deserializer);
                 let mut var_errorCode = <i32>::sse_decode(deserializer);
                 let mut var_errorText = <String>::sse_decode(deserializer);
-                return crate::api::PeerConnectionEvent::IceCandidateError {
-                    address: var_address,
-                    port: var_port,
-                    url: var_url,
-                    error_code: var_errorCode,
-                    error_text: var_errorText,
-                };
+                return crate::api::peer_connection_event::PeerConnectionEvent::IceCandidateError{address: var_address, port: var_port, url: var_url, error_code: var_errorCode, error_text: var_errorText};
             }
             4 => {
-                return crate::api::PeerConnectionEvent::NegotiationNeeded;
+                return crate::api::peer_connection_event::PeerConnectionEvent::NegotiationNeeded;
             }
             5 => {
-                let mut var_field0 =
-                    <crate::api::SignalingState>::sse_decode(deserializer);
-                return crate::api::PeerConnectionEvent::SignallingChange(
-                    var_field0,
-                );
+                let mut var_field0 = <crate::api::peer_connection_event::signaling_state::SignalingState>::sse_decode(deserializer);
+                return crate::api::peer_connection_event::PeerConnectionEvent::SignallingChange(var_field0);
             }
             6 => {
-                let mut var_field0 =
-                    <crate::api::IceConnectionState>::sse_decode(deserializer);
-                return crate::api::PeerConnectionEvent::IceConnectionStateChange(var_field0);
+                let mut var_field0 = <crate::api::peer_connection_event::ice_connection_state::IceConnectionState>::sse_decode(deserializer);
+                return crate::api::peer_connection_event::PeerConnectionEvent::IceConnectionStateChange(var_field0);
             }
             7 => {
-                let mut var_field0 =
-                    <crate::api::PeerConnectionState>::sse_decode(deserializer);
-                return crate::api::PeerConnectionEvent::ConnectionStateChange(
-                    var_field0,
-                );
+                let mut var_field0 = <crate::api::peer_connection_event::peer_connection_state::PeerConnectionState>::sse_decode(deserializer);
+                return crate::api::peer_connection_event::PeerConnectionEvent::ConnectionStateChange(var_field0);
             }
             8 => {
-                let mut var_field0 =
-                    <crate::api::RtcTrackEvent>::sse_decode(deserializer);
-                return crate::api::PeerConnectionEvent::Track(var_field0);
+                let mut var_field0 = <crate::api::peer_connection_event::rtc_track_event::RtcTrackEvent>::sse_decode(deserializer);
+                return crate::api::peer_connection_event::PeerConnectionEvent::Track(var_field0);
             }
             _ => {
                 unimplemented!("");
@@ -1830,26 +1796,19 @@ impl SseDecode for crate::api::PeerConnectionEvent {
     }
 }
 
-impl SseDecode for crate::api::PeerConnectionState {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(
-        deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
-    ) -> Self {
-        let mut inner = <i32>::sse_decode(deserializer);
+impl SseDecode for crate::api::peer_connection_event::peer_connection_state::PeerConnectionState {
+                    // Codec=Sse (Serialization based), see doc to use other codecs
+                    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {let mut inner = <i32>::sse_decode(deserializer);
         return match inner {
-            0 => crate::api::PeerConnectionState::New,
-            1 => crate::api::PeerConnectionState::Connecting,
-            2 => crate::api::PeerConnectionState::Connected,
-            3 => crate::api::PeerConnectionState::Disconnected,
-            4 => crate::api::PeerConnectionState::Failed,
-            5 => crate::api::PeerConnectionState::Closed,
-            _ => unreachable!(
-                "Invalid variant for PeerConnectionState: {}",
-                inner
-            ),
-        };
-    }
-}
+            0 => crate::api::peer_connection_event::peer_connection_state::PeerConnectionState::New,
+1 => crate::api::peer_connection_event::peer_connection_state::PeerConnectionState::Connecting,
+2 => crate::api::peer_connection_event::peer_connection_state::PeerConnectionState::Connected,
+3 => crate::api::peer_connection_event::peer_connection_state::PeerConnectionState::Disconnected,
+4 => crate::api::peer_connection_event::peer_connection_state::PeerConnectionState::Failed,
+5 => crate::api::peer_connection_event::peer_connection_state::PeerConnectionState::Closed,
+            _ => unreachable!("Invalid variant for PeerConnectionState: {}", inner),
+        };}
+                }
 
 impl SseDecode for crate::api::Protocol {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -2220,7 +2179,9 @@ impl SseDecode for crate::api::rtc_stats::RtcStatsType {
     }
 }
 
-impl SseDecode for crate::api::RtcTrackEvent {
+impl SseDecode
+    for crate::api::peer_connection_event::rtc_track_event::RtcTrackEvent
+{
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
@@ -2233,10 +2194,7 @@ impl SseDecode for crate::api::RtcTrackEvent {
             <crate::api::rtc_rtp_transceiver::RtcRtpTransceiver>::sse_decode(
                 deserializer,
             );
-        return crate::api::RtcTrackEvent {
-            track: var_track,
-            transceiver: var_transceiver,
-        };
+        return crate::api::peer_connection_event::rtc_track_event::RtcTrackEvent{track: var_track, transceiver: var_transceiver};
     }
 }
 
@@ -2455,19 +2413,21 @@ impl SseDecode for crate::api::rtc_session_description::SdpType {
     }
 }
 
-impl SseDecode for crate::api::SignalingState {
+impl SseDecode
+    for crate::api::peer_connection_event::signaling_state::SignalingState
+{
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
     ) -> Self {
         let mut inner = <i32>::sse_decode(deserializer);
         return match inner {
-            0 => crate::api::SignalingState::Stable,
-            1 => crate::api::SignalingState::HaveLocalOffer,
-            2 => crate::api::SignalingState::HaveLocalPrAnswer,
-            3 => crate::api::SignalingState::HaveRemoteOffer,
-            4 => crate::api::SignalingState::HaveRemotePrAnswer,
-            5 => crate::api::SignalingState::Closed,
+            0 => crate::api::peer_connection_event::signaling_state::SignalingState::Stable,
+1 => crate::api::peer_connection_event::signaling_state::SignalingState::HaveLocalOffer,
+2 => crate::api::peer_connection_event::signaling_state::SignalingState::HaveLocalPrAnswer,
+3 => crate::api::peer_connection_event::signaling_state::SignalingState::HaveRemoteOffer,
+4 => crate::api::peer_connection_event::signaling_state::SignalingState::HaveRemotePrAnswer,
+5 => crate::api::peer_connection_event::signaling_state::SignalingState::Closed,
             _ => unreachable!("Invalid variant for SignalingState: {}", inner),
         };
     }
@@ -2915,53 +2875,43 @@ impl
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::IceConnectionState {
-    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-        match self {
-            Self::New => 0.into_dart(),
-            Self::Checking => 1.into_dart(),
-            Self::Connected => 2.into_dart(),
-            Self::Completed => 3.into_dart(),
-            Self::Failed => 4.into_dart(),
-            Self::Disconnected => 5.into_dart(),
-            Self::Closed => 6.into_dart(),
-            _ => unreachable!(),
+impl flutter_rust_bridge::IntoDart for crate::api::peer_connection_event::ice_connection_state::IceConnectionState {
+                fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+                    match self {
+                    Self::New => 0.into_dart(),
+Self::Checking => 1.into_dart(),
+Self::Connected => 2.into_dart(),
+Self::Completed => 3.into_dart(),
+Self::Failed => 4.into_dart(),
+Self::Disconnected => 5.into_dart(),
+Self::Closed => 6.into_dart(),
+                    _ => unreachable!(),
+                }
+                }
+            }
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::api::peer_connection_event::ice_connection_state::IceConnectionState {}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::peer_connection_event::ice_connection_state::IceConnectionState> for crate::api::peer_connection_event::ice_connection_state::IceConnectionState {
+            fn into_into_dart(self) -> crate::api::peer_connection_event::ice_connection_state::IceConnectionState {
+                self
+            }
         }
-    }
-}
-impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::IceConnectionState
-{
-}
-impl flutter_rust_bridge::IntoIntoDart<crate::api::IceConnectionState>
-    for crate::api::IceConnectionState
-{
-    fn into_into_dart(self) -> crate::api::IceConnectionState {
-        self
-    }
-}
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::IceGatheringState {
-    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-        match self {
-            Self::New => 0.into_dart(),
-            Self::Gathering => 1.into_dart(),
-            Self::Complete => 2.into_dart(),
-            _ => unreachable!(),
+impl flutter_rust_bridge::IntoDart for crate::api::peer_connection_event::ice_gathering_state::IceGatheringState {
+                fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+                    match self {
+                    Self::New => 0.into_dart(),
+Self::Gathering => 1.into_dart(),
+Self::Complete => 2.into_dart(),
+                    _ => unreachable!(),
+                }
+                }
+            }
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::api::peer_connection_event::ice_gathering_state::IceGatheringState {}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::peer_connection_event::ice_gathering_state::IceGatheringState> for crate::api::peer_connection_event::ice_gathering_state::IceGatheringState {
+            fn into_into_dart(self) -> crate::api::peer_connection_event::ice_gathering_state::IceGatheringState {
+                self
+            }
         }
-    }
-}
-impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::IceGatheringState
-{
-}
-impl flutter_rust_bridge::IntoIntoDart<crate::api::IceGatheringState>
-    for crate::api::IceGatheringState
-{
-    fn into_into_dart(self) -> crate::api::IceGatheringState {
-        self
-    }
-}
 // Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart
     for crate::api::rtc_stats::ice_role::IceRole
@@ -3202,102 +3152,71 @@ impl
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::PeerConnectionEvent {
+impl flutter_rust_bridge::IntoDart
+    for crate::api::peer_connection_event::PeerConnectionEvent
+{
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-        match self {
-            crate::api::PeerConnectionEvent::PeerCreated { peer } => {
-                [0.into_dart(), peer.into_into_dart().into_dart()].into_dart()
-            }
-            crate::api::PeerConnectionEvent::IceCandidate {
-                sdp_mid,
-                sdp_mline_index,
-                candidate,
-            } => [
-                1.into_dart(),
-                sdp_mid.into_into_dart().into_dart(),
-                sdp_mline_index.into_into_dart().into_dart(),
-                candidate.into_into_dart().into_dart(),
-            ]
-            .into_dart(),
-            crate::api::PeerConnectionEvent::IceGatheringStateChange(
-                field0,
-            ) => {
-                [2.into_dart(), field0.into_into_dart().into_dart()].into_dart()
-            }
-            crate::api::PeerConnectionEvent::IceCandidateError {
-                address,
-                port,
-                url,
-                error_code,
-                error_text,
-            } => [
-                3.into_dart(),
-                address.into_into_dart().into_dart(),
-                port.into_into_dart().into_dart(),
-                url.into_into_dart().into_dart(),
-                error_code.into_into_dart().into_dart(),
-                error_text.into_into_dart().into_dart(),
-            ]
-            .into_dart(),
-            crate::api::PeerConnectionEvent::NegotiationNeeded => {
-                [4.into_dart()].into_dart()
-            }
-            crate::api::PeerConnectionEvent::SignallingChange(field0) => {
-                [5.into_dart(), field0.into_into_dart().into_dart()].into_dart()
-            }
-            crate::api::PeerConnectionEvent::IceConnectionStateChange(
-                field0,
-            ) => {
-                [6.into_dart(), field0.into_into_dart().into_dart()].into_dart()
-            }
-            crate::api::PeerConnectionEvent::ConnectionStateChange(field0) => {
-                [7.into_dart(), field0.into_into_dart().into_dart()].into_dart()
-            }
-            crate::api::PeerConnectionEvent::Track(field0) => {
-                [8.into_dart(), field0.into_into_dart().into_dart()].into_dart()
-            }
-            _ => {
-                unimplemented!("");
-            }
-        }
+        match self {crate::api::peer_connection_event::PeerConnectionEvent::PeerCreated{peer} => { [0.into_dart(),
+peer.into_into_dart().into_dart()].into_dart() }
+crate::api::peer_connection_event::PeerConnectionEvent::IceCandidate{sdp_mid,sdp_mline_index,candidate} => { [1.into_dart(),
+sdp_mid.into_into_dart().into_dart(),
+sdp_mline_index.into_into_dart().into_dart(),
+candidate.into_into_dart().into_dart()].into_dart() }
+crate::api::peer_connection_event::PeerConnectionEvent::IceGatheringStateChange(field0) => { [2.into_dart(),
+field0.into_into_dart().into_dart()].into_dart() }
+crate::api::peer_connection_event::PeerConnectionEvent::IceCandidateError{address,port,url,error_code,error_text} => { [3.into_dart(),
+address.into_into_dart().into_dart(),
+port.into_into_dart().into_dart(),
+url.into_into_dart().into_dart(),
+error_code.into_into_dart().into_dart(),
+error_text.into_into_dart().into_dart()].into_dart() }
+crate::api::peer_connection_event::PeerConnectionEvent::NegotiationNeeded => { [4.into_dart()].into_dart() }
+crate::api::peer_connection_event::PeerConnectionEvent::SignallingChange(field0) => { [5.into_dart(),
+field0.into_into_dart().into_dart()].into_dart() }
+crate::api::peer_connection_event::PeerConnectionEvent::IceConnectionStateChange(field0) => { [6.into_dart(),
+field0.into_into_dart().into_dart()].into_dart() }
+crate::api::peer_connection_event::PeerConnectionEvent::ConnectionStateChange(field0) => { [7.into_dart(),
+field0.into_into_dart().into_dart()].into_dart() }
+crate::api::peer_connection_event::PeerConnectionEvent::Track(field0) => { [8.into_dart(),
+field0.into_into_dart().into_dart()].into_dart() }
+ _ => { unimplemented!(""); }}
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::PeerConnectionEvent
+    for crate::api::peer_connection_event::PeerConnectionEvent
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::PeerConnectionEvent>
-    for crate::api::PeerConnectionEvent
+impl
+    flutter_rust_bridge::IntoIntoDart<
+        crate::api::peer_connection_event::PeerConnectionEvent,
+    > for crate::api::peer_connection_event::PeerConnectionEvent
 {
-    fn into_into_dart(self) -> crate::api::PeerConnectionEvent {
+    fn into_into_dart(
+        self,
+    ) -> crate::api::peer_connection_event::PeerConnectionEvent {
         self
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::PeerConnectionState {
-    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-        match self {
-            Self::New => 0.into_dart(),
-            Self::Connecting => 1.into_dart(),
-            Self::Connected => 2.into_dart(),
-            Self::Disconnected => 3.into_dart(),
-            Self::Failed => 4.into_dart(),
-            Self::Closed => 5.into_dart(),
-            _ => unreachable!(),
+impl flutter_rust_bridge::IntoDart for crate::api::peer_connection_event::peer_connection_state::PeerConnectionState {
+                fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+                    match self {
+                    Self::New => 0.into_dart(),
+Self::Connecting => 1.into_dart(),
+Self::Connected => 2.into_dart(),
+Self::Disconnected => 3.into_dart(),
+Self::Failed => 4.into_dart(),
+Self::Closed => 5.into_dart(),
+                    _ => unreachable!(),
+                }
+                }
+            }
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::api::peer_connection_event::peer_connection_state::PeerConnectionState {}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::peer_connection_event::peer_connection_state::PeerConnectionState> for crate::api::peer_connection_event::peer_connection_state::PeerConnectionState {
+            fn into_into_dart(self) -> crate::api::peer_connection_event::peer_connection_state::PeerConnectionState {
+                self
+            }
         }
-    }
-}
-impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::PeerConnectionState
-{
-}
-impl flutter_rust_bridge::IntoIntoDart<crate::api::PeerConnectionState>
-    for crate::api::PeerConnectionState
-{
-    fn into_into_dart(self) -> crate::api::PeerConnectionState {
-        self
-    }
-}
 // Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::api::Protocol {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
@@ -3683,7 +3602,9 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::rtc_stats::RtcStatsType>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::RtcTrackEvent {
+impl flutter_rust_bridge::IntoDart
+    for crate::api::peer_connection_event::rtc_track_event::RtcTrackEvent
+{
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
             self.track.into_into_dart().into_dart(),
@@ -3693,13 +3614,17 @@ impl flutter_rust_bridge::IntoDart for crate::api::RtcTrackEvent {
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::RtcTrackEvent
+    for crate::api::peer_connection_event::rtc_track_event::RtcTrackEvent
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::RtcTrackEvent>
-    for crate::api::RtcTrackEvent
+impl
+    flutter_rust_bridge::IntoIntoDart<
+        crate::api::peer_connection_event::rtc_track_event::RtcTrackEvent,
+    > for crate::api::peer_connection_event::rtc_track_event::RtcTrackEvent
 {
-    fn into_into_dart(self) -> crate::api::RtcTrackEvent {
+    fn into_into_dart(
+        self,
+    ) -> crate::api::peer_connection_event::rtc_track_event::RtcTrackEvent {
         self
     }
 }
@@ -3994,7 +3919,9 @@ impl
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::SignalingState {
+impl flutter_rust_bridge::IntoDart
+    for crate::api::peer_connection_event::signaling_state::SignalingState
+{
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         match self {
             Self::Stable => 0.into_dart(),
@@ -4008,13 +3935,18 @@ impl flutter_rust_bridge::IntoDart for crate::api::SignalingState {
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::SignalingState
+    for crate::api::peer_connection_event::signaling_state::SignalingState
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::SignalingState>
-    for crate::api::SignalingState
+impl
+    flutter_rust_bridge::IntoIntoDart<
+        crate::api::peer_connection_event::signaling_state::SignalingState,
+    > for crate::api::peer_connection_event::signaling_state::SignalingState
 {
-    fn into_into_dart(self) -> crate::api::SignalingState {
+    fn into_into_dart(
+        self,
+    ) -> crate::api::peer_connection_event::signaling_state::SignalingState
+    {
         self
     }
 }
@@ -4234,7 +4166,7 @@ impl SseEncode for RustOpaqueMoi<Arc<RtpTransceiver>> {
 
 impl SseEncode
     for StreamSink<
-        crate::api::PeerConnectionEvent,
+        crate::api::peer_connection_event::PeerConnectionEvent,
         flutter_rust_bridge::for_generated::SseCodec,
     >
 {
@@ -4478,49 +4410,25 @@ impl SseEncode for crate::api::rtc_ice_candidate_stats::IceCandidateStats {
     }
 }
 
-impl SseEncode for crate::api::IceConnectionState {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(
-        self,
-        serializer: &mut flutter_rust_bridge::for_generated::SseSerializer,
-    ) {
-        <i32>::sse_encode(
-            match self {
-                crate::api::IceConnectionState::New => 0,
-                crate::api::IceConnectionState::Checking => 1,
-                crate::api::IceConnectionState::Connected => 2,
-                crate::api::IceConnectionState::Completed => 3,
-                crate::api::IceConnectionState::Failed => 4,
-                crate::api::IceConnectionState::Disconnected => 5,
-                crate::api::IceConnectionState::Closed => 6,
-                _ => {
-                    unimplemented!("");
+impl SseEncode for crate::api::peer_connection_event::ice_connection_state::IceConnectionState {
+                    // Codec=Sse (Serialization based), see doc to use other codecs
+                    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {<i32>::sse_encode(match self {crate::api::peer_connection_event::ice_connection_state::IceConnectionState::New => { 0 }
+crate::api::peer_connection_event::ice_connection_state::IceConnectionState::Checking => { 1 }
+crate::api::peer_connection_event::ice_connection_state::IceConnectionState::Connected => { 2 }
+crate::api::peer_connection_event::ice_connection_state::IceConnectionState::Completed => { 3 }
+crate::api::peer_connection_event::ice_connection_state::IceConnectionState::Failed => { 4 }
+crate::api::peer_connection_event::ice_connection_state::IceConnectionState::Disconnected => { 5 }
+crate::api::peer_connection_event::ice_connection_state::IceConnectionState::Closed => { 6 }
+ _ => { unimplemented!(""); }}, serializer);}
                 }
-            },
-            serializer,
-        );
-    }
-}
 
-impl SseEncode for crate::api::IceGatheringState {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(
-        self,
-        serializer: &mut flutter_rust_bridge::for_generated::SseSerializer,
-    ) {
-        <i32>::sse_encode(
-            match self {
-                crate::api::IceGatheringState::New => 0,
-                crate::api::IceGatheringState::Gathering => 1,
-                crate::api::IceGatheringState::Complete => 2,
-                _ => {
-                    unimplemented!("");
+impl SseEncode for crate::api::peer_connection_event::ice_gathering_state::IceGatheringState {
+                    // Codec=Sse (Serialization based), see doc to use other codecs
+                    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {<i32>::sse_encode(match self {crate::api::peer_connection_event::ice_gathering_state::IceGatheringState::New => { 0 }
+crate::api::peer_connection_event::ice_gathering_state::IceGatheringState::Gathering => { 1 }
+crate::api::peer_connection_event::ice_gathering_state::IceGatheringState::Complete => { 2 }
+ _ => { unimplemented!(""); }}, serializer);}
                 }
-            },
-            serializer,
-        );
-    }
-}
 
 impl SseEncode for crate::api::rtc_stats::ice_role::IceRole {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -5060,103 +4968,49 @@ impl SseEncode for Option<crate::api::media_stream_constraints::video_constraint
                 }}
                 }
 
-impl SseEncode for crate::api::PeerConnectionEvent {
+impl SseEncode for crate::api::peer_connection_event::PeerConnectionEvent {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
         serializer: &mut flutter_rust_bridge::for_generated::SseSerializer,
     ) {
-        match self {
-            crate::api::PeerConnectionEvent::PeerCreated { peer } => {
-                <i32>::sse_encode(0, serializer);
-                <RustOpaqueMoi<Arc<PeerConnection>>>::sse_encode(
-                    peer, serializer,
-                );
-            }
-            crate::api::PeerConnectionEvent::IceCandidate {
-                sdp_mid,
-                sdp_mline_index,
-                candidate,
-            } => {
-                <i32>::sse_encode(1, serializer);
-                <String>::sse_encode(sdp_mid, serializer);
-                <i32>::sse_encode(sdp_mline_index, serializer);
-                <String>::sse_encode(candidate, serializer);
-            }
-            crate::api::PeerConnectionEvent::IceGatheringStateChange(
-                field0,
-            ) => {
-                <i32>::sse_encode(2, serializer);
-                <crate::api::IceGatheringState>::sse_encode(field0, serializer);
-            }
-            crate::api::PeerConnectionEvent::IceCandidateError {
-                address,
-                port,
-                url,
-                error_code,
-                error_text,
-            } => {
-                <i32>::sse_encode(3, serializer);
-                <String>::sse_encode(address, serializer);
-                <i32>::sse_encode(port, serializer);
-                <String>::sse_encode(url, serializer);
-                <i32>::sse_encode(error_code, serializer);
-                <String>::sse_encode(error_text, serializer);
-            }
-            crate::api::PeerConnectionEvent::NegotiationNeeded => {
-                <i32>::sse_encode(4, serializer);
-            }
-            crate::api::PeerConnectionEvent::SignallingChange(field0) => {
-                <i32>::sse_encode(5, serializer);
-                <crate::api::SignalingState>::sse_encode(field0, serializer);
-            }
-            crate::api::PeerConnectionEvent::IceConnectionStateChange(
-                field0,
-            ) => {
-                <i32>::sse_encode(6, serializer);
-                <crate::api::IceConnectionState>::sse_encode(
-                    field0, serializer,
-                );
-            }
-            crate::api::PeerConnectionEvent::ConnectionStateChange(field0) => {
-                <i32>::sse_encode(7, serializer);
-                <crate::api::PeerConnectionState>::sse_encode(
-                    field0, serializer,
-                );
-            }
-            crate::api::PeerConnectionEvent::Track(field0) => {
-                <i32>::sse_encode(8, serializer);
-                <crate::api::RtcTrackEvent>::sse_encode(field0, serializer);
-            }
-            _ => {
-                unimplemented!("");
-            }
-        }
+        match self {crate::api::peer_connection_event::PeerConnectionEvent::PeerCreated{peer} => { <i32>::sse_encode(0, serializer); <RustOpaqueMoi<Arc < PeerConnection >>>::sse_encode(peer, serializer);
+ }
+crate::api::peer_connection_event::PeerConnectionEvent::IceCandidate{sdp_mid,sdp_mline_index,candidate} => { <i32>::sse_encode(1, serializer); <String>::sse_encode(sdp_mid, serializer);
+<i32>::sse_encode(sdp_mline_index, serializer);
+<String>::sse_encode(candidate, serializer);
+ }
+crate::api::peer_connection_event::PeerConnectionEvent::IceGatheringStateChange(field0) => { <i32>::sse_encode(2, serializer); <crate::api::peer_connection_event::ice_gathering_state::IceGatheringState>::sse_encode(field0, serializer);
+ }
+crate::api::peer_connection_event::PeerConnectionEvent::IceCandidateError{address,port,url,error_code,error_text} => { <i32>::sse_encode(3, serializer); <String>::sse_encode(address, serializer);
+<i32>::sse_encode(port, serializer);
+<String>::sse_encode(url, serializer);
+<i32>::sse_encode(error_code, serializer);
+<String>::sse_encode(error_text, serializer);
+ }
+crate::api::peer_connection_event::PeerConnectionEvent::NegotiationNeeded => { <i32>::sse_encode(4, serializer);  }
+crate::api::peer_connection_event::PeerConnectionEvent::SignallingChange(field0) => { <i32>::sse_encode(5, serializer); <crate::api::peer_connection_event::signaling_state::SignalingState>::sse_encode(field0, serializer);
+ }
+crate::api::peer_connection_event::PeerConnectionEvent::IceConnectionStateChange(field0) => { <i32>::sse_encode(6, serializer); <crate::api::peer_connection_event::ice_connection_state::IceConnectionState>::sse_encode(field0, serializer);
+ }
+crate::api::peer_connection_event::PeerConnectionEvent::ConnectionStateChange(field0) => { <i32>::sse_encode(7, serializer); <crate::api::peer_connection_event::peer_connection_state::PeerConnectionState>::sse_encode(field0, serializer);
+ }
+crate::api::peer_connection_event::PeerConnectionEvent::Track(field0) => { <i32>::sse_encode(8, serializer); <crate::api::peer_connection_event::rtc_track_event::RtcTrackEvent>::sse_encode(field0, serializer);
+ }
+ _ => { unimplemented!(""); }}
     }
 }
 
-impl SseEncode for crate::api::PeerConnectionState {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(
-        self,
-        serializer: &mut flutter_rust_bridge::for_generated::SseSerializer,
-    ) {
-        <i32>::sse_encode(
-            match self {
-                crate::api::PeerConnectionState::New => 0,
-                crate::api::PeerConnectionState::Connecting => 1,
-                crate::api::PeerConnectionState::Connected => 2,
-                crate::api::PeerConnectionState::Disconnected => 3,
-                crate::api::PeerConnectionState::Failed => 4,
-                crate::api::PeerConnectionState::Closed => 5,
-                _ => {
-                    unimplemented!("");
+impl SseEncode for crate::api::peer_connection_event::peer_connection_state::PeerConnectionState {
+                    // Codec=Sse (Serialization based), see doc to use other codecs
+                    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {<i32>::sse_encode(match self {crate::api::peer_connection_event::peer_connection_state::PeerConnectionState::New => { 0 }
+crate::api::peer_connection_event::peer_connection_state::PeerConnectionState::Connecting => { 1 }
+crate::api::peer_connection_event::peer_connection_state::PeerConnectionState::Connected => { 2 }
+crate::api::peer_connection_event::peer_connection_state::PeerConnectionState::Disconnected => { 3 }
+crate::api::peer_connection_event::peer_connection_state::PeerConnectionState::Failed => { 4 }
+crate::api::peer_connection_event::peer_connection_state::PeerConnectionState::Closed => { 5 }
+ _ => { unimplemented!(""); }}, serializer);}
                 }
-            },
-            serializer,
-        );
-    }
-}
 
 impl SseEncode for crate::api::Protocol {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -5446,7 +5300,9 @@ crate::api::rtc_stats::RtcStatsType::Unimplemented => { <i32>::sse_encode(8, ser
     }
 }
 
-impl SseEncode for crate::api::RtcTrackEvent {
+impl SseEncode
+    for crate::api::peer_connection_event::rtc_track_event::RtcTrackEvent
+{
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
@@ -5659,26 +5515,21 @@ impl SseEncode for crate::api::rtc_session_description::SdpType {
     }
 }
 
-impl SseEncode for crate::api::SignalingState {
+impl SseEncode
+    for crate::api::peer_connection_event::signaling_state::SignalingState
+{
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
         serializer: &mut flutter_rust_bridge::for_generated::SseSerializer,
     ) {
-        <i32>::sse_encode(
-            match self {
-                crate::api::SignalingState::Stable => 0,
-                crate::api::SignalingState::HaveLocalOffer => 1,
-                crate::api::SignalingState::HaveLocalPrAnswer => 2,
-                crate::api::SignalingState::HaveRemoteOffer => 3,
-                crate::api::SignalingState::HaveRemotePrAnswer => 4,
-                crate::api::SignalingState::Closed => 5,
-                _ => {
-                    unimplemented!("");
-                }
-            },
-            serializer,
-        );
+        <i32>::sse_encode(match self {crate::api::peer_connection_event::signaling_state::SignalingState::Stable => { 0 }
+crate::api::peer_connection_event::signaling_state::SignalingState::HaveLocalOffer => { 1 }
+crate::api::peer_connection_event::signaling_state::SignalingState::HaveLocalPrAnswer => { 2 }
+crate::api::peer_connection_event::signaling_state::SignalingState::HaveRemoteOffer => { 3 }
+crate::api::peer_connection_event::signaling_state::SignalingState::HaveRemotePrAnswer => { 4 }
+crate::api::peer_connection_event::signaling_state::SignalingState::Closed => { 5 }
+ _ => { unimplemented!(""); }}, serializer);
     }
 }
 
