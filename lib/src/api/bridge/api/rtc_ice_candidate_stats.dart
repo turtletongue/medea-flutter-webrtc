@@ -6,12 +6,11 @@
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
 
-import '../api.dart';
 import '../frb_generated.dart';
 
 part 'rtc_ice_candidate_stats.freezed.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `clone`, `eq`, `fmt`, `from`, `from`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `clone`, `eq`, `fmt`, `from`, `from`, `from`
 
 /// [RTCIceCandidateType] represents the type of the ICE candidate, as defined
 /// in [Section 15.1 of RFC 5245][1].
@@ -127,6 +126,21 @@ class IceCandidateStats {
           priority == other.priority &&
           url == other.url &&
           relayProtocol == other.relayProtocol;
+}
+
+/// Transport protocols used in [WebRTC].
+///
+/// [WebRTC]: https://w3.org/TR/webrtc
+enum Protocol {
+  /// [Transmission Control Protocol][1].
+  ///
+  /// [1]: https://en.wikipedia.org/wiki/Transmission_Control_Protocol
+  tcp,
+
+  /// [User Datagram Protocol][1].
+  ///
+  /// [1]: https://en.wikipedia.org/wiki/User_Datagram_Protocol
+  udp,
 }
 
 @freezed
