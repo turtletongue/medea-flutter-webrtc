@@ -14,7 +14,7 @@ import 'renderer.dart';
 part 'api.freezed.dart';
 
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `TrackKind`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `hash`, `hash`, `hash`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `hash`, `hash`
 
 /// Returns all [`VideoCodecInfo`]s of the supported video encoders.
 Future<List<VideoCodecInfo>> videoEncoders() =>
@@ -920,21 +920,6 @@ enum PeerConnectionState {
 
   /// Peer connection is closed.
   closed,
-}
-
-/// Transport protocols used in [WebRTC].
-///
-/// [WebRTC]: https://w3.org/TR/webrtc
-enum Protocol {
-  /// [Transmission Control Protocol][1].
-  ///
-  /// [1]: https://en.wikipedia.org/wiki/Transmission_Control_Protocol
-  tcp,
-
-  /// [User Datagram Protocol][1].
-  ///
-  /// [1]: https://en.wikipedia.org/wiki/User_Datagram_Protocol
-  udp,
 }
 
 /// [`PeerConnection`]'s configuration.
@@ -1978,181 +1963,6 @@ class RtpTransceiverInit {
           runtimeType == other.runtimeType &&
           direction == other.direction &&
           sendEncodings == other.sendEncodings;
-}
-
-/// [ScalabilityMode][0] representation.
-///
-/// [0]: https://tinyurl.com/35ae3mbe
-enum ScalabilityMode {
-  /// [ScalabilityMode.L1T1][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#L1T1*
-  l1T1,
-
-  /// [ScalabilityMode.L1T2][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#L1T2*
-  l1T2,
-
-  /// [ScalabilityMode.L1T3][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#L1T3*
-  l1T3,
-
-  /// [ScalabilityMode.L2T1][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#L2T1*
-  l2T1,
-
-  /// [ScalabilityMode.L2T1h][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#L2T1*
-  l2T1H,
-
-  /// [ScalabilityMode.L2T1_KEY][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#L2T1_KEY*
-  l2T1Key,
-
-  /// [ScalabilityMode.L2T2][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#L2T2h*
-  l2T2,
-
-  /// [ScalabilityMode.L2T2h][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#L2T2*
-  l2T2H,
-
-  /// [ScalabilityMode.L2T2_KEY][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#L2T2_KEY*
-  l2T2Key,
-
-  /// [ScalabilityMode.L2T2_KEY_SHIFT][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#L2T2_KEY_SHIFT*
-  l2T2KeyShift,
-
-  /// [ScalabilityMode.L2T3][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#L2T3*
-  l2T3,
-
-  /// [ScalabilityMode.L2T3h][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#L2T3*
-  l2T3H,
-
-  /// [ScalabilityMode.L2T3_KEY][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#L2T3_KEY*
-  l2T3Key,
-
-  /// [ScalabilityMode.L3T1][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#L3T1*
-  l3T1,
-
-  /// [ScalabilityMode.L3T1h][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#L3T1*
-  l3T1H,
-
-  /// [ScalabilityMode.L3T1_KEY][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#L3T1_KEY*
-  l3T1Key,
-
-  /// [ScalabilityMode.L3T2][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#L3T2h*
-  l3T2,
-
-  /// [ScalabilityMode.L3T2h][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#L3T2*
-  l3T2H,
-
-  /// [ScalabilityMode.L3T2_KEY][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#L3T2_KEY*
-  l3T2Key,
-
-  /// [ScalabilityMode.kL3T3][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#kL3T3*
-  l3T3,
-
-  /// [ScalabilityMode.kL3T3h][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#kL3T3*
-  l3T3H,
-
-  /// [ScalabilityMode.kL3T3_KEY][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#L3T3_KEY*
-  l3T3Key,
-
-  /// [ScalabilityMode.kS2T1][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#kS2T1*
-  s2T1,
-
-  /// [ScalabilityMode.kS2T1h][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#kS2T1*
-  s2T1H,
-
-  /// [ScalabilityMode.kS2T2][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#kS2T2*
-  s2T2,
-
-  /// [ScalabilityMode.kS2T2h][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#kS2T2*
-  s2T2H,
-
-  /// [ScalabilityMode.S2T3][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#S2T3h*
-  s2T3,
-
-  /// [ScalabilityMode.S2T3h][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#S2T3*
-  s2T3H,
-
-  /// [ScalabilityMode.S3T1h][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#S3T1*
-  s3T1,
-
-  /// [ScalabilityMode.S3T1h][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#S3T1*
-  s3T1H,
-
-  /// [ScalabilityMode.S3T2][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#S3T2*
-  s3T2,
-
-  /// [ScalabilityMode.S3T2h][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#S3T2*
-  s3T2H,
-
-  /// [ScalabilityMode.S3T3][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#S3T3*
-  s3T3,
-
-  /// [ScalabilityMode.S3T3h][0] mode.
-  ///
-  /// [0]: https://w3.org/TR/webrtc-svc#S3T3*
-  s3T3H,
 }
 
 /// [RTCSdpType] representation.
