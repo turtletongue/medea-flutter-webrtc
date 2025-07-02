@@ -14,7 +14,7 @@ use crate::{
     Webrtc, api,
     api::WEBRTC,
     frb_generated::StreamSink,
-    user_media::{AudioDeviceId, MediaTrackSource, TrackOrigin, VideoDeviceId},
+    media::{AudioDeviceId, MediaTrackSource, TrackOrigin, VideoDeviceId},
 };
 
 /// Returns a list of all available displays that can be used for screen

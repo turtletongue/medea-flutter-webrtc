@@ -187,9 +187,9 @@ pub mod api;
 mod frb_generated;
 mod devices;
 pub mod frb;
+mod media;
 mod pc;
 mod renderer;
-mod user_media;
 pub mod video_sink;
 
 use std::{
@@ -207,17 +207,17 @@ use threadpool::ThreadPool;
 #[doc(inline)]
 pub use crate::{
     devices::DevicesState,
-    pc::{
-        PeerConnection, RtpEncodingParameters, RtpParameters, RtpTransceiver,
-    },
-    user_media::{
+    media::{
         AudioDeviceId, AudioDeviceModule, AudioSource, AudioTrack,
         AudioTrackId, MediaStreamId, Track, VideoDeviceId, VideoDeviceInfo,
         VideoSource, VideoTrack, VideoTrackId,
     },
+    pc::{
+        PeerConnection, RtpEncodingParameters, RtpParameters, RtpTransceiver,
+    },
     video_sink::VideoSink,
 };
-use crate::{user_media::TrackOrigin, video_sink::Id as VideoSinkId};
+use crate::{media::TrackOrigin, video_sink::Id as VideoSinkId};
 
 /// Main [`ThreadPool`] used by [`flutter_rust_bridge`] when calling
 /// synchronous Rust code to avoid locking [`libwebrtc`] threads.

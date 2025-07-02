@@ -18,8 +18,8 @@ use crate::{
     AudioTrack, AudioTrackId, THREADPOOL, VideoTrack, VideoTrackId, Webrtc,
     api::{self, RtpCodecCapability, RtpTransceiverInit},
     frb_generated::{RustOpaque, StreamSink},
+    media::TrackOrigin,
     next_id,
-    user_media::TrackOrigin,
 };
 
 impl Webrtc {
