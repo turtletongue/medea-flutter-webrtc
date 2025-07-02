@@ -6,6 +6,7 @@ pub mod media_display_info;
 pub mod media_stream_constraints;
 pub mod media_stream_track;
 pub mod peer_connection_event;
+pub mod rtc_configuration;
 pub mod rtc_ice_candidate_stats;
 pub mod rtc_rtp_encoding_parameters;
 pub mod rtc_rtp_send_parameters;
@@ -51,6 +52,9 @@ pub use self::{
     peer_connection_event::{
         IceConnectionState, IceGatheringState, PeerConnectionEvent,
         PeerConnectionState, RtcTrackEvent, SignalingState,
+    },
+    rtc_configuration::{
+        BundlePolicy, IceTransportsType, RtcConfiguration, RtcIceServer,
     },
     rtc_ice_candidate_stats::{
         CandidateType, IceCandidateStats, RtcIceCandidateStats,
@@ -383,133 +387,6 @@ impl From<sys::ScalabilityMode> for ScalabilityMode {
             _ => unreachable!(),
         }
     }
-}
-
-/// [`PeerConnection`]'s configuration.
-#[derive(Debug)]
-pub struct RtcConfiguration {
-    /// [iceTransportPolicy][1] configuration.
-    ///
-    /// Indicates which candidates the [ICE Agent][2] is allowed to use.
-    ///
-    /// [1]: https://tinyurl.com/icetransportpolicy
-    /// [2]: https://w3.org/TR/webrtc#dfn-ice-agent
-    pub ice_transport_policy: IceTransportsType,
-
-    /// [bundlePolicy][1] configuration.
-    ///
-    /// Indicates which media-bundling policy to use when gathering ICE
-    /// candidates.
-    ///
-    /// [1]: https://w3.org/TR/webrtc#dom-rtcconfiguration-bundlepolicy
-    pub bundle_policy: BundlePolicy,
-
-    /// [iceServers][1] configuration.
-    ///
-    /// An array of objects describing servers available to be used by ICE,
-    /// such as STUN and TURN servers.
-    ///
-    /// [1]: https://w3.org/TR/webrtc#dom-rtcconfiguration-iceservers
-    pub ice_servers: Vec<RtcIceServer>,
-}
-
-/// [RTCIceTransportPolicy][1] representation.
-///
-/// It defines an ICE candidate policy the [ICE Agent][2] uses to surface
-/// the permitted candidates to the application. Only these candidates will
-/// be used for connectivity checks.
-///
-/// [1]: https://w3.org/TR/webrtc#dom-rtcicetransportpolicy
-/// [2]: https://w3.org/TR/webrtc#dfn-ice-agent
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum IceTransportsType {
-    /// [RTCIceTransportPolicy.all][1] representation.
-    ///
-    /// [1]: https://w3.org/TR/webrtc#dom-rtcicetransportpolicy-all
-    All,
-
-    /// [RTCIceTransportPolicy.relay][1] representation.
-    ///
-    /// [1]: https://w3.org/TR/webrtc#dom-rtcicetransportpolicy-relay
-    Relay,
-
-    /// ICE Agent can't use `typ host` candidates when this value is specified.
-    ///
-    /// Non-spec-compliant variant.
-    NoHost,
-
-    /// No ICE candidate offered.
-    None,
-}
-
-impl From<IceTransportsType> for sys::IceTransportsType {
-    fn from(kind: IceTransportsType) -> Self {
-        match kind {
-            IceTransportsType::All => Self::kAll,
-            IceTransportsType::Relay => Self::kRelay,
-            IceTransportsType::NoHost => Self::kNoHost,
-            IceTransportsType::None => Self::kNone,
-        }
-    }
-}
-
-/// [RTCBundlePolicy][1] representation.
-///
-/// Affects which media tracks are negotiated if the remote endpoint is not
-/// bundle-aware, and what ICE candidates are gathered. If the remote endpoint
-/// is bundle-aware, all media tracks and data channels are bundled onto the
-/// same transport.
-///
-/// [1]: https://w3.org/TR/webrtc#dom-rtcbundlepolicy
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum BundlePolicy {
-    /// [RTCBundlePolicy.balanced][1] representation.
-    ///
-    /// [1]: https://w3.org/TR/webrtc#dom-rtcbundlepolicy-balanced
-    Balanced,
-
-    /// [RTCBundlePolicy.max-bundle][1] representation.
-    ///
-    /// [1]: https://w3.org/TR/webrtc#dom-rtcbundlepolicy-max-bundle
-    MaxBundle,
-
-    /// [RTCBundlePolicy.max-compat][1] representation.
-    ///
-    /// [1]: https://w3.org/TR/webrtc#dom-rtcbundlepolicy-max-compat
-    MaxCompat,
-}
-
-impl From<BundlePolicy> for sys::BundlePolicy {
-    fn from(policy: BundlePolicy) -> Self {
-        match policy {
-            BundlePolicy::Balanced => Self::kBundlePolicyBalanced,
-            BundlePolicy::MaxBundle => Self::kBundlePolicyMaxBundle,
-            BundlePolicy::MaxCompat => Self::kBundlePolicyMaxCompat,
-        }
-    }
-}
-
-/// Description of STUN and TURN servers that can be used by an [ICE Agent][1]
-/// to establish a connection with a peer.
-///
-/// [1]: https://w3.org/TR/webrtc#dfn-ice-agent
-#[derive(Debug)]
-pub struct RtcIceServer {
-    /// STUN or TURN URI(s).
-    pub urls: Vec<String>,
-
-    /// If this [`RtcIceServer`] object represents a TURN server, then this
-    /// attribute specifies the [username][1] to use with that TURN server.
-    ///
-    /// [1]: https://w3.org/TR/webrtc#dom-rtciceserver-username
-    pub username: String,
-
-    /// If this [`RtcIceServer`] object represents a TURN server, then this
-    /// attribute specifies the [credential][1] to use with that TURN
-    /// server.
-    ///
-    /// [1]: https://w3.org/TR/webrtc#dom-rtciceserver-credential
-    pub credential: String,
 }
 
 /// Supported video codecs.
