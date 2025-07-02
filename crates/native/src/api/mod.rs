@@ -18,6 +18,7 @@ pub mod rtp_capabilities;
 pub mod rtp_codec_capability;
 pub mod rtp_header_extension_capability;
 pub mod rtp_transceiver_init;
+pub mod track_kind;
 pub mod video_codec_info;
 
 use std::{
@@ -84,6 +85,7 @@ pub use self::{
     rtp_codec_capability::{RtpCodecCapability, set_codec_preferences},
     rtp_header_extension_capability::RtpHeaderExtensionCapability,
     rtp_transceiver_init::{RtpTransceiverDirection, RtpTransceiverInit},
+    track_kind::TrackKind,
     video_codec_info::{
         VideoCodec, VideoCodecInfo, video_decoders, video_encoders,
     },
@@ -128,27 +130,6 @@ pub static RX_TIMEOUT: Duration = Duration::from_secs(5);
 
 /// Indicator whether application is configured to use fake media devices.
 static FAKE_MEDIA: AtomicBool = AtomicBool::new(false);
-
-/// [MediaStreamTrack.kind][1] representation.
-///
-/// [1]: https://w3.org/TR/mediacapture-streams#dfn-kind
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum TrackKind {
-    /// Audio track.
-    Audio,
-
-    /// Video track.
-    Video,
-}
-
-impl From<sys::TrackKind> for TrackKind {
-    fn from(kind: sys::TrackKind) -> Self {
-        match kind {
-            sys::TrackKind::Audio => Self::Audio,
-            sys::TrackKind::Video => Self::Video,
-        }
-    }
-}
 
 /// Transport protocols used in [WebRTC].
 ///
