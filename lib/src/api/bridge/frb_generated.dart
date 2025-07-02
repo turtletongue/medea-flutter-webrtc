@@ -45,6 +45,7 @@ import 'api/rtp_capabilities.dart';
 import 'api/rtp_codec_capability.dart';
 import 'api/rtp_header_extension_capability.dart';
 import 'api/rtp_transceiver_init.dart';
+import 'api/video_codec_info.dart';
 import 'frb_generated.dart';
 import 'lib.dart';
 import 'renderer.dart';
@@ -103,7 +104,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.10.0';
 
   @override
-  int get rustContentHash => 475466367;
+  int get rustContentHash => 1478284531;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -321,9 +322,9 @@ abstract class RustLibApi extends BaseApi {
     required AudioProcessingConstraints conf,
   });
 
-  Future<List<VideoCodecInfo>> crateApiVideoDecoders();
+  Future<List<VideoCodecInfo>> crateApiVideoCodecInfoVideoDecoders();
 
-  Future<List<VideoCodecInfo>> crateApiVideoEncoders();
+  Future<List<VideoCodecInfo>> crateApiVideoCodecInfoVideoEncoders();
 
   RustArcIncrementStrongCountFnType
   get rust_arc_increment_strong_count_ArcPeerConnection;
@@ -1957,7 +1958,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<List<VideoCodecInfo>> crateApiVideoDecoders() {
+  Future<List<VideoCodecInfo>> crateApiVideoCodecInfoVideoDecoders() {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
@@ -1973,18 +1974,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_list_video_codec_info,
           decodeErrorData: null,
         ),
-        constMeta: kCrateApiVideoDecodersConstMeta,
+        constMeta: kCrateApiVideoCodecInfoVideoDecodersConstMeta,
         argValues: [],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiVideoDecodersConstMeta =>
+  TaskConstMeta get kCrateApiVideoCodecInfoVideoDecodersConstMeta =>
       const TaskConstMeta(debugName: "video_decoders", argNames: []);
 
   @override
-  Future<List<VideoCodecInfo>> crateApiVideoEncoders() {
+  Future<List<VideoCodecInfo>> crateApiVideoCodecInfoVideoEncoders() {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
@@ -2000,14 +2001,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_list_video_codec_info,
           decodeErrorData: null,
         ),
-        constMeta: kCrateApiVideoEncodersConstMeta,
+        constMeta: kCrateApiVideoCodecInfoVideoEncodersConstMeta,
         argValues: [],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiVideoEncodersConstMeta =>
+  TaskConstMeta get kCrateApiVideoCodecInfoVideoEncodersConstMeta =>
       const TaskConstMeta(debugName: "video_encoders", argNames: []);
 
   RustArcIncrementStrongCountFnType

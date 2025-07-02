@@ -46,6 +46,7 @@ import 'api/rtp_capabilities.dart';
 import 'api/rtp_codec_capability.dart';
 import 'api/rtp_header_extension_capability.dart';
 import 'api/rtp_transceiver_init.dart';
+import 'api/video_codec_info.dart';
 import 'frb_generated.dart';
 import 'lib.dart';
 import 'renderer.dart';

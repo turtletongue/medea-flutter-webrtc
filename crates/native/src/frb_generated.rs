@@ -42,7 +42,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.10.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 475466367;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1478284531;
 
 // Section: executor
 
@@ -787,7 +787,7 @@ let api_conf = <crate::api::media_stream_constraints::audio_constraints::AudioPr
                     })())
                 } })
 }
-fn wire__crate__api__video_decoders_impl(
+fn wire__crate__api__video_codec_info__video_decoders_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -798,11 +798,11 @@ fn wire__crate__api__video_decoders_impl(
             let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             deserializer.end(); move |context|  {
                     transform_result_sse::<_, ()>((move ||  {
-                         let output_ok = Result::<_,()>::Ok(crate::api::video_decoders())?;   Ok(output_ok)
+                         let output_ok = Result::<_,()>::Ok(crate::api::video_codec_info::video_decoders())?;   Ok(output_ok)
                     })())
                 } })
 }
-fn wire__crate__api__video_encoders_impl(
+fn wire__crate__api__video_codec_info__video_encoders_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -813,7 +813,7 @@ fn wire__crate__api__video_encoders_impl(
             let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             deserializer.end(); move |context|  {
                     transform_result_sse::<_, ()>((move ||  {
-                         let output_ok = Result::<_,()>::Ok(crate::api::video_encoders())?;   Ok(output_ok)
+                         let output_ok = Result::<_,()>::Ok(crate::api::video_codec_info::video_encoders())?;   Ok(output_ok)
                     })())
                 } })
 }
@@ -1429,7 +1429,7 @@ impl SseDecode for Vec<crate::api::ScalabilityMode> {
     }
 }
 
-impl SseDecode for Vec<crate::api::VideoCodecInfo> {
+impl SseDecode for Vec<crate::api::video_codec_info::VideoCodecInfo> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
@@ -1437,7 +1437,11 @@ impl SseDecode for Vec<crate::api::VideoCodecInfo> {
         let mut len_ = <i32>::sse_decode(deserializer);
         let mut ans_ = vec![];
         for idx_ in 0..len_ {
-            ans_.push(<crate::api::VideoCodecInfo>::sse_decode(deserializer));
+            ans_.push(
+                <crate::api::video_codec_info::VideoCodecInfo>::sse_decode(
+                    deserializer,
+                ),
+            );
         }
         return ans_;
     }
@@ -2550,31 +2554,34 @@ impl SseDecode for usize {
     }
 }
 
-impl SseDecode for crate::api::VideoCodec {
+impl SseDecode for crate::api::video_codec_info::VideoCodec {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
     ) -> Self {
         let mut inner = <i32>::sse_decode(deserializer);
         return match inner {
-            0 => crate::api::VideoCodec::AV1,
-            1 => crate::api::VideoCodec::H264,
-            2 => crate::api::VideoCodec::H265,
-            3 => crate::api::VideoCodec::VP8,
-            4 => crate::api::VideoCodec::VP9,
+            0 => crate::api::video_codec_info::VideoCodec::AV1,
+            1 => crate::api::video_codec_info::VideoCodec::H264,
+            2 => crate::api::video_codec_info::VideoCodec::H265,
+            3 => crate::api::video_codec_info::VideoCodec::VP8,
+            4 => crate::api::video_codec_info::VideoCodec::VP9,
             _ => unreachable!("Invalid variant for VideoCodec: {}", inner),
         };
     }
 }
 
-impl SseDecode for crate::api::VideoCodecInfo {
+impl SseDecode for crate::api::video_codec_info::VideoCodecInfo {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
     ) -> Self {
         let mut var_isHardwareAccelerated = <bool>::sse_decode(deserializer);
-        let mut var_codec = <crate::api::VideoCodec>::sse_decode(deserializer);
-        return crate::api::VideoCodecInfo {
+        let mut var_codec =
+            <crate::api::video_codec_info::VideoCodec>::sse_decode(
+                deserializer,
+            );
+        return crate::api::video_codec_info::VideoCodecInfo {
             is_hardware_accelerated: var_isHardwareAccelerated,
             codec: var_codec,
         };
@@ -2646,8 +2653,8 @@ fn pde_ffi_dispatcher_primary_impl(
 44 => wire__crate__api__media_stream_track__track_state_impl(port, ptr, rust_vec_len, data_len),
 45 => wire__crate__api__media_stream_track__track_width_impl(port, ptr, rust_vec_len, data_len),
 46 => wire__crate__api__media_stream_track__update_audio_processing_impl(port, ptr, rust_vec_len, data_len),
-47 => wire__crate__api__video_decoders_impl(port, ptr, rust_vec_len, data_len),
-48 => wire__crate__api__video_encoders_impl(port, ptr, rust_vec_len, data_len),
+47 => wire__crate__api__video_codec_info__video_decoders_impl(port, ptr, rust_vec_len, data_len),
+48 => wire__crate__api__video_codec_info__video_encoders_impl(port, ptr, rust_vec_len, data_len),
                         _ => unreachable!(),
                     }
 }
@@ -4068,7 +4075,9 @@ impl
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::VideoCodec {
+impl flutter_rust_bridge::IntoDart
+    for crate::api::video_codec_info::VideoCodec
+{
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         match self {
             Self::AV1 => 0.into_dart(),
@@ -4081,18 +4090,20 @@ impl flutter_rust_bridge::IntoDart for crate::api::VideoCodec {
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::VideoCodec
+    for crate::api::video_codec_info::VideoCodec
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::VideoCodec>
-    for crate::api::VideoCodec
+impl flutter_rust_bridge::IntoIntoDart<crate::api::video_codec_info::VideoCodec>
+    for crate::api::video_codec_info::VideoCodec
 {
-    fn into_into_dart(self) -> crate::api::VideoCodec {
+    fn into_into_dart(self) -> crate::api::video_codec_info::VideoCodec {
         self
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::VideoCodecInfo {
+impl flutter_rust_bridge::IntoDart
+    for crate::api::video_codec_info::VideoCodecInfo
+{
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
             self.is_hardware_accelerated.into_into_dart().into_dart(),
@@ -4102,13 +4113,15 @@ impl flutter_rust_bridge::IntoDart for crate::api::VideoCodecInfo {
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::VideoCodecInfo
+    for crate::api::video_codec_info::VideoCodecInfo
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::VideoCodecInfo>
-    for crate::api::VideoCodecInfo
+impl
+    flutter_rust_bridge::IntoIntoDart<
+        crate::api::video_codec_info::VideoCodecInfo,
+    > for crate::api::video_codec_info::VideoCodecInfo
 {
-    fn into_into_dart(self) -> crate::api::VideoCodecInfo {
+    fn into_into_dart(self) -> crate::api::video_codec_info::VideoCodecInfo {
         self
     }
 }
@@ -4693,7 +4706,7 @@ impl SseEncode for Vec<crate::api::ScalabilityMode> {
     }
 }
 
-impl SseEncode for Vec<crate::api::VideoCodecInfo> {
+impl SseEncode for Vec<crate::api::video_codec_info::VideoCodecInfo> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
@@ -4701,7 +4714,9 @@ impl SseEncode for Vec<crate::api::VideoCodecInfo> {
     ) {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
-            <crate::api::VideoCodecInfo>::sse_encode(item, serializer);
+            <crate::api::video_codec_info::VideoCodecInfo>::sse_encode(
+                item, serializer,
+            );
         }
     }
 }
@@ -5651,7 +5666,7 @@ impl SseEncode for usize {
     }
 }
 
-impl SseEncode for crate::api::VideoCodec {
+impl SseEncode for crate::api::video_codec_info::VideoCodec {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
@@ -5659,11 +5674,11 @@ impl SseEncode for crate::api::VideoCodec {
     ) {
         <i32>::sse_encode(
             match self {
-                crate::api::VideoCodec::AV1 => 0,
-                crate::api::VideoCodec::H264 => 1,
-                crate::api::VideoCodec::H265 => 2,
-                crate::api::VideoCodec::VP8 => 3,
-                crate::api::VideoCodec::VP9 => 4,
+                crate::api::video_codec_info::VideoCodec::AV1 => 0,
+                crate::api::video_codec_info::VideoCodec::H264 => 1,
+                crate::api::video_codec_info::VideoCodec::H265 => 2,
+                crate::api::video_codec_info::VideoCodec::VP8 => 3,
+                crate::api::video_codec_info::VideoCodec::VP9 => 4,
                 _ => {
                     unimplemented!("");
                 }
@@ -5673,14 +5688,16 @@ impl SseEncode for crate::api::VideoCodec {
     }
 }
 
-impl SseEncode for crate::api::VideoCodecInfo {
+impl SseEncode for crate::api::video_codec_info::VideoCodecInfo {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
         serializer: &mut flutter_rust_bridge::for_generated::SseSerializer,
     ) {
         <bool>::sse_encode(self.is_hardware_accelerated, serializer);
-        <crate::api::VideoCodec>::sse_encode(self.codec, serializer);
+        <crate::api::video_codec_info::VideoCodec>::sse_encode(
+            self.codec, serializer,
+        );
     }
 }
 

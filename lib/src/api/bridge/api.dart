@@ -28,14 +28,6 @@ import 'lib.dart';
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `TrackKind`
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `clone`, `eq`, `eq`, `fmt`, `fmt`, `from`, `from`, `from`, `hash`
 
-/// Returns all [`VideoCodecInfo`]s of the supported video encoders.
-Future<List<VideoCodecInfo>> videoEncoders() =>
-    RustLib.instance.api.crateApiVideoEncoders();
-
-/// Returns all [`VideoCodecInfo`]s of the supported video decoders.
-Future<List<VideoCodecInfo>> videoDecoders() =>
-    RustLib.instance.api.crateApiVideoDecoders();
-
 /// Configures media acquisition to use fake devices instead of actual camera
 /// and microphone.
 Future<void> enableFakeMedia() =>
@@ -345,57 +337,4 @@ enum ScalabilityMode {
   ///
   /// [0]: https://w3.org/TR/webrtc-svc#S3T3*
   s3T3H,
-}
-
-/// Supported video codecs.
-enum VideoCodec {
-  /// [AV1] AOMedia Video 1.
-  ///
-  /// [AV1]: https://en.wikipedia.org/wiki/AV1
-  av1,
-
-  /// [H.264] Advanced Video Coding (AVC).
-  ///
-  /// [H.264]: https://en.wikipedia.org/wiki/Advanced_Video_Coding
-  h264,
-
-  /// [H.265] High Efficiency Video Coding (HEVC).
-  ///
-  /// [H.265]: https://en.wikipedia.org/wiki/High_Efficiency_Video_Coding
-  h265,
-
-  /// [VP8] codec.
-  ///
-  /// [VP8]: https://en.wikipedia.org/wiki/VP8
-  vp8,
-
-  /// [VP9] codec.
-  ///
-  /// [VP9]: https://en.wikipedia.org/wiki/VP9
-  vp9,
-}
-
-/// [`VideoCodec`] info for encoding/decoding.
-class VideoCodecInfo {
-  /// Indicator whether hardware acceleration should be used.
-  final bool isHardwareAccelerated;
-
-  /// [`VideoCodec`] to be used for encoding/decoding.
-  final VideoCodec codec;
-
-  const VideoCodecInfo({
-    required this.isHardwareAccelerated,
-    required this.codec,
-  });
-
-  @override
-  int get hashCode => isHardwareAccelerated.hashCode ^ codec.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is VideoCodecInfo &&
-          runtimeType == other.runtimeType &&
-          isHardwareAccelerated == other.isHardwareAccelerated &&
-          codec == other.codec;
 }
