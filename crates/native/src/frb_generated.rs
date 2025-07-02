@@ -79,7 +79,7 @@ fn wire__crate__api__add_transceiver_impl(
             let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_peer = <RustOpaqueMoi<Arc < PeerConnection >>>::sse_decode(&mut deserializer);
 let api_media_type = <crate::api::media_stream_track::media_type::MediaType>::sse_decode(&mut deserializer);
-let api_init = <crate::api::RtpTransceiverInit>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
+let api_init = <crate::api::rtp_transceiver_init::RtpTransceiverInit>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
                     transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>((move ||  {
                          let output_ok = crate::api::add_transceiver(api_peer, api_media_type, api_init)?;   Ok(output_ok)
                     })())
@@ -667,7 +667,7 @@ fn wire__crate__api__set_transceiver_direction_impl(
             let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
             let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_transceiver = <RustOpaqueMoi<Arc < RtpTransceiver >>>::sse_decode(&mut deserializer);
-let api_direction = <crate::api::RtpTransceiverDirection>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
+let api_direction = <crate::api::rtp_transceiver_init::RtpTransceiverDirection>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
                     transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>((move ||  {
                          let output_ok = crate::api::set_transceiver_direction(api_transceiver, api_direction)?;   Ok(output_ok)
                     })())
@@ -2057,8 +2057,7 @@ impl SseDecode for crate::api::RtcRtpTransceiver {
         let mut var_transceiver =
             <RustOpaqueMoi<Arc<RtpTransceiver>>>::sse_decode(deserializer);
         let mut var_mid = <Option<String>>::sse_decode(deserializer);
-        let mut var_direction =
-            <crate::api::RtpTransceiverDirection>::sse_decode(deserializer);
+        let mut var_direction = <crate::api::rtp_transceiver_init::RtpTransceiverDirection>::sse_decode(deserializer);
         return crate::api::RtcRtpTransceiver {
             peer: var_peer,
             transceiver: var_transceiver,
@@ -2357,41 +2356,37 @@ impl SseDecode for crate::api::rtp_header_extension_capability::RtpHeaderExtensi
                     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {let mut var_uri = <String>::sse_decode(deserializer);
 let mut var_preferredId = <Option<i32>>::sse_decode(deserializer);
 let mut var_preferredEncrypted = <bool>::sse_decode(deserializer);
-let mut var_direction = <crate::api::RtpTransceiverDirection>::sse_decode(deserializer);
+let mut var_direction = <crate::api::rtp_transceiver_init::RtpTransceiverDirection>::sse_decode(deserializer);
 return crate::api::rtp_header_extension_capability::RtpHeaderExtensionCapability{uri: var_uri, preferred_id: var_preferredId, preferred_encrypted: var_preferredEncrypted, direction: var_direction};}
                 }
 
-impl SseDecode for crate::api::RtpTransceiverDirection {
+impl SseDecode for crate::api::rtp_transceiver_init::RtpTransceiverDirection {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
     ) -> Self {
         let mut inner = <i32>::sse_decode(deserializer);
         return match inner {
-            0 => crate::api::RtpTransceiverDirection::SendRecv,
-            1 => crate::api::RtpTransceiverDirection::SendOnly,
-            2 => crate::api::RtpTransceiverDirection::RecvOnly,
-            3 => crate::api::RtpTransceiverDirection::Inactive,
-            4 => crate::api::RtpTransceiverDirection::Stopped,
-            _ => unreachable!(
-                "Invalid variant for RtpTransceiverDirection: {}",
-                inner
-            ),
+            0 => crate::api::rtp_transceiver_init::RtpTransceiverDirection::SendRecv,
+1 => crate::api::rtp_transceiver_init::RtpTransceiverDirection::SendOnly,
+2 => crate::api::rtp_transceiver_init::RtpTransceiverDirection::RecvOnly,
+3 => crate::api::rtp_transceiver_init::RtpTransceiverDirection::Inactive,
+4 => crate::api::rtp_transceiver_init::RtpTransceiverDirection::Stopped,
+            _ => unreachable!("Invalid variant for RtpTransceiverDirection: {}", inner),
         };
     }
 }
 
-impl SseDecode for crate::api::RtpTransceiverInit {
+impl SseDecode for crate::api::rtp_transceiver_init::RtpTransceiverInit {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
     ) -> Self {
-        let mut var_direction =
-            <crate::api::RtpTransceiverDirection>::sse_decode(deserializer);
+        let mut var_direction = <crate::api::rtp_transceiver_init::RtpTransceiverDirection>::sse_decode(deserializer);
         let mut var_sendEncodings = <Vec<
             crate::api::rtc_rtp_encoding_parameters::RtcRtpEncodingParameters,
         >>::sse_decode(deserializer);
-        return crate::api::RtpTransceiverInit {
+        return crate::api::rtp_transceiver_init::RtpTransceiverInit {
             direction: var_direction,
             send_encodings: var_sendEncodings,
         };
@@ -3856,7 +3851,9 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::rtp_header_extension_capabili
             }
         }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::RtpTransceiverDirection {
+impl flutter_rust_bridge::IntoDart
+    for crate::api::rtp_transceiver_init::RtpTransceiverDirection
+{
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         match self {
             Self::SendRecv => 0.into_dart(),
@@ -3869,18 +3866,24 @@ impl flutter_rust_bridge::IntoDart for crate::api::RtpTransceiverDirection {
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::RtpTransceiverDirection
+    for crate::api::rtp_transceiver_init::RtpTransceiverDirection
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::RtpTransceiverDirection>
-    for crate::api::RtpTransceiverDirection
+impl
+    flutter_rust_bridge::IntoIntoDart<
+        crate::api::rtp_transceiver_init::RtpTransceiverDirection,
+    > for crate::api::rtp_transceiver_init::RtpTransceiverDirection
 {
-    fn into_into_dart(self) -> crate::api::RtpTransceiverDirection {
+    fn into_into_dart(
+        self,
+    ) -> crate::api::rtp_transceiver_init::RtpTransceiverDirection {
         self
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::RtpTransceiverInit {
+impl flutter_rust_bridge::IntoDart
+    for crate::api::rtp_transceiver_init::RtpTransceiverInit
+{
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
             self.direction.into_into_dart().into_dart(),
@@ -3890,13 +3893,17 @@ impl flutter_rust_bridge::IntoDart for crate::api::RtpTransceiverInit {
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::RtpTransceiverInit
+    for crate::api::rtp_transceiver_init::RtpTransceiverInit
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::RtpTransceiverInit>
-    for crate::api::RtpTransceiverInit
+impl
+    flutter_rust_bridge::IntoIntoDart<
+        crate::api::rtp_transceiver_init::RtpTransceiverInit,
+    > for crate::api::rtp_transceiver_init::RtpTransceiverInit
 {
-    fn into_into_dart(self) -> crate::api::RtpTransceiverInit {
+    fn into_into_dart(
+        self,
+    ) -> crate::api::rtp_transceiver_init::RtpTransceiverInit {
         self
     }
 }
@@ -5331,7 +5338,7 @@ impl SseEncode for crate::api::RtcRtpTransceiver {
             serializer,
         );
         <Option<String>>::sse_encode(self.mid, serializer);
-        <crate::api::RtpTransceiverDirection>::sse_encode(
+        <crate::api::rtp_transceiver_init::RtpTransceiverDirection>::sse_encode(
             self.direction,
             serializer,
         );
@@ -5540,38 +5547,31 @@ impl SseEncode for crate::api::rtp_header_extension_capability::RtpHeaderExtensi
                     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {<String>::sse_encode(self.uri, serializer);
 <Option<i32>>::sse_encode(self.preferred_id, serializer);
 <bool>::sse_encode(self.preferred_encrypted, serializer);
-<crate::api::RtpTransceiverDirection>::sse_encode(self.direction, serializer);}
+<crate::api::rtp_transceiver_init::RtpTransceiverDirection>::sse_encode(self.direction, serializer);}
                 }
 
-impl SseEncode for crate::api::RtpTransceiverDirection {
+impl SseEncode for crate::api::rtp_transceiver_init::RtpTransceiverDirection {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
         serializer: &mut flutter_rust_bridge::for_generated::SseSerializer,
     ) {
-        <i32>::sse_encode(
-            match self {
-                crate::api::RtpTransceiverDirection::SendRecv => 0,
-                crate::api::RtpTransceiverDirection::SendOnly => 1,
-                crate::api::RtpTransceiverDirection::RecvOnly => 2,
-                crate::api::RtpTransceiverDirection::Inactive => 3,
-                crate::api::RtpTransceiverDirection::Stopped => 4,
-                _ => {
-                    unimplemented!("");
-                }
-            },
-            serializer,
-        );
+        <i32>::sse_encode(match self {crate::api::rtp_transceiver_init::RtpTransceiverDirection::SendRecv => { 0 }
+crate::api::rtp_transceiver_init::RtpTransceiverDirection::SendOnly => { 1 }
+crate::api::rtp_transceiver_init::RtpTransceiverDirection::RecvOnly => { 2 }
+crate::api::rtp_transceiver_init::RtpTransceiverDirection::Inactive => { 3 }
+crate::api::rtp_transceiver_init::RtpTransceiverDirection::Stopped => { 4 }
+ _ => { unimplemented!(""); }}, serializer);
     }
 }
 
-impl SseEncode for crate::api::RtpTransceiverInit {
+impl SseEncode for crate::api::rtp_transceiver_init::RtpTransceiverInit {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
         serializer: &mut flutter_rust_bridge::for_generated::SseSerializer,
     ) {
-        <crate::api::RtpTransceiverDirection>::sse_encode(
+        <crate::api::rtp_transceiver_init::RtpTransceiverDirection>::sse_encode(
             self.direction,
             serializer,
         );
