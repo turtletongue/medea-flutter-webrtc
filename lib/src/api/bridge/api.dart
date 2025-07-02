@@ -13,6 +13,10 @@ import 'api/peer_connection_event/ice_gathering_state.dart';
 import 'api/peer_connection_event/peer_connection_state.dart';
 import 'api/peer_connection_event/rtc_track_event.dart';
 import 'api/peer_connection_event/signaling_state.dart';
+import 'api/rtc_configuration.dart';
+import 'api/rtc_configuration/bundle_policy.dart';
+import 'api/rtc_configuration/ice_transports_type.dart';
+import 'api/rtc_configuration/rtc_ice_server.dart';
 import 'api/rtc_rtp_encoding_parameters.dart';
 import 'api/rtc_rtp_send_parameters.dart';
 import 'api/rtc_rtp_transceiver.dart';
@@ -22,7 +26,7 @@ import 'frb_generated.dart';
 import 'lib.dart';
 
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `TrackKind`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`, `from`, `from`, `from`, `hash`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `clone`, `eq`, `eq`, `fmt`, `fmt`, `from`, `from`, `from`, `hash`
 
 /// Returns all [`VideoCodecInfo`]s of the supported video encoders.
 Future<List<VideoCodecInfo>> videoEncoders() =>
@@ -153,59 +157,6 @@ Future<int> microphoneVolume() =>
 Stream<void> setOnDeviceChanged() =>
     RustLib.instance.api.crateApiSetOnDeviceChanged();
 
-/// [RTCBundlePolicy][1] representation.
-///
-/// Affects which media tracks are negotiated if the remote endpoint is not
-/// bundle-aware, and what ICE candidates are gathered. If the remote endpoint
-/// is bundle-aware, all media tracks and data channels are bundled onto the
-/// same transport.
-///
-/// [1]: https://w3.org/TR/webrtc#dom-rtcbundlepolicy
-enum BundlePolicy {
-  /// [RTCBundlePolicy.balanced][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcbundlepolicy-balanced
-  balanced,
-
-  /// [RTCBundlePolicy.max-bundle][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcbundlepolicy-max-bundle
-  maxBundle,
-
-  /// [RTCBundlePolicy.max-compat][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcbundlepolicy-max-compat
-  maxCompat,
-}
-
-/// [RTCIceTransportPolicy][1] representation.
-///
-/// It defines an ICE candidate policy the [ICE Agent][2] uses to surface
-/// the permitted candidates to the application. Only these candidates will
-/// be used for connectivity checks.
-///
-/// [1]: https://w3.org/TR/webrtc#dom-rtcicetransportpolicy
-/// [2]: https://w3.org/TR/webrtc#dfn-ice-agent
-enum IceTransportsType {
-  /// [RTCIceTransportPolicy.all][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcicetransportpolicy-all
-  all,
-
-  /// [RTCIceTransportPolicy.relay][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcicetransportpolicy-relay
-  relay,
-
-  /// ICE Agent can't use `typ host` candidates when this value is specified.
-  ///
-  /// Non-spec-compliant variant.
-  noHost,
-
-  /// No ICE candidate offered.
-  none,
-}
-
 /// Transport protocols used in [WebRTC].
 ///
 /// [WebRTC]: https://w3.org/TR/webrtc
@@ -219,92 +170,6 @@ enum Protocol {
   ///
   /// [1]: https://en.wikipedia.org/wiki/User_Datagram_Protocol
   udp,
-}
-
-/// [`PeerConnection`]'s configuration.
-class RtcConfiguration {
-  /// [iceTransportPolicy][1] configuration.
-  ///
-  /// Indicates which candidates the [ICE Agent][2] is allowed to use.
-  ///
-  /// [1]: https://tinyurl.com/icetransportpolicy
-  /// [2]: https://w3.org/TR/webrtc#dfn-ice-agent
-  final IceTransportsType iceTransportPolicy;
-
-  /// [bundlePolicy][1] configuration.
-  ///
-  /// Indicates which media-bundling policy to use when gathering ICE
-  /// candidates.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcconfiguration-bundlepolicy
-  final BundlePolicy bundlePolicy;
-
-  /// [iceServers][1] configuration.
-  ///
-  /// An array of objects describing servers available to be used by ICE,
-  /// such as STUN and TURN servers.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcconfiguration-iceservers
-  final List<RtcIceServer> iceServers;
-
-  const RtcConfiguration({
-    required this.iceTransportPolicy,
-    required this.bundlePolicy,
-    required this.iceServers,
-  });
-
-  @override
-  int get hashCode =>
-      iceTransportPolicy.hashCode ^ bundlePolicy.hashCode ^ iceServers.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is RtcConfiguration &&
-          runtimeType == other.runtimeType &&
-          iceTransportPolicy == other.iceTransportPolicy &&
-          bundlePolicy == other.bundlePolicy &&
-          iceServers == other.iceServers;
-}
-
-/// Description of STUN and TURN servers that can be used by an [ICE Agent][1]
-/// to establish a connection with a peer.
-///
-/// [1]: https://w3.org/TR/webrtc#dfn-ice-agent
-class RtcIceServer {
-  /// STUN or TURN URI(s).
-  final List<String> urls;
-
-  /// If this [`RtcIceServer`] object represents a TURN server, then this
-  /// attribute specifies the [username][1] to use with that TURN server.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtciceserver-username
-  final String username;
-
-  /// If this [`RtcIceServer`] object represents a TURN server, then this
-  /// attribute specifies the [credential][1] to use with that TURN
-  /// server.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtciceserver-credential
-  final String credential;
-
-  const RtcIceServer({
-    required this.urls,
-    required this.username,
-    required this.credential,
-  });
-
-  @override
-  int get hashCode => urls.hashCode ^ username.hashCode ^ credential.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is RtcIceServer &&
-          runtimeType == other.runtimeType &&
-          urls == other.urls &&
-          username == other.username &&
-          credential == other.credential;
 }
 
 /// [ScalabilityMode][0] representation.

@@ -163,7 +163,7 @@ fn wire__crate__api__create_peer_connection_impl(
             let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
             let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_cb = <StreamSink<crate::api::peer_connection_event::PeerConnectionEvent,flutter_rust_bridge::for_generated::SseCodec>>::sse_decode(&mut deserializer);
-let api_configuration = <crate::api::RtcConfiguration>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
+let api_configuration = <crate::api::rtc_configuration::RtcConfiguration>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
                     transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>((move ||  {
                          let output_ok = crate::api::create_peer_connection(api_cb, api_configuration)?;   Ok(output_ok)
                     })())
@@ -994,16 +994,16 @@ impl SseDecode for bool {
     }
 }
 
-impl SseDecode for crate::api::BundlePolicy {
+impl SseDecode for crate::api::rtc_configuration::bundle_policy::BundlePolicy {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
     ) -> Self {
         let mut inner = <i32>::sse_decode(deserializer);
         return match inner {
-            0 => crate::api::BundlePolicy::Balanced,
-            1 => crate::api::BundlePolicy::MaxBundle,
-            2 => crate::api::BundlePolicy::MaxCompat,
+            0 => crate::api::rtc_configuration::bundle_policy::BundlePolicy::Balanced,
+1 => crate::api::rtc_configuration::bundle_policy::BundlePolicy::MaxBundle,
+2 => crate::api::rtc_configuration::bundle_policy::BundlePolicy::MaxCompat,
             _ => unreachable!("Invalid variant for BundlePolicy: {}", inner),
         };
     }
@@ -1182,20 +1182,20 @@ impl SseDecode for crate::api::rtc_stats::ice_role::IceRole {
     }
 }
 
-impl SseDecode for crate::api::IceTransportsType {
+impl SseDecode
+    for crate::api::rtc_configuration::ice_transports_type::IceTransportsType
+{
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
     ) -> Self {
         let mut inner = <i32>::sse_decode(deserializer);
         return match inner {
-            0 => crate::api::IceTransportsType::All,
-            1 => crate::api::IceTransportsType::Relay,
-            2 => crate::api::IceTransportsType::NoHost,
-            3 => crate::api::IceTransportsType::None,
-            _ => {
-                unreachable!("Invalid variant for IceTransportsType: {}", inner)
-            }
+            0 => crate::api::rtc_configuration::ice_transports_type::IceTransportsType::All,
+1 => crate::api::rtc_configuration::ice_transports_type::IceTransportsType::Relay,
+2 => crate::api::rtc_configuration::ice_transports_type::IceTransportsType::NoHost,
+3 => crate::api::rtc_configuration::ice_transports_type::IceTransportsType::None,
+            _ => unreachable!("Invalid variant for IceTransportsType: {}", inner),
         };
     }
 }
@@ -1315,7 +1315,9 @@ impl SseDecode for Vec<(String, String)> {
     }
 }
 
-impl SseDecode for Vec<crate::api::RtcIceServer> {
+impl SseDecode
+    for Vec<crate::api::rtc_configuration::rtc_ice_server::RtcIceServer>
+{
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
@@ -1323,7 +1325,7 @@ impl SseDecode for Vec<crate::api::RtcIceServer> {
         let mut len_ = <i32>::sse_decode(deserializer);
         let mut ans_ = vec![];
         for idx_ in 0..len_ {
-            ans_.push(<crate::api::RtcIceServer>::sse_decode(deserializer));
+            ans_.push(<crate::api::rtc_configuration::rtc_ice_server::RtcIceServer>::sse_decode(deserializer));
         }
         return ans_;
     }
@@ -1854,18 +1856,17 @@ impl SseDecode for (String, String) {
     }
 }
 
-impl SseDecode for crate::api::RtcConfiguration {
+impl SseDecode for crate::api::rtc_configuration::RtcConfiguration {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
     ) -> Self {
-        let mut var_iceTransportPolicy =
-            <crate::api::IceTransportsType>::sse_decode(deserializer);
-        let mut var_bundlePolicy =
-            <crate::api::BundlePolicy>::sse_decode(deserializer);
-        let mut var_iceServers =
-            <Vec<crate::api::RtcIceServer>>::sse_decode(deserializer);
-        return crate::api::RtcConfiguration {
+        let mut var_iceTransportPolicy = <crate::api::rtc_configuration::ice_transports_type::IceTransportsType>::sse_decode(deserializer);
+        let mut var_bundlePolicy = <crate::api::rtc_configuration::bundle_policy::BundlePolicy>::sse_decode(deserializer);
+        let mut var_iceServers = <Vec<
+            crate::api::rtc_configuration::rtc_ice_server::RtcIceServer,
+        >>::sse_decode(deserializer);
+        return crate::api::rtc_configuration::RtcConfiguration {
             ice_transport_policy: var_iceTransportPolicy,
             bundle_policy: var_bundlePolicy,
             ice_servers: var_iceServers,
@@ -1895,7 +1896,7 @@ impl SseDecode for crate::api::rtc_ice_candidate_stats::RtcIceCandidateStats {
     }
 }
 
-impl SseDecode for crate::api::RtcIceServer {
+impl SseDecode for crate::api::rtc_configuration::rtc_ice_server::RtcIceServer {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
@@ -1903,7 +1904,7 @@ impl SseDecode for crate::api::RtcIceServer {
         let mut var_urls = <Vec<String>>::sse_decode(deserializer);
         let mut var_username = <String>::sse_decode(deserializer);
         let mut var_credential = <String>::sse_decode(deserializer);
-        return crate::api::RtcIceServer {
+        return crate::api::rtc_configuration::rtc_ice_server::RtcIceServer {
             urls: var_urls,
             username: var_username,
             credential: var_credential,
@@ -2729,7 +2730,9 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::media_stream_constraints::aud
             }
         }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::BundlePolicy {
+impl flutter_rust_bridge::IntoDart
+    for crate::api::rtc_configuration::bundle_policy::BundlePolicy
+{
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         match self {
             Self::Balanced => 0.into_dart(),
@@ -2740,13 +2743,17 @@ impl flutter_rust_bridge::IntoDart for crate::api::BundlePolicy {
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::BundlePolicy
+    for crate::api::rtc_configuration::bundle_policy::BundlePolicy
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::BundlePolicy>
-    for crate::api::BundlePolicy
+impl
+    flutter_rust_bridge::IntoIntoDart<
+        crate::api::rtc_configuration::bundle_policy::BundlePolicy,
+    > for crate::api::rtc_configuration::bundle_policy::BundlePolicy
 {
-    fn into_into_dart(self) -> crate::api::BundlePolicy {
+    fn into_into_dart(
+        self,
+    ) -> crate::api::rtc_configuration::bundle_policy::BundlePolicy {
         self
     }
 }
@@ -2937,7 +2944,9 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::rtc_stats::ice_role::IceRole>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::IceTransportsType {
+impl flutter_rust_bridge::IntoDart
+    for crate::api::rtc_configuration::ice_transports_type::IceTransportsType
+{
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         match self {
             Self::All => 0.into_dart(),
@@ -2949,13 +2958,19 @@ impl flutter_rust_bridge::IntoDart for crate::api::IceTransportsType {
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::IceTransportsType
+    for crate::api::rtc_configuration::ice_transports_type::IceTransportsType
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::IceTransportsType>
-    for crate::api::IceTransportsType
+impl
+    flutter_rust_bridge::IntoIntoDart<
+        crate::api::rtc_configuration::ice_transports_type::IceTransportsType,
+    >
+    for crate::api::rtc_configuration::ice_transports_type::IceTransportsType
 {
-    fn into_into_dart(self) -> crate::api::IceTransportsType {
+    fn into_into_dart(
+        self,
+    ) -> crate::api::rtc_configuration::ice_transports_type::IceTransportsType
+    {
         self
     }
 }
@@ -3239,7 +3254,9 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::Protocol>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::RtcConfiguration {
+impl flutter_rust_bridge::IntoDart
+    for crate::api::rtc_configuration::RtcConfiguration
+{
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
             self.ice_transport_policy.into_into_dart().into_dart(),
@@ -3250,13 +3267,15 @@ impl flutter_rust_bridge::IntoDart for crate::api::RtcConfiguration {
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::RtcConfiguration
+    for crate::api::rtc_configuration::RtcConfiguration
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::RtcConfiguration>
-    for crate::api::RtcConfiguration
+impl
+    flutter_rust_bridge::IntoIntoDart<
+        crate::api::rtc_configuration::RtcConfiguration,
+    > for crate::api::rtc_configuration::RtcConfiguration
 {
-    fn into_into_dart(self) -> crate::api::RtcConfiguration {
+    fn into_into_dart(self) -> crate::api::rtc_configuration::RtcConfiguration {
         self
     }
 }
@@ -3288,7 +3307,9 @@ impl
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::RtcIceServer {
+impl flutter_rust_bridge::IntoDart
+    for crate::api::rtc_configuration::rtc_ice_server::RtcIceServer
+{
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
             self.urls.into_into_dart().into_dart(),
@@ -3299,13 +3320,17 @@ impl flutter_rust_bridge::IntoDart for crate::api::RtcIceServer {
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::RtcIceServer
+    for crate::api::rtc_configuration::rtc_ice_server::RtcIceServer
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::RtcIceServer>
-    for crate::api::RtcIceServer
+impl
+    flutter_rust_bridge::IntoIntoDart<
+        crate::api::rtc_configuration::rtc_ice_server::RtcIceServer,
+    > for crate::api::rtc_configuration::rtc_ice_server::RtcIceServer
 {
-    fn into_into_dart(self) -> crate::api::RtcIceServer {
+    fn into_into_dart(
+        self,
+    ) -> crate::api::rtc_configuration::rtc_ice_server::RtcIceServer {
         self
     }
 }
@@ -4270,23 +4295,16 @@ impl SseEncode for bool {
     }
 }
 
-impl SseEncode for crate::api::BundlePolicy {
+impl SseEncode for crate::api::rtc_configuration::bundle_policy::BundlePolicy {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
         serializer: &mut flutter_rust_bridge::for_generated::SseSerializer,
     ) {
-        <i32>::sse_encode(
-            match self {
-                crate::api::BundlePolicy::Balanced => 0,
-                crate::api::BundlePolicy::MaxBundle => 1,
-                crate::api::BundlePolicy::MaxCompat => 2,
-                _ => {
-                    unimplemented!("");
-                }
-            },
-            serializer,
-        );
+        <i32>::sse_encode(match self {crate::api::rtc_configuration::bundle_policy::BundlePolicy::Balanced => { 0 }
+crate::api::rtc_configuration::bundle_policy::BundlePolicy::MaxBundle => { 1 }
+crate::api::rtc_configuration::bundle_policy::BundlePolicy::MaxCompat => { 2 }
+ _ => { unimplemented!(""); }}, serializer);
     }
 }
 
@@ -4450,24 +4468,19 @@ impl SseEncode for crate::api::rtc_stats::ice_role::IceRole {
     }
 }
 
-impl SseEncode for crate::api::IceTransportsType {
+impl SseEncode
+    for crate::api::rtc_configuration::ice_transports_type::IceTransportsType
+{
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
         serializer: &mut flutter_rust_bridge::for_generated::SseSerializer,
     ) {
-        <i32>::sse_encode(
-            match self {
-                crate::api::IceTransportsType::All => 0,
-                crate::api::IceTransportsType::Relay => 1,
-                crate::api::IceTransportsType::NoHost => 2,
-                crate::api::IceTransportsType::None => 3,
-                _ => {
-                    unimplemented!("");
-                }
-            },
-            serializer,
-        );
+        <i32>::sse_encode(match self {crate::api::rtc_configuration::ice_transports_type::IceTransportsType::All => { 0 }
+crate::api::rtc_configuration::ice_transports_type::IceTransportsType::Relay => { 1 }
+crate::api::rtc_configuration::ice_transports_type::IceTransportsType::NoHost => { 2 }
+crate::api::rtc_configuration::ice_transports_type::IceTransportsType::None => { 3 }
+ _ => { unimplemented!(""); }}, serializer);
     }
 }
 
@@ -4573,7 +4586,9 @@ impl SseEncode for Vec<(String, String)> {
     }
 }
 
-impl SseEncode for Vec<crate::api::RtcIceServer> {
+impl SseEncode
+    for Vec<crate::api::rtc_configuration::rtc_ice_server::RtcIceServer>
+{
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
@@ -4581,7 +4596,7 @@ impl SseEncode for Vec<crate::api::RtcIceServer> {
     ) {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
-            <crate::api::RtcIceServer>::sse_encode(item, serializer);
+            <crate::api::rtc_configuration::rtc_ice_server::RtcIceServer>::sse_encode(item, serializer);
         }
     }
 }
@@ -5060,21 +5075,15 @@ impl SseEncode for (String, String) {
     }
 }
 
-impl SseEncode for crate::api::RtcConfiguration {
+impl SseEncode for crate::api::rtc_configuration::RtcConfiguration {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
         serializer: &mut flutter_rust_bridge::for_generated::SseSerializer,
     ) {
-        <crate::api::IceTransportsType>::sse_encode(
-            self.ice_transport_policy,
-            serializer,
-        );
-        <crate::api::BundlePolicy>::sse_encode(self.bundle_policy, serializer);
-        <Vec<crate::api::RtcIceServer>>::sse_encode(
-            self.ice_servers,
-            serializer,
-        );
+        <crate::api::rtc_configuration::ice_transports_type::IceTransportsType>::sse_encode(self.ice_transport_policy, serializer);
+        <crate::api::rtc_configuration::bundle_policy::BundlePolicy>::sse_encode(self.bundle_policy, serializer);
+        <Vec<crate::api::rtc_configuration::rtc_ice_server::RtcIceServer>>::sse_encode(self.ice_servers, serializer);
     }
 }
 
@@ -5092,7 +5101,7 @@ crate::api::rtc_ice_candidate_stats::RtcIceCandidateStats::Remote(field0) => { <
     }
 }
 
-impl SseEncode for crate::api::RtcIceServer {
+impl SseEncode for crate::api::rtc_configuration::rtc_ice_server::RtcIceServer {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
