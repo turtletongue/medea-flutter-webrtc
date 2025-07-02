@@ -1129,15 +1129,19 @@ impl SseDecode for crate::api::rtc_ice_candidate_stats::IceCandidateStats {
         let mut var_transportId = <Option<String>>::sse_decode(deserializer);
         let mut var_address = <Option<String>>::sse_decode(deserializer);
         let mut var_port = <Option<i32>>::sse_decode(deserializer);
-        let mut var_protocol = <crate::api::Protocol>::sse_decode(deserializer);
+        let mut var_protocol =
+            <crate::api::rtc_ice_candidate_stats::Protocol>::sse_decode(
+                deserializer,
+            );
         let mut var_candidateType =
             <crate::api::rtc_ice_candidate_stats::CandidateType>::sse_decode(
                 deserializer,
             );
         let mut var_priority = <Option<i32>>::sse_decode(deserializer);
         let mut var_url = <Option<String>>::sse_decode(deserializer);
-        let mut var_relayProtocol =
-            <Option<crate::api::Protocol>>::sse_decode(deserializer);
+        let mut var_relayProtocol = <Option<
+            crate::api::rtc_ice_candidate_stats::Protocol,
+        >>::sse_decode(deserializer);
         return crate::api::rtc_ice_candidate_stats::IceCandidateStats {
             transport_id: var_transportId,
             address: var_address,
@@ -1688,13 +1692,17 @@ impl SseDecode for Option<crate::api::NoiseSuppressionLevel> {
     }
 }
 
-impl SseDecode for Option<crate::api::Protocol> {
+impl SseDecode for Option<crate::api::rtc_ice_candidate_stats::Protocol> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
     ) -> Self {
         if (<bool>::sse_decode(deserializer)) {
-            return Some(<crate::api::Protocol>::sse_decode(deserializer));
+            return Some(
+                <crate::api::rtc_ice_candidate_stats::Protocol>::sse_decode(
+                    deserializer,
+                ),
+            );
         } else {
             return None;
         }
@@ -1874,15 +1882,15 @@ impl SseDecode for crate::api::PeerConnectionState {
     }
 }
 
-impl SseDecode for crate::api::Protocol {
+impl SseDecode for crate::api::rtc_ice_candidate_stats::Protocol {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
     ) -> Self {
         let mut inner = <i32>::sse_decode(deserializer);
         return match inner {
-            0 => crate::api::Protocol::Tcp,
-            1 => crate::api::Protocol::Udp,
+            0 => crate::api::rtc_ice_candidate_stats::Protocol::Tcp,
+            1 => crate::api::rtc_ice_candidate_stats::Protocol::Udp,
             _ => unreachable!("Invalid variant for Protocol: {}", inner),
         };
     }
@@ -3669,7 +3677,9 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::PeerConnectionState>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::Protocol {
+impl flutter_rust_bridge::IntoDart
+    for crate::api::rtc_ice_candidate_stats::Protocol
+{
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         match self {
             Self::Tcp => 0.into_dart(),
@@ -3679,13 +3689,15 @@ impl flutter_rust_bridge::IntoDart for crate::api::Protocol {
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::Protocol
+    for crate::api::rtc_ice_candidate_stats::Protocol
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::Protocol>
-    for crate::api::Protocol
+impl
+    flutter_rust_bridge::IntoIntoDart<
+        crate::api::rtc_ice_candidate_stats::Protocol,
+    > for crate::api::rtc_ice_candidate_stats::Protocol
 {
-    fn into_into_dart(self) -> crate::api::Protocol {
+    fn into_into_dart(self) -> crate::api::rtc_ice_candidate_stats::Protocol {
         self
     }
 }
@@ -4970,14 +4982,17 @@ impl SseEncode for crate::api::rtc_ice_candidate_stats::IceCandidateStats {
         <Option<String>>::sse_encode(self.transport_id, serializer);
         <Option<String>>::sse_encode(self.address, serializer);
         <Option<i32>>::sse_encode(self.port, serializer);
-        <crate::api::Protocol>::sse_encode(self.protocol, serializer);
+        <crate::api::rtc_ice_candidate_stats::Protocol>::sse_encode(
+            self.protocol,
+            serializer,
+        );
         <crate::api::rtc_ice_candidate_stats::CandidateType>::sse_encode(
             self.candidate_type,
             serializer,
         );
         <Option<i32>>::sse_encode(self.priority, serializer);
         <Option<String>>::sse_encode(self.url, serializer);
-        <Option<crate::api::Protocol>>::sse_encode(
+        <Option<crate::api::rtc_ice_candidate_stats::Protocol>>::sse_encode(
             self.relay_protocol,
             serializer,
         );
@@ -5505,7 +5520,7 @@ impl SseEncode for Option<crate::api::NoiseSuppressionLevel> {
     }
 }
 
-impl SseEncode for Option<crate::api::Protocol> {
+impl SseEncode for Option<crate::api::rtc_ice_candidate_stats::Protocol> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
@@ -5513,7 +5528,9 @@ impl SseEncode for Option<crate::api::Protocol> {
     ) {
         <bool>::sse_encode(self.is_some(), serializer);
         if let Some(value) = self {
-            <crate::api::Protocol>::sse_encode(value, serializer);
+            <crate::api::rtc_ice_candidate_stats::Protocol>::sse_encode(
+                value, serializer,
+            );
         }
     }
 }
@@ -5685,7 +5702,7 @@ impl SseEncode for crate::api::PeerConnectionState {
     }
 }
 
-impl SseEncode for crate::api::Protocol {
+impl SseEncode for crate::api::rtc_ice_candidate_stats::Protocol {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
@@ -5693,8 +5710,8 @@ impl SseEncode for crate::api::Protocol {
     ) {
         <i32>::sse_encode(
             match self {
-                crate::api::Protocol::Tcp => 0,
-                crate::api::Protocol::Udp => 1,
+                crate::api::rtc_ice_candidate_stats::Protocol::Tcp => 0,
+                crate::api::rtc_ice_candidate_stats::Protocol::Udp => 1,
                 _ => {
                     unimplemented!("");
                 }
