@@ -9,8 +9,7 @@ import 'dart:convert';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 import 'api.dart';
-import 'api/media_device_info.dart';
-import 'api/media_display_info.dart';
+import 'api/device_info.dart';
 import 'frb_generated.dart';
 import 'lib.dart';
 import 'renderer.dart';
@@ -69,7 +68,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.10.0';
 
   @override
-  int get rustContentHash => -1008398479;
+  int get rustContentHash => -40294053;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -140,9 +139,9 @@ abstract class RustLibApi extends BaseApi {
 
   Future<void> crateApiEnableFakeMedia();
 
-  Future<List<MediaDeviceInfo>> crateApiMediaDeviceInfoEnumerateDevices();
+  Future<List<MediaDeviceInfo>> crateApiEnumerateDevices();
 
-  Future<List<MediaDisplayInfo>> crateApiMediaDisplayInfoEnumerateDisplays();
+  Future<List<MediaDisplayInfo>> crateApiEnumerateDisplays();
 
   Future<AudioProcessingConfig> crateApiGetAudioProcessingConfig({
     required String trackId,
@@ -759,7 +758,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "enable_fake_media", argNames: []);
 
   @override
-  Future<List<MediaDeviceInfo>> crateApiMediaDeviceInfoEnumerateDevices() {
+  Future<List<MediaDeviceInfo>> crateApiEnumerateDevices() {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
@@ -775,18 +774,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_list_media_device_info,
           decodeErrorData: sse_decode_AnyhowException,
         ),
-        constMeta: kCrateApiMediaDeviceInfoEnumerateDevicesConstMeta,
+        constMeta: kCrateApiEnumerateDevicesConstMeta,
         argValues: [],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiMediaDeviceInfoEnumerateDevicesConstMeta =>
+  TaskConstMeta get kCrateApiEnumerateDevicesConstMeta =>
       const TaskConstMeta(debugName: "enumerate_devices", argNames: []);
 
   @override
-  Future<List<MediaDisplayInfo>> crateApiMediaDisplayInfoEnumerateDisplays() {
+  Future<List<MediaDisplayInfo>> crateApiEnumerateDisplays() {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
@@ -802,14 +801,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_list_media_display_info,
           decodeErrorData: null,
         ),
-        constMeta: kCrateApiMediaDisplayInfoEnumerateDisplaysConstMeta,
+        constMeta: kCrateApiEnumerateDisplaysConstMeta,
         argValues: [],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiMediaDisplayInfoEnumerateDisplaysConstMeta =>
+  TaskConstMeta get kCrateApiEnumerateDisplaysConstMeta =>
       const TaskConstMeta(debugName: "enumerate_displays", argNames: []);
 
   @override
