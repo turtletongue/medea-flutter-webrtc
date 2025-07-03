@@ -6,6 +6,7 @@
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
 
+import 'api/device_info.dart';
 import 'frb_generated.dart';
 import 'lib.dart';
 import 'renderer.dart';
@@ -30,6 +31,16 @@ Future<void> enableFakeMedia() =>
 
 /// Indicates whether application is configured to use fake media devices.
 Future<bool> isFakeMedia() => RustLib.instance.api.crateApiIsFakeMedia();
+
+/// Returns a list of all available media input and output devices, such as
+/// microphones, cameras, headsets, and so forth.
+Future<List<MediaDeviceInfo>> enumerateDevices() =>
+    RustLib.instance.api.crateApiEnumerateDevices();
+
+/// Returns a list of all available displays that can be used for screen
+/// capturing.
+Future<List<MediaDisplayInfo>> enumerateDisplays() =>
+    RustLib.instance.api.crateApiEnumerateDisplays();
 
 /// Creates a new [`PeerConnection`] and returns its ID.
 Stream<PeerConnectionEvent> createPeerConnection({
