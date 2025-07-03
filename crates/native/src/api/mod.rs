@@ -1,6 +1,6 @@
 //! API surface and implementation for Flutter.
 
-pub mod device_info;
+pub mod media_info;
 
 use std::{
     sync::{
@@ -14,7 +14,7 @@ use std::{
 use flutter_rust_bridge::for_generated::FLUTTER_RUST_BRIDGE_RUNTIME_VERSION;
 use libwebrtc_sys as sys;
 
-pub use self::device_info::{
+pub use self::media_info::{
     MediaDeviceInfo, MediaDeviceKind, MediaDisplayInfo,
 };
 // Re-exporting since it is used in the generated code.
