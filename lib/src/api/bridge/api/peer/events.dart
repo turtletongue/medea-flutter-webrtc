@@ -14,7 +14,6 @@ import 'events/ice_gathering_state.dart';
 import 'events/peer_connection_state.dart';
 import 'events/rtc_track_event.dart';
 import 'events/signaling_state.dart';
-import 'rtc_rtp_transceiver.dart';
 
 part 'events.freezed.dart';
 

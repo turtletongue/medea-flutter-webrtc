@@ -20,7 +20,6 @@ import 'api/peer/rtc_configuration.dart';
 import 'api/peer/rtc_configuration/bundle_policy.dart';
 import 'api/peer/rtc_configuration/ice_transports_type.dart';
 import 'api/peer/rtc_configuration/rtc_ice_server.dart';
-import 'api/peer/rtc_rtp_transceiver.dart';
 import 'api/peer/rtc_session_description.dart';
 import 'api/peer/video_codec_info.dart';
 import 'frb_generated.dart';
@@ -81,7 +80,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.10.0';
 
   @override
-  int get rustContentHash => -43526456;
+  int get rustContentHash => -228334806;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -99,7 +98,7 @@ abstract class RustLibApi extends BaseApi {
     required int sdpMlineIndex,
   });
 
-  Future<RtcRtpTransceiver> crateApiPeerRtcRtpTransceiverAddTransceiver({
+  Future<RtcRtpTransceiver> crateApiAddTransceiver({
     required ArcPeerConnection peer,
     required MediaType mediaType,
     required RtpTransceiverInit init,
@@ -178,16 +177,15 @@ abstract class RustLibApi extends BaseApi {
     required MediaType kind,
   });
 
-  Future<RtpTransceiverDirection>
-  crateApiPeerRtcRtpTransceiverGetTransceiverDirection({
+  Future<RtpTransceiverDirection> crateApiGetTransceiverDirection({
     required ArcRtpTransceiver transceiver,
   });
 
-  Future<String?> crateApiPeerRtcRtpTransceiverGetTransceiverMid({
+  Future<String?> crateApiGetTransceiverMid({
     required ArcRtpTransceiver transceiver,
   });
 
-  Future<List<RtcRtpTransceiver>> crateApiPeerRtcRtpTransceiverGetTransceivers({
+  Future<List<RtcRtpTransceiver>> crateApiGetTransceivers({
     required ArcPeerConnection peer,
   });
 
@@ -256,22 +254,22 @@ abstract class RustLibApi extends BaseApi {
     required bool enabled,
   });
 
-  Future<void> crateApiPeerRtcRtpTransceiverSetTransceiverDirection({
+  Future<void> crateApiSetTransceiverDirection({
     required ArcRtpTransceiver transceiver,
     required RtpTransceiverDirection direction,
   });
 
-  Future<void> crateApiPeerRtcRtpTransceiverSetTransceiverRecv({
+  Future<void> crateApiSetTransceiverRecv({
     required ArcRtpTransceiver transceiver,
     required bool recv,
   });
 
-  Future<void> crateApiPeerRtcRtpTransceiverSetTransceiverSend({
+  Future<void> crateApiSetTransceiverSend({
     required ArcRtpTransceiver transceiver,
     required bool send,
   });
 
-  Future<void> crateApiPeerRtcRtpTransceiverStopTransceiver({
+  Future<void> crateApiStopTransceiver({
     required ArcRtpTransceiver transceiver,
   });
 
@@ -387,7 +385,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<RtcRtpTransceiver> crateApiPeerRtcRtpTransceiverAddTransceiver({
+  Future<RtcRtpTransceiver> crateApiAddTransceiver({
     required ArcPeerConnection peer,
     required MediaType mediaType,
     required RtpTransceiverInit init,
@@ -410,18 +408,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_rtc_rtp_transceiver,
           decodeErrorData: sse_decode_AnyhowException,
         ),
-        constMeta: kCrateApiPeerRtcRtpTransceiverAddTransceiverConstMeta,
+        constMeta: kCrateApiAddTransceiverConstMeta,
         argValues: [peer, mediaType, init],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiPeerRtcRtpTransceiverAddTransceiverConstMeta =>
-      const TaskConstMeta(
-        debugName: "add_transceiver",
-        argNames: ["peer", "mediaType", "init"],
-      );
+  TaskConstMeta get kCrateApiAddTransceiverConstMeta => const TaskConstMeta(
+    debugName: "add_transceiver",
+    argNames: ["peer", "mediaType", "init"],
+  );
 
   @override
   Future<AudioProcessingConstraints>
@@ -992,8 +989,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<RtpTransceiverDirection>
-  crateApiPeerRtcRtpTransceiverGetTransceiverDirection({
+  Future<RtpTransceiverDirection> crateApiGetTransceiverDirection({
     required ArcRtpTransceiver transceiver,
   }) {
     return handler.executeNormal(
@@ -1012,23 +1008,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_rtp_transceiver_direction,
           decodeErrorData: null,
         ),
-        constMeta:
-            kCrateApiPeerRtcRtpTransceiverGetTransceiverDirectionConstMeta,
+        constMeta: kCrateApiGetTransceiverDirectionConstMeta,
         argValues: [transceiver],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta
-  get kCrateApiPeerRtcRtpTransceiverGetTransceiverDirectionConstMeta =>
+  TaskConstMeta get kCrateApiGetTransceiverDirectionConstMeta =>
       const TaskConstMeta(
         debugName: "get_transceiver_direction",
         argNames: ["transceiver"],
       );
 
   @override
-  Future<String?> crateApiPeerRtcRtpTransceiverGetTransceiverMid({
+  Future<String?> crateApiGetTransceiverMid({
     required ArcRtpTransceiver transceiver,
   }) {
     return handler.executeNormal(
@@ -1047,21 +1041,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_opt_String,
           decodeErrorData: null,
         ),
-        constMeta: kCrateApiPeerRtcRtpTransceiverGetTransceiverMidConstMeta,
+        constMeta: kCrateApiGetTransceiverMidConstMeta,
         argValues: [transceiver],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiPeerRtcRtpTransceiverGetTransceiverMidConstMeta =>
-      const TaskConstMeta(
-        debugName: "get_transceiver_mid",
-        argNames: ["transceiver"],
-      );
+  TaskConstMeta get kCrateApiGetTransceiverMidConstMeta => const TaskConstMeta(
+    debugName: "get_transceiver_mid",
+    argNames: ["transceiver"],
+  );
 
   @override
-  Future<List<RtcRtpTransceiver>> crateApiPeerRtcRtpTransceiverGetTransceivers({
+  Future<List<RtcRtpTransceiver>> crateApiGetTransceivers({
     required ArcPeerConnection peer,
   }) {
     return handler.executeNormal(
@@ -1080,14 +1073,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_list_rtc_rtp_transceiver,
           decodeErrorData: null,
         ),
-        constMeta: kCrateApiPeerRtcRtpTransceiverGetTransceiversConstMeta,
+        constMeta: kCrateApiGetTransceiversConstMeta,
         argValues: [peer],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiPeerRtcRtpTransceiverGetTransceiversConstMeta =>
+  TaskConstMeta get kCrateApiGetTransceiversConstMeta =>
       const TaskConstMeta(debugName: "get_transceivers", argNames: ["peer"]);
 
   @override
@@ -1631,7 +1624,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   );
 
   @override
-  Future<void> crateApiPeerRtcRtpTransceiverSetTransceiverDirection({
+  Future<void> crateApiSetTransceiverDirection({
     required ArcRtpTransceiver transceiver,
     required RtpTransceiverDirection direction,
   }) {
@@ -1652,23 +1645,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: sse_decode_AnyhowException,
         ),
-        constMeta:
-            kCrateApiPeerRtcRtpTransceiverSetTransceiverDirectionConstMeta,
+        constMeta: kCrateApiSetTransceiverDirectionConstMeta,
         argValues: [transceiver, direction],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta
-  get kCrateApiPeerRtcRtpTransceiverSetTransceiverDirectionConstMeta =>
+  TaskConstMeta get kCrateApiSetTransceiverDirectionConstMeta =>
       const TaskConstMeta(
         debugName: "set_transceiver_direction",
         argNames: ["transceiver", "direction"],
       );
 
   @override
-  Future<void> crateApiPeerRtcRtpTransceiverSetTransceiverRecv({
+  Future<void> crateApiSetTransceiverRecv({
     required ArcRtpTransceiver transceiver,
     required bool recv,
   }) {
@@ -1689,21 +1680,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: sse_decode_AnyhowException,
         ),
-        constMeta: kCrateApiPeerRtcRtpTransceiverSetTransceiverRecvConstMeta,
+        constMeta: kCrateApiSetTransceiverRecvConstMeta,
         argValues: [transceiver, recv],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiPeerRtcRtpTransceiverSetTransceiverRecvConstMeta =>
-      const TaskConstMeta(
-        debugName: "set_transceiver_recv",
-        argNames: ["transceiver", "recv"],
-      );
+  TaskConstMeta get kCrateApiSetTransceiverRecvConstMeta => const TaskConstMeta(
+    debugName: "set_transceiver_recv",
+    argNames: ["transceiver", "recv"],
+  );
 
   @override
-  Future<void> crateApiPeerRtcRtpTransceiverSetTransceiverSend({
+  Future<void> crateApiSetTransceiverSend({
     required ArcRtpTransceiver transceiver,
     required bool send,
   }) {
@@ -1724,21 +1714,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: sse_decode_AnyhowException,
         ),
-        constMeta: kCrateApiPeerRtcRtpTransceiverSetTransceiverSendConstMeta,
+        constMeta: kCrateApiSetTransceiverSendConstMeta,
         argValues: [transceiver, send],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiPeerRtcRtpTransceiverSetTransceiverSendConstMeta =>
-      const TaskConstMeta(
-        debugName: "set_transceiver_send",
-        argNames: ["transceiver", "send"],
-      );
+  TaskConstMeta get kCrateApiSetTransceiverSendConstMeta => const TaskConstMeta(
+    debugName: "set_transceiver_send",
+    argNames: ["transceiver", "send"],
+  );
 
   @override
-  Future<void> crateApiPeerRtcRtpTransceiverStopTransceiver({
+  Future<void> crateApiStopTransceiver({
     required ArcRtpTransceiver transceiver,
   }) {
     return handler.executeNormal(
@@ -1757,18 +1746,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: sse_decode_AnyhowException,
         ),
-        constMeta: kCrateApiPeerRtcRtpTransceiverStopTransceiverConstMeta,
+        constMeta: kCrateApiStopTransceiverConstMeta,
         argValues: [transceiver],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiPeerRtcRtpTransceiverStopTransceiverConstMeta =>
-      const TaskConstMeta(
-        debugName: "stop_transceiver",
-        argNames: ["transceiver"],
-      );
+  TaskConstMeta get kCrateApiStopTransceiverConstMeta => const TaskConstMeta(
+    debugName: "stop_transceiver",
+    argNames: ["transceiver"],
+  );
 
   @override
   Future<int?> crateApiTrackHeight({

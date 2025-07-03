@@ -21,7 +21,6 @@ import 'api/peer/rtc_configuration.dart';
 import 'api/peer/rtc_configuration/bundle_policy.dart';
 import 'api/peer/rtc_configuration/ice_transports_type.dart';
 import 'api/peer/rtc_configuration/rtc_ice_server.dart';
-import 'api/peer/rtc_rtp_transceiver.dart';
 import 'api/peer/rtc_session_description.dart';
 import 'api/peer/video_codec_info.dart';
 import 'frb_generated.dart';

@@ -18,7 +18,6 @@ import 'peer/rtc_configuration.dart';
 import 'peer/rtc_configuration/bundle_policy.dart';
 import 'peer/rtc_configuration/ice_transports_type.dart';
 import 'peer/rtc_configuration/rtc_ice_server.dart';
-import 'peer/rtc_rtp_transceiver.dart';
 import 'peer/rtc_session_description.dart';
 
 /// Creates a new [`PeerConnection`] and returns its ID.

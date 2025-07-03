@@ -13,7 +13,7 @@ import 'renderer.dart';
 part 'api.freezed.dart';
 
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `TrackKind`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `hash`, `hash`, `hash`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `hash`, `hash`, `hash`
 
 /// Configures media acquisition to use fake devices instead of actual camera
 /// and microphone.
@@ -33,9 +33,76 @@ Future<List<MediaDeviceInfo>> enumerateDevices() =>
 Future<List<MediaDisplayInfo>> enumerateDisplays() =>
     RustLib.instance.api.crateApiEnumerateDisplays();
 
+/// Creates a new [`RtcRtpTransceiver`] and adds it to the set of transceivers
+/// of the specified [`PeerConnection`].
+Future<RtcRtpTransceiver> addTransceiver({
+  required ArcPeerConnection peer,
+  required MediaType mediaType,
+  required RtpTransceiverInit init,
+}) => RustLib.instance.api.crateApiAddTransceiver(
+  peer: peer,
+  mediaType: mediaType,
+  init: init,
+);
+
+/// Returns a sequence of [`RtcRtpTransceiver`] objects representing the RTP
+/// transceivers currently attached to the specified [`PeerConnection`].
+Future<List<RtcRtpTransceiver>> getTransceivers({
+  required ArcPeerConnection peer,
+}) => RustLib.instance.api.crateApiGetTransceivers(peer: peer);
+
+/// Changes the preferred `direction` of the specified [`RtcRtpTransceiver`].
+Future<void> setTransceiverDirection({
+  required ArcRtpTransceiver transceiver,
+  required RtpTransceiverDirection direction,
+}) => RustLib.instance.api.crateApiSetTransceiverDirection(
+  transceiver: transceiver,
+  direction: direction,
+);
+
+/// Changes the receive direction of the specified [`RtcRtpTransceiver`].
+Future<void> setTransceiverRecv({
+  required ArcRtpTransceiver transceiver,
+  required bool recv,
+}) => RustLib.instance.api.crateApiSetTransceiverRecv(
+  transceiver: transceiver,
+  recv: recv,
+);
+
+/// Changes the send direction of the specified [`RtcRtpTransceiver`].
+Future<void> setTransceiverSend({
+  required ArcRtpTransceiver transceiver,
+  required bool send,
+}) => RustLib.instance.api.crateApiSetTransceiverSend(
+  transceiver: transceiver,
+  send: send,
+);
+
+/// Returns the [negotiated media ID (mid)][1] of the specified
+/// [`RtcRtpTransceiver`].
+///
+/// [1]: https://w3.org/TR/webrtc#dfn-media-stream-identification-tag
+Future<String?> getTransceiverMid({required ArcRtpTransceiver transceiver}) =>
+    RustLib.instance.api.crateApiGetTransceiverMid(transceiver: transceiver);
+
+/// Returns the preferred direction of the specified [`RtcRtpTransceiver`].
+Future<RtpTransceiverDirection> getTransceiverDirection({
+  required ArcRtpTransceiver transceiver,
+}) => RustLib.instance.api.crateApiGetTransceiverDirection(
+  transceiver: transceiver,
+);
+
 /// Returns [`RtcStats`] of the [`PeerConnection`] by its ID.
 Future<List<RtcStats>> getPeerStats({required ArcPeerConnection peer}) =>
     RustLib.instance.api.crateApiGetPeerStats(peer: peer);
+
+/// Irreversibly marks the specified [`RtcRtpTransceiver`] as stopping, unless
+/// it's already stopped.
+///
+/// This will immediately cause the transceiver's sender to no longer send, and
+/// its receiver to no longer receive.
+Future<void> stopTransceiver({required ArcRtpTransceiver transceiver}) =>
+    RustLib.instance.api.crateApiStopTransceiver(transceiver: transceiver);
 
 /// Changes the preferred [`RtpTransceiver`] codecs to the provided
 /// [`Vec`]`<`[`RtpCodecCapability`]`>`.
@@ -1061,6 +1128,53 @@ class RtcRtpSendParameters {
           runtimeType == other.runtimeType &&
           encodings == other.encodings &&
           inner == other.inner;
+}
+
+/// Representation of a permanent pair of an [RTCRtpSender] and an
+/// [RTCRtpReceiver], along with some shared state.
+///
+/// [RTCRtpSender]: https://w3.org/TR/webrtc#dom-rtcrtpsender
+/// [RTCRtpReceiver]: https://w3.org/TR/webrtc#dom-rtcrtpreceiver
+class RtcRtpTransceiver {
+  /// [`PeerConnection`] that this [`RtcRtpTransceiver`] belongs to.
+  final ArcPeerConnection peer;
+
+  /// Rust side [`RtpTransceiver`].
+  final ArcRtpTransceiver transceiver;
+
+  /// [Negotiated media ID (mid)][1] which the local and remote peers have
+  /// agreed upon to uniquely identify the [MediaStream]'s pairing of sender
+  /// and receiver.
+  ///
+  /// [MediaStream]: https://w3.org/TR/mediacapture-streams#dom-mediastream
+  /// [1]: https://w3.org/TR/webrtc#dfn-media-stream-identification-tag
+  final String? mid;
+
+  /// Preferred [`direction`][1] of this [`RtcRtpTransceiver`].
+  ///
+  /// [1]: https://w3.org/TR/webrtc#dom-rtcrtptransceiver-direction
+  final RtpTransceiverDirection direction;
+
+  const RtcRtpTransceiver({
+    required this.peer,
+    required this.transceiver,
+    this.mid,
+    required this.direction,
+  });
+
+  @override
+  int get hashCode =>
+      peer.hashCode ^ transceiver.hashCode ^ mid.hashCode ^ direction.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RtcRtpTransceiver &&
+          runtimeType == other.runtimeType &&
+          peer == other.peer &&
+          transceiver == other.transceiver &&
+          mid == other.mid &&
+          direction == other.direction;
 }
 
 /// Represents the [stats object] constructed by inspecting a specific

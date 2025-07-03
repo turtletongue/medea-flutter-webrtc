@@ -42,7 +42,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.10.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -43526456;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -228334806;
 
 // Section: executor
 
@@ -68,7 +68,7 @@ let api_sdp_mline_index = <i32>::sse_decode(&mut deserializer);deserializer.end(
                     })())
                 } })
 }
-fn wire__crate__api__peer__rtc_rtp_transceiver__add_transceiver_impl(
+fn wire__crate__api__add_transceiver_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -81,7 +81,7 @@ fn wire__crate__api__peer__rtc_rtp_transceiver__add_transceiver_impl(
 let api_media_type = <crate::api::MediaType>::sse_decode(&mut deserializer);
 let api_init = <crate::api::RtpTransceiverInit>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
                     transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>((move ||  {
-                         let output_ok = crate::api::peer::rtc_rtp_transceiver::add_transceiver(api_peer, api_media_type, api_init)?;   Ok(output_ok)
+                         let output_ok = crate::api::add_transceiver(api_peer, api_media_type, api_init)?;   Ok(output_ok)
                     })())
                 } })
 }
@@ -356,7 +356,7 @@ fn wire__crate__api__get_rtp_sender_capabilities_impl(
                     })())
                 } })
 }
-fn wire__crate__api__peer__rtc_rtp_transceiver__get_transceiver_direction_impl(
+fn wire__crate__api__get_transceiver_direction_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -367,11 +367,11 @@ fn wire__crate__api__peer__rtc_rtp_transceiver__get_transceiver_direction_impl(
             let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_transceiver = <RustOpaqueMoi<Arc < RtpTransceiver >>>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
                     transform_result_sse::<_, ()>((move ||  {
-                         let output_ok = Result::<_,()>::Ok(crate::api::peer::rtc_rtp_transceiver::get_transceiver_direction(api_transceiver))?;   Ok(output_ok)
+                         let output_ok = Result::<_,()>::Ok(crate::api::get_transceiver_direction(api_transceiver))?;   Ok(output_ok)
                     })())
                 } })
 }
-fn wire__crate__api__peer__rtc_rtp_transceiver__get_transceiver_mid_impl(
+fn wire__crate__api__get_transceiver_mid_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -382,11 +382,11 @@ fn wire__crate__api__peer__rtc_rtp_transceiver__get_transceiver_mid_impl(
             let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_transceiver = <RustOpaqueMoi<Arc < RtpTransceiver >>>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
                     transform_result_sse::<_, ()>((move ||  {
-                         let output_ok = Result::<_,()>::Ok(crate::api::peer::rtc_rtp_transceiver::get_transceiver_mid(api_transceiver))?;   Ok(output_ok)
+                         let output_ok = Result::<_,()>::Ok(crate::api::get_transceiver_mid(api_transceiver))?;   Ok(output_ok)
                     })())
                 } })
 }
-fn wire__crate__api__peer__rtc_rtp_transceiver__get_transceivers_impl(
+fn wire__crate__api__get_transceivers_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -397,7 +397,7 @@ fn wire__crate__api__peer__rtc_rtp_transceiver__get_transceivers_impl(
             let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_peer = <RustOpaqueMoi<Arc < PeerConnection >>>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
                     transform_result_sse::<_, ()>((move ||  {
-                         let output_ok = Result::<_,()>::Ok(crate::api::peer::rtc_rtp_transceiver::get_transceivers(api_peer))?;   Ok(output_ok)
+                         let output_ok = Result::<_,()>::Ok(crate::api::get_transceivers(api_peer))?;   Ok(output_ok)
                     })())
                 } })
 }
@@ -657,7 +657,7 @@ let api_enabled = <bool>::sse_decode(&mut deserializer);deserializer.end(); move
                     })())
                 } })
 }
-fn wire__crate__api__peer__rtc_rtp_transceiver__set_transceiver_direction_impl(
+fn wire__crate__api__set_transceiver_direction_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -669,11 +669,11 @@ fn wire__crate__api__peer__rtc_rtp_transceiver__set_transceiver_direction_impl(
             let api_transceiver = <RustOpaqueMoi<Arc < RtpTransceiver >>>::sse_decode(&mut deserializer);
 let api_direction = <crate::api::RtpTransceiverDirection>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
                     transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>((move ||  {
-                         let output_ok = crate::api::peer::rtc_rtp_transceiver::set_transceiver_direction(api_transceiver, api_direction)?;   Ok(output_ok)
+                         let output_ok = crate::api::set_transceiver_direction(api_transceiver, api_direction)?;   Ok(output_ok)
                     })())
                 } })
 }
-fn wire__crate__api__peer__rtc_rtp_transceiver__set_transceiver_recv_impl(
+fn wire__crate__api__set_transceiver_recv_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -685,11 +685,11 @@ fn wire__crate__api__peer__rtc_rtp_transceiver__set_transceiver_recv_impl(
             let api_transceiver = <RustOpaqueMoi<Arc < RtpTransceiver >>>::sse_decode(&mut deserializer);
 let api_recv = <bool>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
                     transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>((move ||  {
-                         let output_ok = crate::api::peer::rtc_rtp_transceiver::set_transceiver_recv(api_transceiver, api_recv)?;   Ok(output_ok)
+                         let output_ok = crate::api::set_transceiver_recv(api_transceiver, api_recv)?;   Ok(output_ok)
                     })())
                 } })
 }
-fn wire__crate__api__peer__rtc_rtp_transceiver__set_transceiver_send_impl(
+fn wire__crate__api__set_transceiver_send_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -701,11 +701,11 @@ fn wire__crate__api__peer__rtc_rtp_transceiver__set_transceiver_send_impl(
             let api_transceiver = <RustOpaqueMoi<Arc < RtpTransceiver >>>::sse_decode(&mut deserializer);
 let api_send = <bool>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
                     transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>((move ||  {
-                         let output_ok = crate::api::peer::rtc_rtp_transceiver::set_transceiver_send(api_transceiver, api_send)?;   Ok(output_ok)
+                         let output_ok = crate::api::set_transceiver_send(api_transceiver, api_send)?;   Ok(output_ok)
                     })())
                 } })
 }
-fn wire__crate__api__peer__rtc_rtp_transceiver__stop_transceiver_impl(
+fn wire__crate__api__stop_transceiver_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -716,7 +716,7 @@ fn wire__crate__api__peer__rtc_rtp_transceiver__stop_transceiver_impl(
             let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_transceiver = <RustOpaqueMoi<Arc < RtpTransceiver >>>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
                     transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>((move ||  {
-                         let output_ok = crate::api::peer::rtc_rtp_transceiver::stop_transceiver(api_transceiver)?;   Ok(output_ok)
+                         let output_ok = crate::api::stop_transceiver(api_transceiver)?;   Ok(output_ok)
                     })())
                 } })
 }
@@ -1354,9 +1354,7 @@ impl SseDecode for Vec<crate::api::RtcRtpEncodingParameters> {
     }
 }
 
-impl SseDecode
-    for Vec<crate::api::peer::rtc_rtp_transceiver::RtcRtpTransceiver>
-{
+impl SseDecode for Vec<crate::api::RtcRtpTransceiver> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
@@ -1364,7 +1362,9 @@ impl SseDecode
         let mut len_ = <i32>::sse_decode(deserializer);
         let mut ans_ = vec![];
         for idx_ in 0..len_ {
-            ans_.push(<crate::api::peer::rtc_rtp_transceiver::RtcRtpTransceiver>::sse_decode(deserializer));
+            ans_.push(<crate::api::RtcRtpTransceiver>::sse_decode(
+                deserializer,
+            ));
         }
         return ans_;
     }
@@ -2137,7 +2137,7 @@ impl SseDecode for crate::api::RtcRtpSendParameters {
     }
 }
 
-impl SseDecode for crate::api::peer::rtc_rtp_transceiver::RtcRtpTransceiver {
+impl SseDecode for crate::api::RtcRtpTransceiver {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
@@ -2149,7 +2149,7 @@ impl SseDecode for crate::api::peer::rtc_rtp_transceiver::RtcRtpTransceiver {
         let mut var_mid = <Option<String>>::sse_decode(deserializer);
         let mut var_direction =
             <crate::api::RtpTransceiverDirection>::sse_decode(deserializer);
-        return crate::api::peer::rtc_rtp_transceiver::RtcRtpTransceiver {
+        return crate::api::RtcRtpTransceiver {
             peer: var_peer,
             transceiver: var_transceiver,
             mid: var_mid,
@@ -2369,7 +2369,8 @@ impl SseDecode for crate::api::peer::events::rtc_track_event::RtcTrackEvent {
     ) -> Self {
         let mut var_track =
             <crate::api::MediaStreamTrack>::sse_decode(deserializer);
-        let mut var_transceiver = <crate::api::peer::rtc_rtp_transceiver::RtcRtpTransceiver>::sse_decode(deserializer);
+        let mut var_transceiver =
+            <crate::api::RtcRtpTransceiver>::sse_decode(deserializer);
         return crate::api::peer::events::rtc_track_event::RtcTrackEvent {
             track: var_track,
             transceiver: var_transceiver,
@@ -2796,7 +2797,7 @@ fn pde_ffi_dispatcher_primary_impl(
     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
     match func_id {
                         1 => wire__crate__api__peer__add_ice_candidate_impl(port, ptr, rust_vec_len, data_len),
-2 => wire__crate__api__peer__rtc_rtp_transceiver__add_transceiver_impl(port, ptr, rust_vec_len, data_len),
+2 => wire__crate__api__add_transceiver_impl(port, ptr, rust_vec_len, data_len),
 3 => wire__crate__api__audio_processing_constraints_default_impl(port, ptr, rust_vec_len, data_len),
 4 => wire__crate__api__clone_track_impl(port, ptr, rust_vec_len, data_len),
 5 => wire__crate__api__peer__create_answer_impl(port, ptr, rust_vec_len, data_len),
@@ -2814,9 +2815,9 @@ fn pde_ffi_dispatcher_primary_impl(
 17 => wire__crate__api__get_peer_stats_impl(port, ptr, rust_vec_len, data_len),
 18 => wire__crate__api__get_rtp_receiver_capabilities_impl(port, ptr, rust_vec_len, data_len),
 19 => wire__crate__api__get_rtp_sender_capabilities_impl(port, ptr, rust_vec_len, data_len),
-20 => wire__crate__api__peer__rtc_rtp_transceiver__get_transceiver_direction_impl(port, ptr, rust_vec_len, data_len),
-21 => wire__crate__api__peer__rtc_rtp_transceiver__get_transceiver_mid_impl(port, ptr, rust_vec_len, data_len),
-22 => wire__crate__api__peer__rtc_rtp_transceiver__get_transceivers_impl(port, ptr, rust_vec_len, data_len),
+20 => wire__crate__api__get_transceiver_direction_impl(port, ptr, rust_vec_len, data_len),
+21 => wire__crate__api__get_transceiver_mid_impl(port, ptr, rust_vec_len, data_len),
+22 => wire__crate__api__get_transceivers_impl(port, ptr, rust_vec_len, data_len),
 23 => wire__crate__api__is_fake_media_impl(port, ptr, rust_vec_len, data_len),
 24 => wire__crate__api__microphone_volume_impl(port, ptr, rust_vec_len, data_len),
 25 => wire__crate__api__microphone_volume_is_available_impl(port, ptr, rust_vec_len, data_len),
@@ -2833,10 +2834,10 @@ fn pde_ffi_dispatcher_primary_impl(
 36 => wire__crate__api__set_on_device_changed_impl(port, ptr, rust_vec_len, data_len),
 37 => wire__crate__api__peer__rtc_session_description__set_remote_description_impl(port, ptr, rust_vec_len, data_len),
 38 => wire__crate__api__set_track_enabled_impl(port, ptr, rust_vec_len, data_len),
-39 => wire__crate__api__peer__rtc_rtp_transceiver__set_transceiver_direction_impl(port, ptr, rust_vec_len, data_len),
-40 => wire__crate__api__peer__rtc_rtp_transceiver__set_transceiver_recv_impl(port, ptr, rust_vec_len, data_len),
-41 => wire__crate__api__peer__rtc_rtp_transceiver__set_transceiver_send_impl(port, ptr, rust_vec_len, data_len),
-42 => wire__crate__api__peer__rtc_rtp_transceiver__stop_transceiver_impl(port, ptr, rust_vec_len, data_len),
+39 => wire__crate__api__set_transceiver_direction_impl(port, ptr, rust_vec_len, data_len),
+40 => wire__crate__api__set_transceiver_recv_impl(port, ptr, rust_vec_len, data_len),
+41 => wire__crate__api__set_transceiver_send_impl(port, ptr, rust_vec_len, data_len),
+42 => wire__crate__api__stop_transceiver_impl(port, ptr, rust_vec_len, data_len),
 43 => wire__crate__api__track_height_impl(port, ptr, rust_vec_len, data_len),
 44 => wire__crate__api__track_state_impl(port, ptr, rust_vec_len, data_len),
 45 => wire__crate__api__track_width_impl(port, ptr, rust_vec_len, data_len),
@@ -3709,9 +3710,7 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::RtcRtpSendParameters>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart
-    for crate::api::peer::rtc_rtp_transceiver::RtcRtpTransceiver
-{
+impl flutter_rust_bridge::IntoDart for crate::api::RtcRtpTransceiver {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
             self.peer.into_into_dart().into_dart(),
@@ -3723,17 +3722,13 @@ impl flutter_rust_bridge::IntoDart
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::peer::rtc_rtp_transceiver::RtcRtpTransceiver
+    for crate::api::RtcRtpTransceiver
 {
 }
-impl
-    flutter_rust_bridge::IntoIntoDart<
-        crate::api::peer::rtc_rtp_transceiver::RtcRtpTransceiver,
-    > for crate::api::peer::rtc_rtp_transceiver::RtcRtpTransceiver
+impl flutter_rust_bridge::IntoIntoDart<crate::api::RtcRtpTransceiver>
+    for crate::api::RtcRtpTransceiver
 {
-    fn into_into_dart(
-        self,
-    ) -> crate::api::peer::rtc_rtp_transceiver::RtcRtpTransceiver {
+    fn into_into_dart(self) -> crate::api::RtcRtpTransceiver {
         self
     }
 }
@@ -4948,9 +4943,7 @@ impl SseEncode for Vec<crate::api::RtcRtpEncodingParameters> {
     }
 }
 
-impl SseEncode
-    for Vec<crate::api::peer::rtc_rtp_transceiver::RtcRtpTransceiver>
-{
+impl SseEncode for Vec<crate::api::RtcRtpTransceiver> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
@@ -4958,7 +4951,7 @@ impl SseEncode
     ) {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
-            <crate::api::peer::rtc_rtp_transceiver::RtcRtpTransceiver>::sse_encode(item, serializer);
+            <crate::api::RtcRtpTransceiver>::sse_encode(item, serializer);
         }
     }
 }
@@ -5652,7 +5645,7 @@ impl SseEncode for crate::api::RtcRtpSendParameters {
     }
 }
 
-impl SseEncode for crate::api::peer::rtc_rtp_transceiver::RtcRtpTransceiver {
+impl SseEncode for crate::api::RtcRtpTransceiver {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
@@ -5867,7 +5860,7 @@ impl SseEncode for crate::api::peer::events::rtc_track_event::RtcTrackEvent {
         serializer: &mut flutter_rust_bridge::for_generated::SseSerializer,
     ) {
         <crate::api::MediaStreamTrack>::sse_encode(self.track, serializer);
-        <crate::api::peer::rtc_rtp_transceiver::RtcRtpTransceiver>::sse_encode(
+        <crate::api::RtcRtpTransceiver>::sse_encode(
             self.transceiver,
             serializer,
         );
