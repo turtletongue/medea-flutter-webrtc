@@ -20,7 +20,6 @@ pub use self::stats::{
     RtcOutboundRtpStreamStatsMediaType, RtcStats,
     RtcStatsIceCandidatePairState, RtcStatsType, get_peer_stats,
 };
-
 // Re-exporting since it is used in the generated code.
 pub use crate::{
     PeerConnection, RtpEncodingParameters, RtpParameters, RtpTransceiver,
