@@ -2,7 +2,6 @@
 
 pub mod events;
 pub mod rtc_configuration;
-pub mod rtc_rtp_transceiver;
 pub mod rtc_session_description;
 pub mod video_codec_info;
 
@@ -15,11 +14,6 @@ pub use self::{
     },
     rtc_configuration::{
         BundlePolicy, IceTransportsType, RtcConfiguration, RtcIceServer,
-    },
-    rtc_rtp_transceiver::{
-        RtcRtpTransceiver, add_transceiver, get_transceiver_direction,
-        get_transceiver_mid, get_transceivers, set_transceiver_direction,
-        set_transceiver_recv, set_transceiver_send, stop_transceiver,
     },
     rtc_session_description::{
         RtcSessionDescription, SdpType, set_local_description,

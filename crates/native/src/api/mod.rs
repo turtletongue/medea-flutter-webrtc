@@ -17,13 +17,11 @@ use libwebrtc_sys as sys;
 pub use self::peer::{
     BundlePolicy, IceConnectionState, IceGatheringState, IceTransportsType,
     PeerConnectionEvent, PeerConnectionState, RtcConfiguration, RtcIceServer,
-    RtcRtpTransceiver, RtcSessionDescription, RtcTrackEvent, SdpType,
-    SignalingState, VideoCodec, VideoCodecInfo, add_ice_candidate,
-    add_transceiver, create_answer, create_offer, create_peer_connection,
-    dispose_peer_connection, get_transceiver_direction, get_transceiver_mid,
-    get_transceivers, restart_ice, set_local_description,
-    set_remote_description, set_transceiver_direction, set_transceiver_recv,
-    set_transceiver_send, stop_transceiver, video_decoders, video_encoders,
+    RtcSessionDescription, RtcTrackEvent, SdpType, SignalingState, VideoCodec,
+    VideoCodecInfo, add_ice_candidate, create_answer, create_offer,
+    create_peer_connection, dispose_peer_connection, restart_ice,
+    set_local_description, set_remote_description, video_decoders,
+    video_encoders,
 };
 // Re-exporting since it is used in the generated code.
 pub use crate::{
@@ -1962,6 +1960,33 @@ pub struct RtpTransceiverInit {
     pub send_encodings: Vec<RtcRtpEncodingParameters>,
 }
 
+/// Representation of a permanent pair of an [RTCRtpSender] and an
+/// [RTCRtpReceiver], along with some shared state.
+///
+/// [RTCRtpSender]: https://w3.org/TR/webrtc#dom-rtcrtpsender
+/// [RTCRtpReceiver]: https://w3.org/TR/webrtc#dom-rtcrtpreceiver
+#[derive(Clone)]
+pub struct RtcRtpTransceiver {
+    /// [`PeerConnection`] that this [`RtcRtpTransceiver`] belongs to.
+    pub peer: RustOpaque<Arc<PeerConnection>>,
+
+    /// Rust side [`RtpTransceiver`].
+    pub transceiver: RustOpaque<Arc<RtpTransceiver>>,
+
+    /// [Negotiated media ID (mid)][1] which the local and remote peers have
+    /// agreed upon to uniquely identify the [MediaStream]'s pairing of sender
+    /// and receiver.
+    ///
+    /// [MediaStream]: https://w3.org/TR/mediacapture-streams#dom-mediastream
+    /// [1]: https://w3.org/TR/webrtc#dfn-media-stream-identification-tag
+    pub mid: Option<String>,
+
+    /// Preferred [`direction`][1] of this [`RtcRtpTransceiver`].
+    ///
+    /// [1]: https://w3.org/TR/webrtc#dom-rtcrtptransceiver-direction
+    pub direction: RtpTransceiverDirection,
+}
+
 /// Representation of [RTCRtpSendParameters][0].
 ///
 /// [0]: https://w3.org/TR/webrtc#dom-rtcrtpsendparameters
@@ -2035,6 +2060,74 @@ pub fn enumerate_displays() -> Vec<MediaDisplayInfo> {
     devices::enumerate_displays()
 }
 
+/// Creates a new [`RtcRtpTransceiver`] and adds it to the set of transceivers
+/// of the specified [`PeerConnection`].
+pub fn add_transceiver(
+    peer: RustOpaque<Arc<PeerConnection>>,
+    media_type: MediaType,
+    init: RtpTransceiverInit,
+) -> anyhow::Result<RtcRtpTransceiver> {
+    PeerConnection::add_transceiver(peer, media_type.into(), init)
+}
+
+/// Returns a sequence of [`RtcRtpTransceiver`] objects representing the RTP
+/// transceivers currently attached to the specified [`PeerConnection`].
+#[expect(clippy::needless_pass_by_value, reason = "FFI")]
+#[must_use]
+pub fn get_transceivers(
+    peer: RustOpaque<Arc<PeerConnection>>,
+) -> Vec<RtcRtpTransceiver> {
+    Webrtc::get_transceivers(&peer)
+}
+
+/// Changes the preferred `direction` of the specified [`RtcRtpTransceiver`].
+#[expect(clippy::needless_pass_by_value, reason = "FFI")]
+pub fn set_transceiver_direction(
+    transceiver: RustOpaque<Arc<RtpTransceiver>>,
+    direction: RtpTransceiverDirection,
+) -> anyhow::Result<()> {
+    transceiver.set_direction(direction)
+}
+
+/// Changes the receive direction of the specified [`RtcRtpTransceiver`].
+#[expect(clippy::needless_pass_by_value, reason = "FFI")]
+pub fn set_transceiver_recv(
+    transceiver: RustOpaque<Arc<RtpTransceiver>>,
+    recv: bool,
+) -> anyhow::Result<()> {
+    transceiver.set_recv(recv)
+}
+
+/// Changes the send direction of the specified [`RtcRtpTransceiver`].
+#[expect(clippy::needless_pass_by_value, reason = "FFI")]
+pub fn set_transceiver_send(
+    transceiver: RustOpaque<Arc<RtpTransceiver>>,
+    send: bool,
+) -> anyhow::Result<()> {
+    transceiver.set_send(send)
+}
+
+/// Returns the [negotiated media ID (mid)][1] of the specified
+/// [`RtcRtpTransceiver`].
+///
+/// [1]: https://w3.org/TR/webrtc#dfn-media-stream-identification-tag
+#[expect(clippy::needless_pass_by_value, reason = "FFI")]
+#[must_use]
+pub fn get_transceiver_mid(
+    transceiver: RustOpaque<Arc<RtpTransceiver>>,
+) -> Option<String> {
+    transceiver.mid()
+}
+
+/// Returns the preferred direction of the specified [`RtcRtpTransceiver`].
+#[expect(clippy::needless_pass_by_value, reason = "FFI")]
+#[must_use]
+pub fn get_transceiver_direction(
+    transceiver: RustOpaque<Arc<RtpTransceiver>>,
+) -> RtpTransceiverDirection {
+    transceiver.direction().into()
+}
+
 /// Returns [`RtcStats`] of the [`PeerConnection`] by its ID.
 #[expect(clippy::needless_pass_by_value, reason = "FFI")]
 pub fn get_peer_stats(
@@ -2046,6 +2139,18 @@ pub fn get_peer_stats(
     let report = rx.recv_timeout(RX_TIMEOUT)?;
 
     Ok(report.get_stats()?.into_iter().map(RtcStats::from).collect())
+}
+
+/// Irreversibly marks the specified [`RtcRtpTransceiver`] as stopping, unless
+/// it's already stopped.
+///
+/// This will immediately cause the transceiver's sender to no longer send, and
+/// its receiver to no longer receive.
+#[expect(clippy::needless_pass_by_value, reason = "FFI")]
+pub fn stop_transceiver(
+    transceiver: RustOpaque<Arc<RtpTransceiver>>,
+) -> anyhow::Result<()> {
+    transceiver.stop()
 }
 
 /// Changes the preferred [`RtpTransceiver`] codecs to the provided
