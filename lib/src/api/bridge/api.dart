@@ -13,15 +13,7 @@ import 'renderer.dart';
 part 'api.freezed.dart';
 
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `TrackKind`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `hash`, `hash`, `hash`
-
-/// Returns all [`VideoCodecInfo`]s of the supported video encoders.
-Future<List<VideoCodecInfo>> videoEncoders() =>
-    RustLib.instance.api.crateApiVideoEncoders();
-
-/// Returns all [`VideoCodecInfo`]s of the supported video decoders.
-Future<List<VideoCodecInfo>> videoDecoders() =>
-    RustLib.instance.api.crateApiVideoDecoders();
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `hash`, `hash`, `hash`
 
 /// Configures media acquisition to use fake devices instead of actual camera
 /// and microphone.
@@ -41,134 +33,9 @@ Future<List<MediaDeviceInfo>> enumerateDevices() =>
 Future<List<MediaDisplayInfo>> enumerateDisplays() =>
     RustLib.instance.api.crateApiEnumerateDisplays();
 
-/// Creates a new [`PeerConnection`] and returns its ID.
-Stream<PeerConnectionEvent> createPeerConnection({
-  required RtcConfiguration configuration,
-}) => RustLib.instance.api.crateApiCreatePeerConnection(
-  configuration: configuration,
-);
-
-/// Initiates the creation of an SDP offer for the purpose of starting a new
-/// WebRTC connection to a remote peer.
-Future<RtcSessionDescription> createOffer({
-  required ArcPeerConnection peer,
-  required bool voiceActivityDetection,
-  required bool iceRestart,
-  required bool useRtpMux,
-}) => RustLib.instance.api.crateApiCreateOffer(
-  peer: peer,
-  voiceActivityDetection: voiceActivityDetection,
-  iceRestart: iceRestart,
-  useRtpMux: useRtpMux,
-);
-
-/// Creates an SDP answer to an offer received from a remote peer during an
-/// offer/answer negotiation of a WebRTC connection.
-Future<RtcSessionDescription> createAnswer({
-  required ArcPeerConnection peer,
-  required bool voiceActivityDetection,
-  required bool iceRestart,
-  required bool useRtpMux,
-}) => RustLib.instance.api.crateApiCreateAnswer(
-  peer: peer,
-  voiceActivityDetection: voiceActivityDetection,
-  iceRestart: iceRestart,
-  useRtpMux: useRtpMux,
-);
-
-/// Changes the local description associated with the connection.
-Future<void> setLocalDescription({
-  required ArcPeerConnection peer,
-  required SdpType kind,
-  required String sdp,
-}) => RustLib.instance.api.crateApiSetLocalDescription(
-  peer: peer,
-  kind: kind,
-  sdp: sdp,
-);
-
-/// Sets the specified session description as the remote peer's current offer or
-/// answer.
-Future<void> setRemoteDescription({
-  required ArcPeerConnection peer,
-  required SdpType kind,
-  required String sdp,
-}) => RustLib.instance.api.crateApiSetRemoteDescription(
-  peer: peer,
-  kind: kind,
-  sdp: sdp,
-);
-
-/// Creates a new [`RtcRtpTransceiver`] and adds it to the set of transceivers
-/// of the specified [`PeerConnection`].
-Future<RtcRtpTransceiver> addTransceiver({
-  required ArcPeerConnection peer,
-  required MediaType mediaType,
-  required RtpTransceiverInit init,
-}) => RustLib.instance.api.crateApiAddTransceiver(
-  peer: peer,
-  mediaType: mediaType,
-  init: init,
-);
-
-/// Returns a sequence of [`RtcRtpTransceiver`] objects representing the RTP
-/// transceivers currently attached to the specified [`PeerConnection`].
-Future<List<RtcRtpTransceiver>> getTransceivers({
-  required ArcPeerConnection peer,
-}) => RustLib.instance.api.crateApiGetTransceivers(peer: peer);
-
-/// Changes the preferred `direction` of the specified [`RtcRtpTransceiver`].
-Future<void> setTransceiverDirection({
-  required ArcRtpTransceiver transceiver,
-  required RtpTransceiverDirection direction,
-}) => RustLib.instance.api.crateApiSetTransceiverDirection(
-  transceiver: transceiver,
-  direction: direction,
-);
-
-/// Changes the receive direction of the specified [`RtcRtpTransceiver`].
-Future<void> setTransceiverRecv({
-  required ArcRtpTransceiver transceiver,
-  required bool recv,
-}) => RustLib.instance.api.crateApiSetTransceiverRecv(
-  transceiver: transceiver,
-  recv: recv,
-);
-
-/// Changes the send direction of the specified [`RtcRtpTransceiver`].
-Future<void> setTransceiverSend({
-  required ArcRtpTransceiver transceiver,
-  required bool send,
-}) => RustLib.instance.api.crateApiSetTransceiverSend(
-  transceiver: transceiver,
-  send: send,
-);
-
-/// Returns the [negotiated media ID (mid)][1] of the specified
-/// [`RtcRtpTransceiver`].
-///
-/// [1]: https://w3.org/TR/webrtc#dfn-media-stream-identification-tag
-Future<String?> getTransceiverMid({required ArcRtpTransceiver transceiver}) =>
-    RustLib.instance.api.crateApiGetTransceiverMid(transceiver: transceiver);
-
-/// Returns the preferred direction of the specified [`RtcRtpTransceiver`].
-Future<RtpTransceiverDirection> getTransceiverDirection({
-  required ArcRtpTransceiver transceiver,
-}) => RustLib.instance.api.crateApiGetTransceiverDirection(
-  transceiver: transceiver,
-);
-
 /// Returns [`RtcStats`] of the [`PeerConnection`] by its ID.
 Future<List<RtcStats>> getPeerStats({required ArcPeerConnection peer}) =>
     RustLib.instance.api.crateApiGetPeerStats(peer: peer);
-
-/// Irreversibly marks the specified [`RtcRtpTransceiver`] as stopping, unless
-/// it's already stopped.
-///
-/// This will immediately cause the transceiver's sender to no longer send, and
-/// its receiver to no longer receive.
-Future<void> stopTransceiver({required ArcRtpTransceiver transceiver}) =>
-    RustLib.instance.api.crateApiStopTransceiver(transceiver: transceiver);
 
 /// Changes the preferred [`RtpTransceiver`] codecs to the provided
 /// [`Vec`]`<`[`RtpCodecCapability`]`>`.
@@ -221,27 +88,6 @@ Future<void> senderSetParameters({
   transceiver: transceiver,
   params: params,
 );
-
-/// Adds the new ICE `candidate` to the given [`PeerConnection`].
-Future<void> addIceCandidate({
-  required ArcPeerConnection peer,
-  required String candidate,
-  required String sdpMid,
-  required int sdpMlineIndex,
-}) => RustLib.instance.api.crateApiAddIceCandidate(
-  peer: peer,
-  candidate: candidate,
-  sdpMid: sdpMid,
-  sdpMlineIndex: sdpMlineIndex,
-);
-
-/// Tells the [`PeerConnection`] that ICE should be restarted.
-Future<void> restartIce({required ArcPeerConnection peer}) =>
-    RustLib.instance.api.crateApiRestartIce(peer: peer);
-
-/// Closes the [`PeerConnection`].
-Future<void> disposePeerConnection({required ArcPeerConnection peer}) =>
-    RustLib.instance.api.crateApiDisposePeerConnection(peer: peer);
 
 /// Creates a [MediaStream] with tracks according to provided
 /// [`MediaStreamConstraints`].
@@ -554,31 +400,6 @@ class AudioProcessingConstraints {
           echoCancellation == other.echoCancellation;
 }
 
-/// [RTCBundlePolicy][1] representation.
-///
-/// Affects which media tracks are negotiated if the remote endpoint is not
-/// bundle-aware, and what ICE candidates are gathered. If the remote endpoint
-/// is bundle-aware, all media tracks and data channels are bundled onto the
-/// same transport.
-///
-/// [1]: https://w3.org/TR/webrtc#dom-rtcbundlepolicy
-enum BundlePolicy {
-  /// [RTCBundlePolicy.balanced][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcbundlepolicy-balanced
-  balanced,
-
-  /// [RTCBundlePolicy.max-bundle][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcbundlepolicy-max-bundle
-  maxBundle,
-
-  /// [RTCBundlePolicy.max-compat][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcbundlepolicy-max-compat
-  maxCompat,
-}
-
 /// [RTCIceCandidateType] represents the type of the ICE candidate, as defined
 /// in [Section 15.1 of RFC 5245][1].
 ///
@@ -718,66 +539,6 @@ class IceCandidateStats {
           relayProtocol == other.relayProtocol;
 }
 
-/// [RTCIceConnectionState][1] representation.
-///
-/// [1]: https://w3.org/TR/webrtc#dom-rtciceconnectionstate
-enum IceConnectionState {
-  /// [RTCIceConnectionState.new][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtciceconnectionstate-new
-  new_,
-
-  /// [RTCIceConnectionState.checking][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtciceconnectionstate-checking
-  checking,
-
-  /// [RTCIceConnectionState.connected][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtciceconnectionstate-connected
-  connected,
-
-  /// [RTCIceConnectionState.completed][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtciceconnectionstate-completed
-  completed,
-
-  /// [RTCIceConnectionState.failed][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtciceconnectionstate-failed
-  failed,
-
-  /// [RTCIceConnectionState.disconnected][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtciceconnectionstate-disconnected
-  disconnected,
-
-  /// [RTCIceConnectionState.closed][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtciceconnectionstate-closed
-  closed,
-}
-
-/// [RTCIceGatheringState][1] representation.
-///
-/// [1]: https://w3.org/TR/webrtc#dom-rtcicegatheringstate
-enum IceGatheringState {
-  /// [RTCIceGatheringState.new][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcicegatheringstate-new
-  new_,
-
-  /// [RTCIceGatheringState.gathering][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcicegatheringstate-gathering
-  gathering,
-
-  /// [RTCIceGatheringState.complete][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcicegatheringstate-complete
-  complete,
-}
-
 /// Variants of [ICE roles][1].
 ///
 /// More info in the [RFC 5245].
@@ -800,34 +561,6 @@ enum IceRole {
   ///
   /// [1]: https://tools.ietf.org/html/rfc5245#section-3
   controlled,
-}
-
-/// [RTCIceTransportPolicy][1] representation.
-///
-/// It defines an ICE candidate policy the [ICE Agent][2] uses to surface
-/// the permitted candidates to the application. Only these candidates will
-/// be used for connectivity checks.
-///
-/// [1]: https://w3.org/TR/webrtc#dom-rtcicetransportpolicy
-/// [2]: https://w3.org/TR/webrtc#dfn-ice-agent
-enum IceTransportsType {
-  /// [RTCIceTransportPolicy.all][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcicetransportpolicy-all
-  all,
-
-  /// [RTCIceTransportPolicy.relay][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcicetransportpolicy-relay
-  relay,
-
-  /// ICE Agent can't use `typ host` candidates when this value is specified.
-  ///
-  /// Non-spec-compliant variant.
-  noHost,
-
-  /// No ICE candidate offered.
-  none,
 }
 
 /// Information describing a single media input or output device.
@@ -999,140 +732,6 @@ enum NoiseSuppressionLevel {
   veryHigh,
 }
 
-@freezed
-sealed class PeerConnectionEvent with _$PeerConnectionEvent {
-  const PeerConnectionEvent._();
-
-  /// [`PeerConnection`] has been created.
-  const factory PeerConnectionEvent.peerCreated({
-    /// Rust side [`PeerConnection`].
-    required ArcPeerConnection peer,
-  }) = PeerConnectionEvent_PeerCreated;
-
-  /// [RTCIceCandidate][1] has been discovered.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcicecandidate
-  const factory PeerConnectionEvent.iceCandidate({
-    /// Media stream "identification-tag" defined in [RFC 5888] for the
-    /// media component the discovered [RTCIceCandidate][1] is associated
-    /// with.
-    ///
-    /// [1]: https://w3.org/TR/webrtc#dom-rtcicecandidate
-    /// [RFC 5888]: https://tools.ietf.org/html/rfc5888
-    required String sdpMid,
-
-    /// Index (starting at zero) of the media description in the SDP this
-    /// [RTCIceCandidate][1] is associated with.
-    ///
-    /// [1]: https://w3.org/TR/webrtc#dom-rtcicecandidate
-    required int sdpMlineIndex,
-
-    /// Candidate-attribute as defined in Section 15.1 of [RFC 5245].
-    ///
-    /// If this [RTCIceCandidate][1] represents an end-of-candidates
-    /// indication or a peer reflexive remote candidate, candidate is an
-    /// empty string.
-    ///
-    /// [1]: https://w3.org/TR/webrtc#dom-rtcicecandidate
-    /// [RFC 5245]: https://tools.ietf.org/html/rfc5245
-    required String candidate,
-  }) = PeerConnectionEvent_IceCandidate;
-
-  /// [`PeerConnection`]'s ICE gathering state has changed.
-  const factory PeerConnectionEvent.iceGatheringStateChange(
-    IceGatheringState field0,
-  ) = PeerConnectionEvent_IceGatheringStateChange;
-
-  /// Failure occurred when gathering [RTCIceCandidate][1].
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcicecandidate
-  const factory PeerConnectionEvent.iceCandidateError({
-    /// Local IP address used to communicate with the STUN or TURN server.
-    required String address,
-
-    /// Port used to communicate with the STUN or TURN server.
-    required int port,
-
-    /// STUN or TURN URL identifying the STUN or TURN server for which the
-    /// failure occurred.
-    required String url,
-
-    /// Numeric STUN error code returned by the STUN or TURN server
-    /// [`STUN-PARAMETERS`][1].
-    ///
-    /// If no host candidate can reach the server, it will be set to the
-    /// value `701` which is outside the STUN error code range.
-    ///
-    /// [1]: https://tinyurl.com/stun-parameters-6
-    required int errorCode,
-
-    /// STUN reason text returned by the STUN or TURN server
-    /// [`STUN-PARAMETERS`][1].
-    ///
-    /// If the server could not be reached, it will be set to an
-    /// implementation-specific value providing details about the error.
-    ///
-    /// [1]: https://tinyurl.com/stun-parameters-6
-    required String errorText,
-  }) = PeerConnectionEvent_IceCandidateError;
-
-  /// Negotiation or renegotiation of the [`PeerConnection`] needs to be
-  /// performed.
-  const factory PeerConnectionEvent.negotiationNeeded() =
-      PeerConnectionEvent_NegotiationNeeded;
-
-  /// [`PeerConnection`]'s [`SignalingState`] has been changed.
-  const factory PeerConnectionEvent.signallingChange(SignalingState field0) =
-      PeerConnectionEvent_SignallingChange;
-
-  /// [`PeerConnection`]'s [`IceConnectionState`] has been changed.
-  const factory PeerConnectionEvent.iceConnectionStateChange(
-    IceConnectionState field0,
-  ) = PeerConnectionEvent_IceConnectionStateChange;
-
-  /// [`PeerConnection`]'s [`PeerConnectionState`] has been changed.
-  const factory PeerConnectionEvent.connectionStateChange(
-    PeerConnectionState field0,
-  ) = PeerConnectionEvent_ConnectionStateChange;
-
-  /// New incoming media has been negotiated.
-  const factory PeerConnectionEvent.track(RtcTrackEvent field0) =
-      PeerConnectionEvent_Track;
-}
-
-/// Indicator of the current state of a [`PeerConnection`].
-enum PeerConnectionState {
-  /// At least one of the connection's ICE transports is in the new state,
-  /// and none of them are in one of the following states: `connecting`,
-  /// `checking`, `failed`, `disconnected`, or all of the connection's
-  /// transports are in the `closed` state.
-  new_,
-
-  /// One or more of the ICE transports are currently in the process of
-  /// establishing a connection. That is, their [`IceConnectionState`] is
-  /// either [`IceConnectionState::Checking`] or
-  /// [`IceConnectionState::Connected`], and no transports are in the
-  /// `failed` state.
-  connecting,
-
-  /// Every ICE transport used by the connection is either in use (state
-  /// `connected` or `completed`) or is closed (state `closed`). In addition,
-  /// at least one transport is either `connected` or `completed`.
-  connected,
-
-  /// At least one of the ICE transports for the connection is in the
-  /// `disconnected` state and none of the other transports are in the state
-  /// `failed`, `connecting` or `checking`.
-  disconnected,
-
-  /// One or more of the ICE transports on the connection is in the `failed`
-  /// state.
-  failed,
-
-  /// Peer connection is closed.
-  closed,
-}
-
 /// Transport protocols used in [WebRTC].
 ///
 /// [WebRTC]: https://w3.org/TR/webrtc
@@ -1148,52 +747,6 @@ enum Protocol {
   udp,
 }
 
-/// [`PeerConnection`]'s configuration.
-class RtcConfiguration {
-  /// [iceTransportPolicy][1] configuration.
-  ///
-  /// Indicates which candidates the [ICE Agent][2] is allowed to use.
-  ///
-  /// [1]: https://tinyurl.com/icetransportpolicy
-  /// [2]: https://w3.org/TR/webrtc#dfn-ice-agent
-  final IceTransportsType iceTransportPolicy;
-
-  /// [bundlePolicy][1] configuration.
-  ///
-  /// Indicates which media-bundling policy to use when gathering ICE
-  /// candidates.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcconfiguration-bundlepolicy
-  final BundlePolicy bundlePolicy;
-
-  /// [iceServers][1] configuration.
-  ///
-  /// An array of objects describing servers available to be used by ICE,
-  /// such as STUN and TURN servers.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcconfiguration-iceservers
-  final List<RtcIceServer> iceServers;
-
-  const RtcConfiguration({
-    required this.iceTransportPolicy,
-    required this.bundlePolicy,
-    required this.iceServers,
-  });
-
-  @override
-  int get hashCode =>
-      iceTransportPolicy.hashCode ^ bundlePolicy.hashCode ^ iceServers.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is RtcConfiguration &&
-          runtimeType == other.runtimeType &&
-          iceTransportPolicy == other.iceTransportPolicy &&
-          bundlePolicy == other.bundlePolicy &&
-          iceServers == other.iceServers;
-}
-
 @freezed
 sealed class RtcIceCandidateStats with _$RtcIceCandidateStats {
   const RtcIceCandidateStats._();
@@ -1205,46 +758,6 @@ sealed class RtcIceCandidateStats with _$RtcIceCandidateStats {
   /// [`IceCandidateStats`] of remote candidate.
   const factory RtcIceCandidateStats.remote(IceCandidateStats field0) =
       RtcIceCandidateStats_Remote;
-}
-
-/// Description of STUN and TURN servers that can be used by an [ICE Agent][1]
-/// to establish a connection with a peer.
-///
-/// [1]: https://w3.org/TR/webrtc#dfn-ice-agent
-class RtcIceServer {
-  /// STUN or TURN URI(s).
-  final List<String> urls;
-
-  /// If this [`RtcIceServer`] object represents a TURN server, then this
-  /// attribute specifies the [username][1] to use with that TURN server.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtciceserver-username
-  final String username;
-
-  /// If this [`RtcIceServer`] object represents a TURN server, then this
-  /// attribute specifies the [credential][1] to use with that TURN
-  /// server.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtciceserver-credential
-  final String credential;
-
-  const RtcIceServer({
-    required this.urls,
-    required this.username,
-    required this.credential,
-  });
-
-  @override
-  int get hashCode => urls.hashCode ^ username.hashCode ^ credential.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is RtcIceServer &&
-          runtimeType == other.runtimeType &&
-          urls == other.urls &&
-          username == other.username &&
-          credential == other.credential;
 }
 
 @freezed
@@ -1548,77 +1061,6 @@ class RtcRtpSendParameters {
           runtimeType == other.runtimeType &&
           encodings == other.encodings &&
           inner == other.inner;
-}
-
-/// Representation of a permanent pair of an [RTCRtpSender] and an
-/// [RTCRtpReceiver], along with some shared state.
-///
-/// [RTCRtpSender]: https://w3.org/TR/webrtc#dom-rtcrtpsender
-/// [RTCRtpReceiver]: https://w3.org/TR/webrtc#dom-rtcrtpreceiver
-class RtcRtpTransceiver {
-  /// [`PeerConnection`] that this [`RtcRtpTransceiver`] belongs to.
-  final ArcPeerConnection peer;
-
-  /// Rust side [`RtpTransceiver`].
-  final ArcRtpTransceiver transceiver;
-
-  /// [Negotiated media ID (mid)][1] which the local and remote peers have
-  /// agreed upon to uniquely identify the [MediaStream]'s pairing of sender
-  /// and receiver.
-  ///
-  /// [MediaStream]: https://w3.org/TR/mediacapture-streams#dom-mediastream
-  /// [1]: https://w3.org/TR/webrtc#dfn-media-stream-identification-tag
-  final String? mid;
-
-  /// Preferred [`direction`][1] of this [`RtcRtpTransceiver`].
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcrtptransceiver-direction
-  final RtpTransceiverDirection direction;
-
-  const RtcRtpTransceiver({
-    required this.peer,
-    required this.transceiver,
-    this.mid,
-    required this.direction,
-  });
-
-  @override
-  int get hashCode =>
-      peer.hashCode ^ transceiver.hashCode ^ mid.hashCode ^ direction.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is RtcRtpTransceiver &&
-          runtimeType == other.runtimeType &&
-          peer == other.peer &&
-          transceiver == other.transceiver &&
-          mid == other.mid &&
-          direction == other.direction;
-}
-
-/// [RTCSessionDescription] representation.
-///
-/// [RTCSessionDescription]: https://w3.org/TR/webrtc#dom-rtcsessiondescription
-class RtcSessionDescription {
-  /// String representation of the SDP.
-  final String sdp;
-
-  /// Type of this [`RtcSessionDescription`].
-  final SdpType kind;
-
-  const RtcSessionDescription({required this.sdp, required this.kind});
-
-  @override
-  int get hashCode => sdp.hashCode ^ kind.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is RtcSessionDescription &&
-          runtimeType == other.runtimeType &&
-          sdp == other.sdp &&
-          kind == other.kind;
 }
 
 /// Represents the [stats object] constructed by inspecting a specific
@@ -2035,32 +1477,6 @@ sealed class RtcStatsType with _$RtcStatsType {
 
   /// Unimplemented stats.
   const factory RtcStatsType.unimplemented() = RtcStatsType_Unimplemented;
-}
-
-/// Representation of a track event, sent when a new [`MediaStreamTrack`] is
-/// added to an [`RtcRtpTransceiver`] as part of a [`PeerConnection`].
-class RtcTrackEvent {
-  /// [`MediaStreamTrack`] associated with the [RTCRtpReceiver] identified
-  /// by the receiver.
-  ///
-  /// [RTCRtpReceiver]: https://w3.org/TR/webrtc#dom-rtcrtpreceiver
-  final MediaStreamTrack track;
-
-  /// [`RtcRtpTransceiver`] object associated with the event.
-  final RtcRtpTransceiver transceiver;
-
-  const RtcTrackEvent({required this.track, required this.transceiver});
-
-  @override
-  int get hashCode => track.hashCode ^ transceiver.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is RtcTrackEvent &&
-          runtimeType == other.runtimeType &&
-          track == other.track &&
-          transceiver == other.transceiver;
 }
 
 /// [RTCP] feedback message intended to enable congestion control for
@@ -2542,66 +1958,6 @@ enum ScalabilityMode {
   s3T3H,
 }
 
-/// [RTCSdpType] representation.
-///
-/// [RTCSdpType]: https://w3.org/TR/webrtc#dom-rtcsdptype
-enum SdpType {
-  /// [RTCSdpType.offer][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcsdptype-offer
-  offer,
-
-  /// [RTCSdpType.pranswer][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcsdptype-pranswer
-  prAnswer,
-
-  /// [RTCSdpType.answer][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcsdptype-answer
-  answer,
-
-  /// [RTCSdpType.rollback][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcsdptype-rollback
-  rollback,
-}
-
-/// [RTCSignalingState] representation.
-///
-/// [RTCSignalingState]: https://w3.org/TR/webrtc#state-definitions
-enum SignalingState {
-  /// [RTCSignalingState.stable][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcsignalingstate-stable
-  stable,
-
-  /// [RTCSignalingState.have-local-offer][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcsignalingstate-have-local-offer
-  haveLocalOffer,
-
-  /// [RTCSignalingState.have-local-pranswer][1] representation.
-  ///
-  /// [1]: https://tinyurl.com/have-local-pranswer
-  haveLocalPrAnswer,
-
-  /// [RTCSignalingState.have-remote-offer][1] representation.
-  ///
-  /// [1]: https://tinyurl.com/have-remote-offer
-  haveRemoteOffer,
-
-  /// [RTCSignalingState.have-remote-pranswer][1] representation.
-  ///
-  /// [1]: https://tinyurl.com/have-remote-pranswer
-  haveRemotePrAnswer,
-
-  /// [RTCSignalingState.closed][1] representation.
-  ///
-  /// [1]: https://w3.org/TR/webrtc#dom-rtcsignalingstate-closed
-  closed,
-}
-
 @freezed
 sealed class TrackEvent with _$TrackEvent {
   const TrackEvent._();
@@ -2634,59 +1990,6 @@ enum TrackState {
   ///
   /// [0]: https://tinyurl.com/w3mcs#idl-def-MediaStreamTrackState.ended
   ended,
-}
-
-/// Supported video codecs.
-enum VideoCodec {
-  /// [AV1] AOMedia Video 1.
-  ///
-  /// [AV1]: https://en.wikipedia.org/wiki/AV1
-  av1,
-
-  /// [H.264] Advanced Video Coding (AVC).
-  ///
-  /// [H.264]: https://en.wikipedia.org/wiki/Advanced_Video_Coding
-  h264,
-
-  /// [H.265] High Efficiency Video Coding (HEVC).
-  ///
-  /// [H.265]: https://en.wikipedia.org/wiki/High_Efficiency_Video_Coding
-  h265,
-
-  /// [VP8] codec.
-  ///
-  /// [VP8]: https://en.wikipedia.org/wiki/VP8
-  vp8,
-
-  /// [VP9] codec.
-  ///
-  /// [VP9]: https://en.wikipedia.org/wiki/VP9
-  vp9,
-}
-
-/// [`VideoCodec`] info for encoding/decoding.
-class VideoCodecInfo {
-  /// Indicator whether hardware acceleration should be used.
-  final bool isHardwareAccelerated;
-
-  /// [`VideoCodec`] to be used for encoding/decoding.
-  final VideoCodec codec;
-
-  const VideoCodecInfo({
-    required this.isHardwareAccelerated,
-    required this.codec,
-  });
-
-  @override
-  int get hashCode => isHardwareAccelerated.hashCode ^ codec.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is VideoCodecInfo &&
-          runtimeType == other.runtimeType &&
-          isHardwareAccelerated == other.isHardwareAccelerated &&
-          codec == other.codec;
 }
 
 /// Nature and settings of the video [`MediaStreamTrack`] returned by
