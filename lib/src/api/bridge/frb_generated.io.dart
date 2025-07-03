@@ -10,6 +10,10 @@ import 'dart:ffi' as ffi;
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_io.dart';
 
 import 'api.dart';
+import 'api/media.dart';
+import 'api/media/constraints.dart';
+import 'api/media/constraints/audio.dart';
+import 'api/media/constraints/video.dart';
 import 'frb_generated.dart';
 import 'lib.dart';
 import 'renderer.dart';

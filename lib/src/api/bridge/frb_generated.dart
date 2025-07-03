@@ -9,6 +9,10 @@ import 'dart:convert';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 import 'api.dart';
+import 'api/media.dart';
+import 'api/media/constraints.dart';
+import 'api/media/constraints/audio.dart';
+import 'api/media/constraints/video.dart';
 import 'frb_generated.dart';
 import 'lib.dart';
 import 'renderer.dart';
@@ -67,7 +71,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.10.0';
 
   @override
-  int get rustContentHash => -40294053;
+  int get rustContentHash => 973326276;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -92,7 +96,7 @@ abstract class RustLibApi extends BaseApi {
   });
 
   Future<AudioProcessingConstraints>
-  crateApiAudioProcessingConstraintsDefault();
+  crateApiMediaConstraintsAudioAudioProcessingConstraintsDefault();
 
   Future<MediaStreamTrack?> crateApiCloneTrack({
     required String trackId,
@@ -136,11 +140,11 @@ abstract class RustLibApi extends BaseApi {
 
   Future<void> crateApiDisposeVideoSink({required PlatformInt64 sinkId});
 
-  Future<void> crateApiEnableFakeMedia();
+  Future<void> crateApiMediaEnableFakeMedia();
 
-  Future<List<MediaDeviceInfo>> crateApiEnumerateDevices();
+  Future<List<MediaDeviceInfo>> crateApiMediaEnumerateDevices();
 
-  Future<List<MediaDisplayInfo>> crateApiEnumerateDisplays();
+  Future<List<MediaDisplayInfo>> crateApiMediaEnumerateDisplays();
 
   Future<AudioProcessingConfig> crateApiGetAudioProcessingConfig({
     required String trackId,
@@ -174,11 +178,11 @@ abstract class RustLibApi extends BaseApi {
     required ArcPeerConnection peer,
   });
 
-  Future<bool> crateApiIsFakeMedia();
+  Future<bool> crateApiMediaIsFakeMedia();
 
-  Future<int> crateApiMicrophoneVolume();
+  Future<int> crateApiMediaMicrophoneVolume();
 
-  Future<bool> crateApiMicrophoneVolumeIsAvailable();
+  Future<bool> crateApiMediaMicrophoneVolumeIsAvailable();
 
   Stream<TrackEvent> crateApiRegisterTrackObserver({
     int? peerId,
@@ -209,7 +213,7 @@ abstract class RustLibApi extends BaseApi {
     required bool enabled,
   });
 
-  Future<void> crateApiSetAudioPlayoutDevice({required String deviceId});
+  Future<void> crateApiMediaSetAudioPlayoutDevice({required String deviceId});
 
   Future<void> crateApiSetCodecPreferences({
     required ArcRtpTransceiver transceiver,
@@ -222,9 +226,9 @@ abstract class RustLibApi extends BaseApi {
     required String sdp,
   });
 
-  Future<void> crateApiSetMicrophoneVolume({required int level});
+  Future<void> crateApiMediaSetMicrophoneVolume({required int level});
 
-  Stream<void> crateApiSetOnDeviceChanged();
+  Stream<void> crateApiMediaSetOnDeviceChanged();
 
   Future<void> crateApiSetRemoteDescription({
     required ArcPeerConnection peer,
@@ -406,7 +410,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @override
   Future<AudioProcessingConstraints>
-  crateApiAudioProcessingConstraintsDefault() {
+  crateApiMediaConstraintsAudioAudioProcessingConstraintsDefault() {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
@@ -422,14 +426,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_audio_processing_constraints,
           decodeErrorData: null,
         ),
-        constMeta: kCrateApiAudioProcessingConstraintsDefaultConstMeta,
+        constMeta:
+            kCrateApiMediaConstraintsAudioAudioProcessingConstraintsDefaultConstMeta,
         argValues: [],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiAudioProcessingConstraintsDefaultConstMeta =>
+  TaskConstMeta
+  get kCrateApiMediaConstraintsAudioAudioProcessingConstraintsDefaultConstMeta =>
       const TaskConstMeta(
         debugName: "audio_processing_constraints_default",
         argNames: [],
@@ -730,7 +736,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   );
 
   @override
-  Future<void> crateApiEnableFakeMedia() {
+  Future<void> crateApiMediaEnableFakeMedia() {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
@@ -746,18 +752,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: null,
         ),
-        constMeta: kCrateApiEnableFakeMediaConstMeta,
+        constMeta: kCrateApiMediaEnableFakeMediaConstMeta,
         argValues: [],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiEnableFakeMediaConstMeta =>
+  TaskConstMeta get kCrateApiMediaEnableFakeMediaConstMeta =>
       const TaskConstMeta(debugName: "enable_fake_media", argNames: []);
 
   @override
-  Future<List<MediaDeviceInfo>> crateApiEnumerateDevices() {
+  Future<List<MediaDeviceInfo>> crateApiMediaEnumerateDevices() {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
@@ -773,18 +779,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_list_media_device_info,
           decodeErrorData: sse_decode_AnyhowException,
         ),
-        constMeta: kCrateApiEnumerateDevicesConstMeta,
+        constMeta: kCrateApiMediaEnumerateDevicesConstMeta,
         argValues: [],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiEnumerateDevicesConstMeta =>
+  TaskConstMeta get kCrateApiMediaEnumerateDevicesConstMeta =>
       const TaskConstMeta(debugName: "enumerate_devices", argNames: []);
 
   @override
-  Future<List<MediaDisplayInfo>> crateApiEnumerateDisplays() {
+  Future<List<MediaDisplayInfo>> crateApiMediaEnumerateDisplays() {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
@@ -800,14 +806,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_list_media_display_info,
           decodeErrorData: null,
         ),
-        constMeta: kCrateApiEnumerateDisplaysConstMeta,
+        constMeta: kCrateApiMediaEnumerateDisplaysConstMeta,
         argValues: [],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiEnumerateDisplaysConstMeta =>
+  TaskConstMeta get kCrateApiMediaEnumerateDisplaysConstMeta =>
       const TaskConstMeta(debugName: "enumerate_displays", argNames: []);
 
   @override
@@ -1068,7 +1074,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "get_transceivers", argNames: ["peer"]);
 
   @override
-  Future<bool> crateApiIsFakeMedia() {
+  Future<bool> crateApiMediaIsFakeMedia() {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
@@ -1084,18 +1090,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_bool,
           decodeErrorData: null,
         ),
-        constMeta: kCrateApiIsFakeMediaConstMeta,
+        constMeta: kCrateApiMediaIsFakeMediaConstMeta,
         argValues: [],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiIsFakeMediaConstMeta =>
+  TaskConstMeta get kCrateApiMediaIsFakeMediaConstMeta =>
       const TaskConstMeta(debugName: "is_fake_media", argNames: []);
 
   @override
-  Future<int> crateApiMicrophoneVolume() {
+  Future<int> crateApiMediaMicrophoneVolume() {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
@@ -1111,18 +1117,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_u_32,
           decodeErrorData: sse_decode_AnyhowException,
         ),
-        constMeta: kCrateApiMicrophoneVolumeConstMeta,
+        constMeta: kCrateApiMediaMicrophoneVolumeConstMeta,
         argValues: [],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiMicrophoneVolumeConstMeta =>
+  TaskConstMeta get kCrateApiMediaMicrophoneVolumeConstMeta =>
       const TaskConstMeta(debugName: "microphone_volume", argNames: []);
 
   @override
-  Future<bool> crateApiMicrophoneVolumeIsAvailable() {
+  Future<bool> crateApiMediaMicrophoneVolumeIsAvailable() {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
@@ -1138,14 +1144,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_bool,
           decodeErrorData: sse_decode_AnyhowException,
         ),
-        constMeta: kCrateApiMicrophoneVolumeIsAvailableConstMeta,
+        constMeta: kCrateApiMediaMicrophoneVolumeIsAvailableConstMeta,
         argValues: [],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiMicrophoneVolumeIsAvailableConstMeta =>
+  TaskConstMeta get kCrateApiMediaMicrophoneVolumeIsAvailableConstMeta =>
       const TaskConstMeta(
         debugName: "microphone_volume_is_available",
         argNames: [],
@@ -1363,7 +1369,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<void> crateApiSetAudioPlayoutDevice({required String deviceId}) {
+  Future<void> crateApiMediaSetAudioPlayoutDevice({required String deviceId}) {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
@@ -1380,14 +1386,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: sse_decode_AnyhowException,
         ),
-        constMeta: kCrateApiSetAudioPlayoutDeviceConstMeta,
+        constMeta: kCrateApiMediaSetAudioPlayoutDeviceConstMeta,
         argValues: [deviceId],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiSetAudioPlayoutDeviceConstMeta =>
+  TaskConstMeta get kCrateApiMediaSetAudioPlayoutDeviceConstMeta =>
       const TaskConstMeta(
         debugName: "set_audio_playout_device",
         argNames: ["deviceId"],
@@ -1466,7 +1472,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<void> crateApiSetMicrophoneVolume({required int level}) {
+  Future<void> crateApiMediaSetMicrophoneVolume({required int level}) {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
@@ -1483,21 +1489,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: sse_decode_AnyhowException,
         ),
-        constMeta: kCrateApiSetMicrophoneVolumeConstMeta,
+        constMeta: kCrateApiMediaSetMicrophoneVolumeConstMeta,
         argValues: [level],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiSetMicrophoneVolumeConstMeta =>
+  TaskConstMeta get kCrateApiMediaSetMicrophoneVolumeConstMeta =>
       const TaskConstMeta(
         debugName: "set_microphone_volume",
         argNames: ["level"],
       );
 
   @override
-  Stream<void> crateApiSetOnDeviceChanged() {
+  Stream<void> crateApiMediaSetOnDeviceChanged() {
     final cb = RustStreamSink<void>();
     unawaited(
       handler.executeNormal(
@@ -1516,7 +1522,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             decodeSuccessData: sse_decode_unit,
             decodeErrorData: null,
           ),
-          constMeta: kCrateApiSetOnDeviceChangedConstMeta,
+          constMeta: kCrateApiMediaSetOnDeviceChangedConstMeta,
           argValues: [cb],
           apiImpl: this,
         ),
@@ -1525,7 +1531,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return cb.stream;
   }
 
-  TaskConstMeta get kCrateApiSetOnDeviceChangedConstMeta =>
+  TaskConstMeta get kCrateApiMediaSetOnDeviceChangedConstMeta =>
       const TaskConstMeta(debugName: "set_on_device_changed", argNames: ["cb"]);
 
   @override
