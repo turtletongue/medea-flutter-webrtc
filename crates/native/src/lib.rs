@@ -76,6 +76,7 @@
     clippy::rc_mutex,
     clippy::read_zero_byte_vec,
     clippy::redundant_clone,
+    clippy::redundant_test_prefix,
     clippy::redundant_type_annotations,
     clippy::renamed_function_params,
     clippy::ref_patterns,
@@ -160,6 +161,7 @@
     reason = "needs refactoring"
 )]
 
+#[expect(clippy::module_name_repetitions, reason = "codegen")]
 pub mod api;
 #[expect( // codegen
     clippy::absolute_paths,

@@ -1,5 +1,7 @@
 //! API surface and implementation for Flutter.
 
+pub mod capability;
+
 use std::{
     sync::{
         Arc, LazyLock, Mutex,
@@ -12,6 +14,11 @@ use std::{
 use flutter_rust_bridge::for_generated::FLUTTER_RUST_BRIDGE_RUNTIME_VERSION;
 use libwebrtc_sys as sys;
 
+pub use self::capability::{
+    RtpCapabilities, RtpCodecCapability, RtpHeaderExtensionCapability,
+    get_rtp_receiver_capabilities, get_rtp_sender_capabilities,
+    set_codec_preferences,
+};
 // Re-exporting since it is used in the generated code.
 pub use crate::{
     PeerConnection, RtpEncodingParameters, RtpParameters, RtpTransceiver,
@@ -540,33 +547,6 @@ impl From<sys::IceCandidateStats> for IceCandidateStats {
     }
 }
 
-/// Representation of the static capabilities of an endpoint.
-///
-/// Applications can use these capabilities to construct [`RtpParameters`].
-#[derive(Debug)]
-pub struct RtpCapabilities {
-    /// Supported codecs.
-    pub codecs: Vec<RtpCodecCapability>,
-
-    /// Supported [RTP] header extensions.
-    ///
-    /// [RTP]: https://en.wikipedia.org/wiki/Real-time_Transport_Protocol
-    pub header_extensions: Vec<RtpHeaderExtensionCapability>,
-}
-
-impl From<sys::RtpCapabilities> for RtpCapabilities {
-    fn from(value: sys::RtpCapabilities) -> Self {
-        Self {
-            codecs: value.codecs().into_iter().map(Into::into).collect(),
-            header_extensions: value
-                .header_extensions()
-                .into_iter()
-                .map(Into::into)
-                .collect(),
-        }
-    }
-}
-
 impl From<sys::RtcpFeedbackType> for RtcpFeedbackType {
     fn from(value: sys::RtcpFeedbackType) -> Self {
         match value {
@@ -863,117 +843,6 @@ impl From<sys::ScalabilityMode> for ScalabilityMode {
             sys::ScalabilityMode::kS3T3 => Self::S3T3,
             sys::ScalabilityMode::kS3T3h => Self::S3T3h,
             _ => unreachable!(),
-        }
-    }
-}
-
-/// Representation of capabilities/preferences of an implementation for a header
-/// extension of [`RtpCapabilities`].
-#[derive(Debug)]
-pub struct RtpHeaderExtensionCapability {
-    /// [URI] of this extension, as defined in [RFC 8285].
-    ///
-    /// [RFC 8285]: https://tools.ietf.org/html/rfc8285
-    /// [URI]: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
-    pub uri: String,
-
-    /// Preferred value of ID that goes in the packet.
-    pub preferred_id: Option<i32>,
-
-    /// If [`true`], it's preferred that the value in the header is encrypted.
-    pub preferred_encrypted: bool,
-
-    /// Direction of the extension.
-    ///
-    /// [`RtpTransceiverDirection::Stopped`] value is only used with
-    /// `RtpTransceiverInterface::SetHeaderExtensionsToNegotiate()` and
-    /// `SetHeaderExtensionsToNegotiate()`.
-    pub direction: RtpTransceiverDirection,
-}
-
-impl From<sys::RtpHeaderExtensionCapability> for RtpHeaderExtensionCapability {
-    fn from(value: sys::RtpHeaderExtensionCapability) -> Self {
-        Self {
-            uri: value.uri(),
-            preferred_id: value.preferred_id(),
-            preferred_encrypted: value.preferred_encrypted(),
-            direction: value.direction().into(),
-        }
-    }
-}
-
-/// Representation of static capabilities of an endpoint's implementation of a
-/// codec.
-#[derive(Debug)]
-pub struct RtpCodecCapability {
-    /// Default payload type for the codec.
-    ///
-    /// Mainly needed for codecs that have statically assigned payload types.
-    pub preferred_payload_type: Option<i32>,
-
-    /// List of [`ScalabilityMode`]s supported by the video codec.
-    pub scalability_modes: Vec<ScalabilityMode>,
-
-    /// Built [MIME "type/subtype"][0] string from `name` and `kind`.
-    ///
-    /// [0]: https://en.wikipedia.org/wiki/Media_type
-    pub mime_type: String,
-
-    /// Used to identify the codec. Equivalent to [MIME subtype][0].
-    ///
-    /// [0]: https://en.wikipedia.org/wiki/Media_type#Subtypes
-    pub name: String,
-
-    /// [`MediaType`] of this codec. Equivalent to [MIME] top-level type.
-    ///
-    /// [MIME]: https://en.wikipedia.org/wiki/Media_type
-    pub kind: MediaType,
-
-    /// If [`None`], the implementation default is used.
-    pub clock_rate: Option<i32>,
-
-    /// Number of audio channels used.
-    ///
-    /// [`None`] for video codecs.
-    ///
-    /// If [`None`] for audio, the implementation default is used.
-    pub num_channels: Option<i32>,
-
-    /// Codec-specific parameters that must be signaled to the remote party.
-    ///
-    /// Corresponds to `a=fmtp` parameters in [SDP].
-    ///
-    /// Contrary to ORTC, these parameters are named using all lowercase
-    /// strings. This helps make the mapping to [SDP] simpler, if an application
-    /// is using [SDP]. Boolean values are represented by the string "1".
-    ///
-    /// [SDP]: https://en.wikipedia.org/wiki/Session_Description_Protocol
-    pub parameters: Vec<(String, String)>,
-
-    /// Feedback mechanisms to be used for this codec.
-    pub feedback: Vec<RtcpFeedback>,
-}
-
-impl From<sys::RtpCodecCapability> for RtpCodecCapability {
-    fn from(value: sys::RtpCodecCapability) -> Self {
-        Self {
-            preferred_payload_type: value.preferred_payload_type(),
-            scalability_modes: value
-                .scalability_modes()
-                .into_iter()
-                .map(Into::into)
-                .collect(),
-            mime_type: value.mime_type(),
-            name: value.name(),
-            kind: value.kind().into(),
-            clock_rate: value.clock_rate(),
-            num_channels: value.num_channels(),
-            parameters: value.parameters().into_iter().collect(),
-            feedback: value
-                .rtcp_feedback()
-                .into_iter()
-                .map(Into::into)
-                .collect(),
         }
     }
 }
@@ -2768,16 +2637,6 @@ pub fn stop_transceiver(
     transceiver.stop()
 }
 
-/// Changes the preferred [`RtpTransceiver`] codecs to the provided
-/// [`Vec`]`<`[`RtpCodecCapability`]`>`.
-#[expect(clippy::needless_pass_by_value, reason = "FFI")]
-pub fn set_codec_preferences(
-    transceiver: RustOpaque<Arc<RtpTransceiver>>,
-    codecs: Vec<RtpCodecCapability>,
-) {
-    transceiver.set_codec_preferences(codecs);
-}
-
 /// Replaces the specified [`AudioTrack`] (or [`VideoTrack`]) on the
 /// [`sys::RtpTransceiverInterface`]'s `sender`.
 ///
@@ -2799,34 +2658,6 @@ pub fn sender_get_parameters(
     transceiver: RustOpaque<Arc<RtpTransceiver>>,
 ) -> RtcRtpSendParameters {
     RtcRtpSendParameters::from(transceiver.sender_get_parameters())
-}
-
-/// Returns the capabilities of an [RTP] sender of the provided [`MediaType`].
-///
-/// [RTP]: https://en.wikipedia.org/wiki/Real-time_Transport_Protocol
-#[must_use]
-pub fn get_rtp_sender_capabilities(kind: MediaType) -> RtpCapabilities {
-    RtpCapabilities::from(
-        WEBRTC
-            .lock()
-            .unwrap()
-            .peer_connection_factory
-            .get_rtp_sender_capabilities(kind.into()),
-    )
-}
-
-/// Returns the capabilities of an [RTP] receiver of the provided [`MediaType`].
-///
-/// [RTP]: https://en.wikipedia.org/wiki/Real-time_Transport_Protocol
-#[must_use]
-pub fn get_rtp_receiver_capabilities(kind: MediaType) -> RtpCapabilities {
-    RtpCapabilities::from(
-        WEBRTC
-            .lock()
-            .unwrap()
-            .peer_connection_factory
-            .get_rtp_receiver_capabilities(kind.into()),
-    )
 }
 
 /// Sets [`RtpParameters`] into the provided [`RtpTransceiver`]'s `sender`.
