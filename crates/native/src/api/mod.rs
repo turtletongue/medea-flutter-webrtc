@@ -1,7 +1,6 @@
 //! API surface and implementation for Flutter.
 
-pub mod media_device_info;
-pub mod media_display_info;
+pub mod device_info;
 
 use std::{
     sync::{
@@ -15,9 +14,8 @@ use std::{
 use flutter_rust_bridge::for_generated::FLUTTER_RUST_BRIDGE_RUNTIME_VERSION;
 use libwebrtc_sys as sys;
 
-pub use self::{
-    media_device_info::{MediaDeviceInfo, MediaDeviceKind, enumerate_devices},
-    media_display_info::{MediaDisplayInfo, enumerate_displays},
+pub use self::device_info::{
+    MediaDeviceInfo, MediaDeviceKind, MediaDisplayInfo,
 };
 // Re-exporting since it is used in the generated code.
 pub use crate::{
@@ -25,7 +23,7 @@ pub use crate::{
     renderer::TextureEvent,
 };
 use crate::{
-    Webrtc,
+    Webrtc, devices,
     frb::{FrbHandler, new_frb_handler},
     frb_generated::{
         FLUTTER_RUST_BRIDGE_CODEGEN_VERSION, RustOpaque, StreamSink,
@@ -2565,6 +2563,19 @@ pub fn enable_fake_media() {
 /// Indicates whether application is configured to use fake media devices.
 pub fn is_fake_media() -> bool {
     FAKE_MEDIA.load(Ordering::Acquire)
+}
+
+/// Returns a list of all available media input and output devices, such as
+/// microphones, cameras, headsets, and so forth.
+pub fn enumerate_devices() -> anyhow::Result<Vec<MediaDeviceInfo>> {
+    WEBRTC.lock().unwrap().enumerate_devices()
+}
+
+/// Returns a list of all available displays that can be used for screen
+/// capturing.
+#[must_use]
+pub fn enumerate_displays() -> Vec<MediaDisplayInfo> {
+    devices::enumerate_displays()
 }
 
 /// Creates a new [`PeerConnection`] and returns its ID.

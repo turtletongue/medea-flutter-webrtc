@@ -1,6 +1,4 @@
-//! A single media input or output device description.
-
-use crate::api::WEBRTC;
+//! Information about media devices and displays.
 
 /// Possible kinds of media devices.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -28,8 +26,12 @@ pub struct MediaDeviceInfo {
     pub label: String,
 }
 
-/// Returns a list of all available media input and output devices, such as
-/// microphones, cameras, headsets, and so forth.
-pub fn enumerate_devices() -> anyhow::Result<Vec<MediaDeviceInfo>> {
-    WEBRTC.lock().unwrap().enumerate_devices()
+/// Information describing a display.
+#[derive(Debug)]
+pub struct MediaDisplayInfo {
+    /// Unique identifier of the device representing the display.
+    pub device_id: String,
+
+    /// Title describing the represented display.
+    pub title: Option<String>,
 }
