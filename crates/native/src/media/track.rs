@@ -328,7 +328,8 @@ impl VideoTrack {
         let mut res = Self {
             kind: kind::Video {
                 id: id.clone(),
-                inner: pc.create_video_track(id.into(), &src.inner)?,
+                inner: pc
+                    .create_video_track(id.into(), src.as_ref().as_ref())?,
                 sinks: Vec::new(),
                 dimensions,
                 sink: None,
@@ -409,7 +410,7 @@ impl From<&VideoTrack> for api::MediaStreamTrack {
         Self {
             id: track.id().0,
             device_id: match track.source() {
-                MediaTrackSource::Local(src) => src.device_id.to_string(),
+                MediaTrackSource::Local(src) => src.device_id().to_string(),
                 MediaTrackSource::Remote { .. } => "remote".into(),
             },
             kind: api::MediaType::Video,
@@ -474,7 +475,8 @@ impl AudioTrack {
         Ok(Self {
             kind: kind::Audio {
                 id: id.clone(),
-                inner: pc.create_audio_track(id.into(), &src.src)?,
+                inner: pc
+                    .create_audio_track(id.into(), src.as_ref().as_ref())?,
                 volume_observer_id: None,
                 source: MediaTrackSource::Local(src),
             },
@@ -528,7 +530,7 @@ impl From<&AudioTrack> for api::MediaStreamTrack {
         Self {
             id: track.id().0,
             device_id: match track.source() {
-                MediaTrackSource::Local(local) => local.device_id.to_string(),
+                MediaTrackSource::Local(local) => local.device_id().to_string(),
                 MediaTrackSource::Remote { mid: _, peer: _ } => "remote".into(),
             },
             kind: api::MediaType::Audio,

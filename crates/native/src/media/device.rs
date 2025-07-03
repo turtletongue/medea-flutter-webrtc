@@ -13,14 +13,14 @@ use crate::api;
 /// [`VideoSource`]: crate::media::VideoSource
 #[derive(AsRef, Clone, Debug, Display, Eq, From, Hash, Into, PartialEq)]
 #[as_ref(forward)]
-pub struct VideoDeviceId(pub(super) String);
+pub struct VideoDeviceId(String);
 
 /// ID of an `AudioDevice`.
 #[derive(
     AsRef, Clone, Debug, Default, Display, Eq, From, Hash, Into, PartialEq,
 )]
 #[as_ref(forward)]
-pub struct AudioDeviceId(pub(super) String);
+pub struct AudioDeviceId(String);
 
 /// [`sys::VideoDeviceInfo`] wrapper.
 pub struct VideoDeviceInfo(sys::VideoDeviceInfo);

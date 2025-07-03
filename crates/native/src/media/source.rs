@@ -6,7 +6,7 @@ use std::{
 };
 
 use anyhow::Context as _;
-use derive_more::{AsRef, Display, From, with_trait::Into as _};
+use derive_more::{AsRef, with_trait::Into as _};
 use libwebrtc_sys as sys;
 
 use crate::{
@@ -25,36 +25,8 @@ pub enum MediaTrackSource<T> {
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, PartialEq)]
 pub struct AudioLevelObserverId(u64);
 
-/// Storage for a [`sys::AudioSourceOnAudioLevelChangeCallback`].
-type ObserverStorage =
-    Arc<RwLock<HashMap<AudioLevelObserverId, AudioSourceAudioLevelHandler>>>;
-
-/// [`sys::AudioSourceOnAudioLevelChangeCallback`] implementation which
-/// broadcasts all audio level updates to all the underlying
-/// [`sys::AudioSourceOnAudioLevelChangeCallback`]s.
-struct BroadcasterObserver(ObserverStorage);
-
-impl BroadcasterObserver {
-    /// Creates a new [`BroadcasterObserver`] with the provided
-    /// [`ObserverStorage`] as a sink for audio level broadcasts.
-    pub const fn new(observers: ObserverStorage) -> Self {
-        Self(observers)
-    }
-}
-
-impl sys::AudioSourceOnAudioLevelChangeCallback for BroadcasterObserver {
-    /// Propagates audio level change to all the underlying
-    /// [`sys::AudioSourceOnAudioLevelChangeCallback`]s.
-    fn on_audio_level_change(&self, volume: f32) {
-        let observers = self.0.read().unwrap();
-
-        observers.values().for_each(|observer| {
-            observer.on_audio_level_change(volume);
-        });
-    }
-}
-
 /// [`sys::AudioSourceInterface`] wrapper.
+#[derive(AsRef)]
 pub struct AudioSource {
     /// Storage for the all the [`sys::AudioSourceOnAudioLevelChangeCallback`]
     /// related to this [`AudioSourceInterface`].
@@ -68,13 +40,14 @@ pub struct AudioSource {
     last_observer_id: Mutex<AudioLevelObserverId>,
 
     /// [`AudioDeviceId`] of the device this [`AudioSource`] is related to.
-    pub device_id: AudioDeviceId,
+    device_id: AudioDeviceId,
 
     /// Underlying FFI wrapper for the `LocalAudioSource`.
-    pub(super) src: sys::AudioSourceInterface,
+    #[as_ref]
+    src: sys::AudioSourceInterface,
 
     /// [`sys::AudioProcessing`] used by this [`AudioSource`].
-    pub(super) ap: sys::AudioProcessing,
+    ap: sys::AudioProcessing,
 }
 
 impl AudioSource {
@@ -92,6 +65,13 @@ impl AudioSource {
             src,
             ap,
         }
+    }
+
+    /// Returns [`AudioDeviceId`] of the device this [`AudioSource`] is
+    /// related to.
+    #[must_use]
+    pub const fn device_id(&self) -> &AudioDeviceId {
+        &self.device_id
     }
 
     /// Subscribes the provided [`sys::AudioSourceOnAudioLevelChangeCallback`]
@@ -173,18 +153,32 @@ impl AudioSource {
         }
         self.ap.apply_config(&conf);
     }
+
+    /// [`sys::AudioProcessingConfig`] used by this [`AudioSource`].
+    pub(super) fn ap_config(&self) -> sys::AudioProcessingConfig {
+        self.ap.config()
+    }
 }
 
 /// [`sys::VideoTrackSourceInterface`] wrapper.
+#[derive(AsRef)]
 pub struct VideoSource {
     /// Underlying [`sys::VideoTrackSourceInterface`].
-    pub(super) inner: sys::VideoTrackSourceInterface,
+    #[as_ref]
+    inner: sys::VideoTrackSourceInterface,
 
     /// ID of an video input device that provides data to this [`VideoSource`].
-    pub device_id: VideoDeviceId,
+    device_id: VideoDeviceId,
 }
 
 impl VideoSource {
+    /// Returns [`VideoDeviceId`] of the device this [`VideoSource`] is
+    /// related to.
+    #[must_use]
+    pub const fn device_id(&self) -> &VideoDeviceId {
+        &self.device_id
+    }
+
     /// Creates a new [`VideoTrackSourceInterface`] from the video input device
     /// with the specified constraints.
     pub(super) fn new_device_source(
@@ -236,10 +230,12 @@ impl VideoSource {
                 caps.frame_rate as usize,
             )?
         } else {
+            let device_id: &str = device_id.as_ref();
+
             sys::VideoTrackSourceInterface::create_proxy_from_display(
                 worker_thread,
                 signaling_thread,
-                device_id.0.parse::<i64>()?,
+                device_id.parse::<i64>()?,
                 caps.width as usize,
                 caps.height as usize,
                 caps.frame_rate as usize,
@@ -305,14 +301,31 @@ impl From<&api::AudioProcessingConstraints> for sys::AudioProcessingConfig {
     }
 }
 
-/// Label identifying a video track source.
-#[derive(AsRef, Clone, Debug, Default, Display, Eq, From, Hash, PartialEq)]
-#[as_ref(forward)]
-#[from(forward)]
-pub struct VideoLabel(String);
+/// Storage for a [`sys::AudioSourceOnAudioLevelChangeCallback`].
+type ObserverStorage =
+    Arc<RwLock<HashMap<AudioLevelObserverId, AudioSourceAudioLevelHandler>>>;
 
-/// Label identifying an audio track source.
-#[derive(AsRef, Clone, Debug, Default, Display, Eq, From, Hash, PartialEq)]
-#[as_ref(forward)]
-#[from(forward)]
-pub struct AudioLabel(String);
+/// [`sys::AudioSourceOnAudioLevelChangeCallback`] implementation which
+/// broadcasts all audio level updates to all the underlying
+/// [`sys::AudioSourceOnAudioLevelChangeCallback`]s.
+struct BroadcasterObserver(ObserverStorage);
+
+impl BroadcasterObserver {
+    /// Creates a new [`BroadcasterObserver`] with the provided
+    /// [`ObserverStorage`] as a sink for audio level broadcasts.
+    pub const fn new(observers: ObserverStorage) -> Self {
+        Self(observers)
+    }
+}
+
+impl sys::AudioSourceOnAudioLevelChangeCallback for BroadcasterObserver {
+    /// Propagates audio level change to all the underlying
+    /// [`sys::AudioSourceOnAudioLevelChangeCallback`]s.
+    fn on_audio_level_change(&self, volume: f32) {
+        let observers = self.0.read().unwrap();
+
+        observers.values().for_each(|observer| {
+            observer.on_audio_level_change(volume);
+        });
+    }
+}

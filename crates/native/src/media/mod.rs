@@ -49,7 +49,7 @@ impl Webrtc {
                     .map_err(|err| api::GetMediaError::Video(err.to_string()));
                 if let Err(err) = track {
                     if Arc::strong_count(&src) == 2 {
-                        self.video_sources.remove(&src.device_id);
+                        self.video_sources.remove(src.device_id());
                     }
                     return Err(err);
                 }
@@ -104,9 +104,9 @@ impl Webrtc {
                 {
                     if let MediaTrackSource::Local(src) = track.source() {
                         if Arc::strong_count(src) <= 2 {
-                            self.audio_sources.remove(&src.device_id);
+                            self.audio_sources.remove(src.device_id());
                             self.audio_device_module
-                                .dispose_audio_source(&src.device_id);
+                                .dispose_audio_source(src.device_id());
                         }
                     }
                     if notify_on_ended {
@@ -129,7 +129,7 @@ impl Webrtc {
                     }
                     if let MediaTrackSource::Local(src) = track.source() {
                         if Arc::strong_count(src) == 2 {
-                            self.video_sources.remove(&src.device_id);
+                            self.video_sources.remove(src.device_id());
                         }
                     }
                     if notify_on_ended {
@@ -185,7 +185,7 @@ impl Webrtc {
                              {device_id}",
                         )
                     })?;
-                VideoDeviceId(device_id)
+                device_id.into()
             } else {
                 let displays = devices::enumerate_displays();
                 // No device ID is provided, so just pick the first available
@@ -194,7 +194,7 @@ impl Webrtc {
                     bail!("Cannot find any available video input displays");
                 }
 
-                VideoDeviceId(displays[0].device_id.clone())
+                displays[0].device_id.clone().into()
             };
             if let Some(src) = self.video_sources.get(&device_id) {
                 return Ok(Arc::clone(src));
@@ -210,30 +210,30 @@ impl Webrtc {
                 device_id,
             )
         } else {
-            let (index, device_id) =
-                if let Some(device_id) = caps.device_id.clone() {
-                    let device_id = VideoDeviceId(device_id);
-                    if let Some(index) =
-                        self.get_index_of_video_device(&device_id)?
-                    {
-                        (index, device_id)
-                    } else {
-                        bail!(
-                            "Cannot find video device with the specified ID: \
-                             {device_id}",
-                        );
-                    }
+            let (index, device_id) = if let Some(device_id) =
+                caps.device_id.clone()
+            {
+                let device_id = device_id.into();
+                if let Some(index) =
+                    self.get_index_of_video_device(&device_id)?
+                {
+                    (index, device_id)
                 } else {
-                    // No device ID is provided, so just pick the first
-                    // available device.
-                    if self.video_device_info.number_of_devices() < 1 {
-                        bail!("Cannot find any available video input devices");
-                    }
+                    bail!(
+                        "Cannot find video device with the specified ID: \
+                             {device_id}",
+                    );
+                }
+            } else {
+                // No device ID is provided, so just pick the first
+                // available device.
+                if self.video_device_info.number_of_devices() < 1 {
+                    bail!("Cannot find any available video input devices");
+                }
 
-                    let device_id =
-                        VideoDeviceId(self.video_device_info.device_name(0)?.1);
-                    (0, device_id)
-                };
+                let device_id = self.video_device_info.device_name(0)?.1.into();
+                (0, device_id)
+            };
             if let Some(src) = self.video_sources.get(&device_id) {
                 return Ok(Arc::clone(src));
             }
@@ -284,7 +284,7 @@ impl Webrtc {
         caps: &api::AudioConstraints,
     ) -> anyhow::Result<Arc<AudioSource>> {
         let device_id = if let Some(device_id) = caps.device_id.clone() {
-            AudioDeviceId(device_id)
+            device_id.into()
         } else {
             // `AudioDeviceModule` is not capturing anything at the moment,
             // so we will use first available device (with `0` index).
@@ -292,7 +292,7 @@ impl Webrtc {
                 bail!("Cannot find any available audio input device");
             }
 
-            AudioDeviceId(self.audio_device_module.recording_device_name(0)?.1)
+            self.audio_device_module.recording_device_name(0)?.1.into()
         };
 
         let Some(device_index) =
@@ -627,7 +627,7 @@ impl Webrtc {
             bail!("Cannot get audio processing of remote `AudioTrack`");
         };
 
-        let mut conf = src.ap.config();
+        let mut conf = src.ap_config();
 
         Ok(api::AudioProcessingConfig {
             auto_gain_control: conf.get_gain_controller_enabled(),
