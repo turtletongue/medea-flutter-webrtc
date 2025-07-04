@@ -1,16 +1,18 @@
 use std::{
     collections::{HashMap, HashSet},
-    sync::{Arc, OnceLock, RwLock},
+    mem,
+    ops::{Deref, DerefMut},
+    sync::{Arc, OnceLock, RwLock, RwLockReadGuard},
 };
 
 use derive_more::{
-    Display,
+    Deref, DerefMut, Display,
     with_trait::{AsRef, From, Into},
 };
 use libwebrtc_sys as sys;
 
 use crate::{
-    AudioSource, PeerConnection, VideoSink, VideoSource, api,
+    AudioSource, PeerConnection, VideoSink, VideoSinkId, VideoSource, api,
     frb_generated::StreamSink,
     media::MediaTrackSource,
     next_id,
@@ -47,7 +49,7 @@ pub struct AudioTrackId(String);
 mod kind {
     use std::sync::{Arc, OnceLock, RwLock};
 
-    use derive_more::AsRef;
+    use derive_more::{Deref, DerefMut};
     use libwebrtc_sys as sys;
 
     use crate::{
@@ -61,7 +63,7 @@ mod kind {
     };
 
     /// Representation of a [`sys::VideoTrackInterface`].
-    #[derive(AsRef)]
+    #[derive(Deref, DerefMut)]
     pub struct Video {
         /// ID of this [`Video`].
         pub id: VideoTrackId,
@@ -70,8 +72,9 @@ mod kind {
         pub source: MediaTrackSource<VideoSource>,
 
         /// Underlying [`sys::VideoTrackInterface`].
-        #[as_ref]
-        pub(in crate::media) inner: sys::VideoTrackInterface,
+        #[deref]
+        #[deref_mut]
+        pub inner: sys::VideoTrackInterface,
 
         /// List of the [`VideoSink`]s attached to this [`VideoTrack`].
         pub sinks: Vec<VideoSinkId>,
@@ -105,7 +108,7 @@ mod kind {
     }
 
     /// Representation of a [`sys::AudioTrackInterface`].
-    #[derive(AsRef)]
+    #[derive(Deref, DerefMut)]
     pub struct Audio {
         /// ID of this [`Audio`].
         pub id: AudioTrackId,
@@ -114,8 +117,9 @@ mod kind {
         pub source: MediaTrackSource<AudioSource>,
 
         /// Underlying [`sys::AudioTrackInterface`].
-        #[as_ref]
-        pub(in crate::media) inner: sys::AudioTrackInterface,
+        #[deref]
+        #[deref_mut]
+        pub inner: sys::AudioTrackInterface,
 
         /// [`AudioLevelObserverId`] related to this [`Audio`].
         ///
@@ -166,21 +170,25 @@ mod kind {
     }
 }
 
+type SendersMap = HashMap<Arc<PeerConnection>, HashSet<Arc<RtpTransceiver>>>;
+
 /// Representation of a generic track interface.
+#[derive(Deref, DerefMut)]
 pub struct Track<T> {
     /// Indicator whether this is a remote or a local track.
     origin: TrackOrigin,
 
     /// [`TrackInterface`] of this [`Track`].
-    pub(super) kind: T,
+    #[deref(forward)]
+    #[deref_mut(forward)]
+    kind: T,
 
     /// `StreamSink` which can be used by this [`Track`] to emit
     /// [`api::TrackEvent`]s to Flutter side.
     events_tx: Option<StreamSink<api::TrackEvent>>,
 
     /// Peers and transceivers sending this [`Track`].
-    pub(super) senders:
-        HashMap<Arc<PeerConnection>, HashSet<Arc<RtpTransceiver>>>,
+    senders: SendersMap,
 }
 
 impl<T> Track<T> {
@@ -227,16 +235,18 @@ impl<T> Track<T> {
     pub fn remove_peer(&mut self, peer: &Arc<PeerConnection>) {
         self.senders.remove(peer);
     }
+
+    pub fn take_senders(&mut self) -> SendersMap {
+        mem::take(&mut self.senders)
+    }
+
+    pub fn senders(&self) -> &SendersMap {
+        &self.senders
+    }
 }
 
 /// Representation of a `Video` track interface.
 pub type VideoTrack = Track<kind::Video>;
-
-impl AsRef<sys::VideoTrackInterface> for VideoTrack {
-    fn as_ref(&self) -> &sys::VideoTrackInterface {
-        self.kind.as_ref()
-    }
-}
 
 /// Dimensions of the [`VideoTrack`].
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
@@ -403,6 +413,14 @@ impl VideoTrack {
     pub fn remove_video_sink(&mut self, video_sink: VideoSink) {
         self.kind.remove_video_sink(video_sink);
     }
+
+    pub fn dimensions(&self) -> RwLockReadGuard<'_, VideoDimensions> {
+        self.kind.dimensions.wait().read().unwrap()
+    }
+
+    pub fn sinks(&self) -> &Vec<VideoSinkId> {
+        &self.kind.sinks
+    }
 }
 
 impl From<&VideoTrack> for api::MediaStreamTrack {
@@ -425,12 +443,6 @@ impl From<&VideoTrack> for api::MediaStreamTrack {
 
 /// Representation of an `Audio` track interface.
 pub type AudioTrack = Track<kind::Audio>;
-
-impl AsRef<sys::AudioTrackInterface> for AudioTrack {
-    fn as_ref(&self) -> &sys::AudioTrackInterface {
-        self.kind.as_ref()
-    }
-}
 
 impl AudioTrack {
     /// Returns ID of this [`AudioTrack`].

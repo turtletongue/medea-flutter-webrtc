@@ -112,7 +112,7 @@ impl Webrtc {
                     if notify_on_ended {
                         track.notify_on_ended();
                     }
-                    mem::take(&mut track.senders)
+                    track.take_senders()
                 } else {
                     return;
                 }
@@ -122,7 +122,7 @@ impl Webrtc {
                     .video_tracks
                     .remove(&(VideoTrackId::from(track_id), track_origin))
                 {
-                    for id in track.kind.sinks.clone() {
+                    for id in track.sinks().clone() {
                         if let Some(sink) = self.video_sinks.remove(&id) {
                             track.remove_video_sink(sink);
                         }
@@ -135,7 +135,7 @@ impl Webrtc {
                     if notify_on_ended {
                         track.notify_on_ended();
                     }
-                    track.senders.clone()
+                    track.senders().clone()
                 } else {
                     return;
                 }
@@ -366,7 +366,7 @@ impl Webrtc {
 
         self.video_tracks
             .get(&(id, track_origin))
-            .map(|t| t.kind.dimensions.wait().read().unwrap().width())
+            .map(|t| t.dimensions().width())
     }
 
     /// Returns the [height] property of the media track by its ID and origin.
@@ -384,7 +384,7 @@ impl Webrtc {
 
         self.video_tracks
             .get(&(id, track_origin))
-            .map(|t| t.kind.dimensions.wait().read().unwrap().height())
+            .map(|t| t.dimensions().height())
     }
 
     /// Changes the [enabled][1] property of the media track by its ID.
@@ -554,9 +554,9 @@ impl Webrtc {
                 let track = self.audio_tracks.get_mut(&(id, track_origin));
 
                 if let Some(mut track) = track {
-                    obs.set_audio_track(&track.kind.inner);
+                    obs.set_audio_track(&track);
                     track.set_track_events_tx(track_events_tx);
-                    track.kind.inner.register_observer(obs);
+                    track.register_observer(obs);
                 }
             }
             api::MediaType::Video => {
@@ -564,9 +564,9 @@ impl Webrtc {
                 let track = self.video_tracks.get_mut(&(id, track_origin));
 
                 if let Some(mut track) = track {
-                    obs.set_video_track(&track.kind.inner);
+                    obs.set_video_track(&track);
                     track.set_track_events_tx(track_events_tx);
-                    track.kind.inner.register_observer(obs);
+                    track.register_observer(obs);
                 }
             }
         }

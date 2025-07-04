@@ -160,7 +160,7 @@ impl Webrtc {
                         Arc::clone(transceiver),
                     );
 
-                    sender.replace_video_track(Some(track.as_ref()))
+                    sender.replace_video_track(Some(&track))
                 }
                 sys::MediaType::MEDIA_TYPE_AUDIO => {
                     let track_id = AudioTrackId::from(track_id);
@@ -176,7 +176,7 @@ impl Webrtc {
                         Arc::clone(transceiver),
                     );
 
-                    sender.replace_audio_track(Some(track.as_ref()))
+                    sender.replace_audio_track(Some(&track))
                 }
                 _ => unreachable!(),
             }
