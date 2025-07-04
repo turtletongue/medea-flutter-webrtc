@@ -521,7 +521,7 @@ fn wire__crate__api__sender_set_parameters_impl(
             let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
             let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_transceiver = <RustOpaqueMoi<Arc < RtpTransceiver >>>::sse_decode(&mut deserializer);
-let api_params = <crate::api::RtcRtpSendParameters>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
+let api_params = <crate::api::rtc_rtp_send_parameters::RtcRtpSendParameters>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
                     transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>((move ||  {
                          let output_ok = crate::api::sender_set_parameters(api_transceiver, api_params)?;   Ok(output_ok)
                     })())
@@ -2145,7 +2145,7 @@ impl SseDecode for crate::api::RtcRtpEncodingParameters {
     }
 }
 
-impl SseDecode for crate::api::RtcRtpSendParameters {
+impl SseDecode for crate::api::rtc_rtp_send_parameters::RtcRtpSendParameters {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
@@ -2156,7 +2156,7 @@ impl SseDecode for crate::api::RtcRtpSendParameters {
         )>>::sse_decode(deserializer);
         let mut var_inner =
             <RustOpaqueMoi<Arc<RtpParameters>>>::sse_decode(deserializer);
-        return crate::api::RtcRtpSendParameters {
+        return crate::api::rtc_rtp_send_parameters::RtcRtpSendParameters {
             encodings: var_encodings,
             inner: var_inner,
         };
@@ -3942,7 +3942,9 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::RtcRtpEncodingParameters>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::RtcRtpSendParameters {
+impl flutter_rust_bridge::IntoDart
+    for crate::api::rtc_rtp_send_parameters::RtcRtpSendParameters
+{
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
             self.encodings.into_into_dart().into_dart(),
@@ -3952,13 +3954,17 @@ impl flutter_rust_bridge::IntoDart for crate::api::RtcRtpSendParameters {
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::RtcRtpSendParameters
+    for crate::api::rtc_rtp_send_parameters::RtcRtpSendParameters
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::RtcRtpSendParameters>
-    for crate::api::RtcRtpSendParameters
+impl
+    flutter_rust_bridge::IntoIntoDart<
+        crate::api::rtc_rtp_send_parameters::RtcRtpSendParameters,
+    > for crate::api::rtc_rtp_send_parameters::RtcRtpSendParameters
 {
-    fn into_into_dart(self) -> crate::api::RtcRtpSendParameters {
+    fn into_into_dart(
+        self,
+    ) -> crate::api::rtc_rtp_send_parameters::RtcRtpSendParameters {
         self
     }
 }
@@ -5924,7 +5930,7 @@ impl SseEncode for crate::api::RtcRtpEncodingParameters {
     }
 }
 
-impl SseEncode for crate::api::RtcRtpSendParameters {
+impl SseEncode for crate::api::rtc_rtp_send_parameters::RtcRtpSendParameters {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
