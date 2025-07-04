@@ -2,8 +2,6 @@
 //!
 //! [0]: https://w3.org/TR/webrtc#dom-rtcrtptransceiverinit
 
-use libwebrtc_sys as sys;
-
 use crate::api::{RtcRtpEncodingParameters, RtpTransceiverDirection};
 
 /// Representation of an [RTCRtpTransceiverInit][0].
