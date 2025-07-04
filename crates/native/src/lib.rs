@@ -150,7 +150,6 @@
     clippy::missing_docs_in_private_items,
     clippy::missing_panics_doc,
     clippy::multiple_inherent_impl,
-    clippy::partial_pub_fields,
     clippy::undocumented_unsafe_blocks,
     clippy::unwrap_in_result,
     clippy::unwrap_used,

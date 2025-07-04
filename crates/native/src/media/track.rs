@@ -1,13 +1,12 @@
 use std::{
     collections::{HashMap, HashSet},
     mem,
-    ops::{Deref, DerefMut},
-    sync::{Arc, OnceLock, RwLock, RwLockReadGuard},
+    sync::{Arc, OnceLock, RwLock},
 };
 
 use derive_more::{
     Deref, DerefMut, Display,
-    with_trait::{AsRef, From, Into},
+    with_trait::{From, Into},
 };
 use libwebrtc_sys as sys;
 
@@ -236,11 +235,17 @@ impl<T> Track<T> {
         self.senders.remove(peer);
     }
 
+    /// Take peers and transceivers from this [`Track`].
+    // TODO: Replace mutable key type with something else.
+    #[expect(clippy::mutable_key_type, reason = "needs refactoring")]
     pub fn take_senders(&mut self) -> SendersMap {
         mem::take(&mut self.senders)
     }
 
-    pub fn senders(&self) -> &SendersMap {
+    /// Get peers and transceivers sending this [`Track`].
+    // TODO: Replace mutable key type with something else.
+    #[expect(clippy::mutable_key_type, reason = "needs refactoring")]
+    pub const fn senders(&self) -> &SendersMap {
         &self.senders
     }
 }
@@ -414,11 +419,15 @@ impl VideoTrack {
         self.kind.remove_video_sink(video_sink);
     }
 
-    pub fn dimensions(&self) -> RwLockReadGuard<'_, VideoDimensions> {
-        self.kind.dimensions.wait().read().unwrap()
+    /// Get dimensions of this [`VideoTrack`].
+    #[must_use]
+    pub fn dimensions(&self) -> VideoDimensions {
+        *self.kind.dimensions.wait().read().unwrap()
     }
 
-    pub fn sinks(&self) -> &Vec<VideoSinkId> {
+    /// List of the [`VideoSink`]s attached to this [`VideoTrack`].
+    #[must_use]
+    pub const fn sinks(&self) -> &Vec<VideoSinkId> {
         &self.kind.sinks
     }
 }

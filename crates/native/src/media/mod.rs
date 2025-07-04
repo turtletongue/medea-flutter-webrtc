@@ -4,7 +4,6 @@ mod track;
 
 use std::{
     hash::Hash,
-    mem,
     sync::{Arc, Weak},
 };
 
