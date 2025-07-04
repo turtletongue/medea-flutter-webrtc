@@ -29,10 +29,10 @@ class RtcpFeedback {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is RtcpFeedback &&
-              runtimeType == other.runtimeType &&
-              messageType == other.messageType &&
-              kind == other.kind;
+      other is RtcpFeedback &&
+          runtimeType == other.runtimeType &&
+          messageType == other.messageType &&
+          kind == other.kind;
 }
 
 /// Possible message types of an [`RtcpFeedback`], when is type is
