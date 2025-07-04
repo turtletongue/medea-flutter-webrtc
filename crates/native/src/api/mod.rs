@@ -1,5 +1,7 @@
 //! API surface and implementation for Flutter.
 
+pub mod rtc_rtp_send_parameters;
+
 use std::{
     sync::{
         Arc, LazyLock, Mutex,
@@ -12,6 +14,7 @@ use std::{
 use flutter_rust_bridge::for_generated::FLUTTER_RUST_BRIDGE_RUNTIME_VERSION;
 use libwebrtc_sys as sys;
 
+pub use self::rtc_rtp_send_parameters::RtcRtpSendParameters;
 // Re-exporting since it is used in the generated code.
 pub use crate::{
     PeerConnection, RtpEncodingParameters, RtpParameters, RtpTransceiver,
@@ -2316,37 +2319,6 @@ pub struct RtcRtpTransceiver {
     ///
     /// [1]: https://w3.org/TR/webrtc#dom-rtcrtptransceiver-direction
     pub direction: RtpTransceiverDirection,
-}
-
-/// Representation of [RTCRtpSendParameters][0].
-///
-/// [0]: https://w3.org/TR/webrtc#dom-rtcrtpsendparameters
-pub struct RtcRtpSendParameters {
-    /// Sequence containing parameters for sending [RTP] encodings of media.
-    ///
-    /// [RTP]: https://en.wikipedia.org/wiki/Real-time_Transport_Protocol
-    pub encodings:
-        Vec<(RtcRtpEncodingParameters, RustOpaque<Arc<RtpEncodingParameters>>)>,
-
-    /// Reference to the Rust side [`RtpParameters`].
-    pub inner: RustOpaque<Arc<RtpParameters>>,
-}
-
-impl From<RtpParameters> for RtcRtpSendParameters {
-    fn from(v: RtpParameters) -> Self {
-        let encodings = v
-            .get_encodings()
-            .into_iter()
-            .map(|e| {
-                (
-                    RtcRtpEncodingParameters::from(&e),
-                    RustOpaque::new(Arc::new(RtpEncodingParameters::from(e))),
-                )
-            })
-            .collect();
-
-        Self { encodings, inner: RustOpaque::new(Arc::new(v)) }
-    }
 }
 
 /// Representation of a track event, sent when a new [`MediaStreamTrack`] is
