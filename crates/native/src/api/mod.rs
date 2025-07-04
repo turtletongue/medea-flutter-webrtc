@@ -33,9 +33,6 @@ use crate::{
     frb_generated::{
         FLUTTER_RUST_BRIDGE_CODEGEN_VERSION, RustOpaque, StreamSink,
     },
-    pc::PeerConnectionId,
-    renderer::FrameHandler,
-    user_media::TrackOrigin,
 };
 
 /// Custom [`Handler`] for executing Rust code called from Dart.
