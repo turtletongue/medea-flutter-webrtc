@@ -1,14 +1,17 @@
 //! Static codec capabilities.
 
+pub mod rtcp_feedback;
+pub mod scalability_mode;
+
 use std::sync::Arc;
 
 use libwebrtc_sys as sys;
 
-use crate::{
-    RtpTransceiver,
-    api::{MediaType, RtcpFeedback, ScalabilityMode},
-    frb_generated::RustOpaque,
+pub use self::{
+    rtcp_feedback::{RtcpFeedback, RtcpFeedbackMessageType, RtcpFeedbackType},
+    scalability_mode::ScalabilityMode,
 };
+use crate::{RtpTransceiver, api::MediaType, frb_generated::RustOpaque};
 
 /// Representation of static capabilities of an endpoint's implementation of a
 /// codec.

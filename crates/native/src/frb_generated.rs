@@ -30,7 +30,7 @@ use flutter_rust_bridge::for_generated::byteorder::{
     NativeEndian, ReadBytesExt, WriteBytesExt,
 };
 use flutter_rust_bridge::for_generated::{
-    transform_result_dco, Lifetimeable, Lockable,
+    Lifetimeable, Lockable, transform_result_dco,
 };
 use flutter_rust_bridge::{Handler, IntoIntoDart};
 
@@ -569,9 +569,9 @@ fn wire__crate__api__capability__rtp_codec_capability__set_codec_preferences_imp
             let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
             let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_transceiver = <RustOpaqueMoi<Arc < RtpTransceiver >>>::sse_decode(&mut deserializer);
-let api_codecs = <Vec<crate::api::capability::rtp_codec_capability::RtpCodecCapability>>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
+let api_codecs = <Vec<crate::api::capability::r#mod::RtpCodecCapability>>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
                     transform_result_sse::<_, ()>((move ||  {
-                         let output_ok = Result::<_,()>::Ok({ crate::api::capability::rtp_codec_capability::set_codec_preferences(api_transceiver, api_codecs); })?;   Ok(output_ok)
+                         let output_ok = Result::<_,()>::Ok({ crate::api::capability::r#mod::set_codec_preferences(api_transceiver, api_codecs); })?;   Ok(output_ok)
                     })())
                 } })
 }
@@ -1401,9 +1401,7 @@ impl SseDecode for Vec<crate::api::RtcpFeedback> {
     }
 }
 
-impl SseDecode
-    for Vec<crate::api::capability::rtp_codec_capability::RtpCodecCapability>
-{
+impl SseDecode for Vec<crate::api::capability::r#mod::RtpCodecCapability> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
@@ -1411,7 +1409,11 @@ impl SseDecode
         let mut len_ = <i32>::sse_decode(deserializer);
         let mut ans_ = vec![];
         for idx_ in 0..len_ {
-            ans_.push(<crate::api::capability::rtp_codec_capability::RtpCodecCapability>::sse_decode(deserializer));
+            ans_.push(
+                <crate::api::capability::r#mod::RtpCodecCapability>::sse_decode(
+                    deserializer,
+                ),
+            );
         }
         return ans_;
     }
@@ -2455,7 +2457,7 @@ impl SseDecode for crate::api::capability::RtpCapabilities {
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
     ) -> Self {
         let mut var_codecs = <Vec<
-            crate::api::capability::rtp_codec_capability::RtpCodecCapability,
+            crate::api::capability::r#mod::RtpCodecCapability,
         >>::sse_decode(deserializer);
         let mut var_headerExtensions = <Vec<crate::api::capability::rtp_header_extension_capability::RtpHeaderExtensionCapability>>::sse_decode(deserializer);
         return crate::api::capability::RtpCapabilities {
@@ -2465,9 +2467,7 @@ impl SseDecode for crate::api::capability::RtpCapabilities {
     }
 }
 
-impl SseDecode
-    for crate::api::capability::rtp_codec_capability::RtpCodecCapability
-{
+impl SseDecode for crate::api::capability::r#mod::RtpCodecCapability {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
@@ -2485,7 +2485,17 @@ impl SseDecode
             <Vec<(String, String)>>::sse_decode(deserializer);
         let mut var_feedback =
             <Vec<crate::api::RtcpFeedback>>::sse_decode(deserializer);
-        return crate::api::capability::rtp_codec_capability::RtpCodecCapability{preferred_payload_type: var_preferredPayloadType, scalability_modes: var_scalabilityModes, mime_type: var_mimeType, name: var_name, kind: var_kind, clock_rate: var_clockRate, num_channels: var_numChannels, parameters: var_parameters, feedback: var_feedback};
+        return crate::api::capability::r#mod::RtpCodecCapability {
+            preferred_payload_type: var_preferredPayloadType,
+            scalability_modes: var_scalabilityModes,
+            mime_type: var_mimeType,
+            name: var_name,
+            kind: var_kind,
+            clock_rate: var_clockRate,
+            num_channels: var_numChannels,
+            parameters: var_parameters,
+            feedback: var_feedback,
+        };
     }
 }
 
@@ -4036,7 +4046,7 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::capability::RtpCapabilities>
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart
-    for crate::api::capability::rtp_codec_capability::RtpCodecCapability
+    for crate::api::capability::r#mod::RtpCodecCapability
 {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
@@ -4054,17 +4064,17 @@ impl flutter_rust_bridge::IntoDart
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::capability::rtp_codec_capability::RtpCodecCapability
+    for crate::api::capability::r#mod::RtpCodecCapability
 {
 }
 impl
     flutter_rust_bridge::IntoIntoDart<
-        crate::api::capability::rtp_codec_capability::RtpCodecCapability,
-    > for crate::api::capability::rtp_codec_capability::RtpCodecCapability
+        crate::api::capability::r#mod::RtpCodecCapability,
+    > for crate::api::capability::r#mod::RtpCodecCapability
 {
     fn into_into_dart(
         self,
-    ) -> crate::api::capability::rtp_codec_capability::RtpCodecCapability {
+    ) -> crate::api::capability::r#mod::RtpCodecCapability {
         self
     }
 }
@@ -4960,9 +4970,7 @@ impl SseEncode for Vec<crate::api::RtcpFeedback> {
     }
 }
 
-impl SseEncode
-    for Vec<crate::api::capability::rtp_codec_capability::RtpCodecCapability>
-{
+impl SseEncode for Vec<crate::api::capability::r#mod::RtpCodecCapability> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
@@ -4970,7 +4978,9 @@ impl SseEncode
     ) {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
-            <crate::api::capability::rtp_codec_capability::RtpCodecCapability>::sse_encode(item, serializer);
+            <crate::api::capability::r#mod::RtpCodecCapability>::sse_encode(
+                item, serializer,
+            );
         }
     }
 }
@@ -5945,14 +5955,15 @@ impl SseEncode for crate::api::capability::RtpCapabilities {
         self,
         serializer: &mut flutter_rust_bridge::for_generated::SseSerializer,
     ) {
-        <Vec<crate::api::capability::rtp_codec_capability::RtpCodecCapability>>::sse_encode(self.codecs, serializer);
+        <Vec<crate::api::capability::r#mod::RtpCodecCapability>>::sse_encode(
+            self.codecs,
+            serializer,
+        );
         <Vec<crate::api::capability::rtp_header_extension_capability::RtpHeaderExtensionCapability>>::sse_encode(self.header_extensions, serializer);
     }
 }
 
-impl SseEncode
-    for crate::api::capability::rtp_codec_capability::RtpCodecCapability
-{
+impl SseEncode for crate::api::capability::r#mod::RtpCodecCapability {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
@@ -6299,7 +6310,7 @@ mod io {
         NativeEndian, ReadBytesExt, WriteBytesExt,
     };
     use flutter_rust_bridge::for_generated::{
-        transform_result_dco, Lifetimeable, Lockable,
+        Lifetimeable, Lockable, transform_result_dco,
     };
     use flutter_rust_bridge::{Handler, IntoIntoDart};
 

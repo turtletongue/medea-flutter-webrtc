@@ -2,13 +2,16 @@
 //!
 //! [RTP]: https://en.wikipedia.org/wiki/Real-time_Transport_Protocol
 
-pub mod rtp_codec_capability;
+pub mod rtp_codec;
 pub mod rtp_header_extension_capability;
 
 use libwebrtc_sys as sys;
 
 pub use self::{
-    rtp_codec_capability::{RtpCodecCapability, set_codec_preferences},
+    rtp_codec::{
+        RtcpFeedback, RtcpFeedbackMessageType, RtcpFeedbackType,
+        RtpCodecCapability, ScalabilityMode, set_codec_preferences,
+    },
     rtp_header_extension_capability::RtpHeaderExtensionCapability,
 };
 #[cfg(doc)]
