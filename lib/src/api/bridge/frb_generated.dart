@@ -10,7 +10,9 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 import 'api.dart';
 import 'api/capability.dart';
-import 'api/capability/rtp_codec_capability.dart';
+import 'api/capability/rtp_codec.dart';
+import 'api/capability/rtp_codec/rtcp_feedback.dart';
+import 'api/capability/rtp_codec/scalability_mode.dart';
 import 'api/capability/rtp_header_extension_capability.dart';
 import 'frb_generated.dart';
 import 'lib.dart';
@@ -70,7 +72,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.10.0';
 
   @override
-  int get rustContentHash => -1889800580;
+  int get rustContentHash => 248322291;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -214,7 +216,7 @@ abstract class RustLibApi extends BaseApi {
 
   Future<void> crateApiSetAudioPlayoutDevice({required String deviceId});
 
-  Future<void> crateApiCapabilityRtpCodecCapabilitySetCodecPreferences({
+  Future<void> crateApiCapabilityRtpCodecSetCodecPreferences({
     required ArcRtpTransceiver transceiver,
     required List<RtpCodecCapability> codecs,
   });
@@ -1397,7 +1399,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<void> crateApiCapabilityRtpCodecCapabilitySetCodecPreferences({
+  Future<void> crateApiCapabilityRtpCodecSetCodecPreferences({
     required ArcRtpTransceiver transceiver,
     required List<RtpCodecCapability> codecs,
   }) {
@@ -1418,16 +1420,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: null,
         ),
-        constMeta:
-            kCrateApiCapabilityRtpCodecCapabilitySetCodecPreferencesConstMeta,
+        constMeta: kCrateApiCapabilityRtpCodecSetCodecPreferencesConstMeta,
         argValues: [transceiver, codecs],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta
-  get kCrateApiCapabilityRtpCodecCapabilitySetCodecPreferencesConstMeta =>
+  TaskConstMeta get kCrateApiCapabilityRtpCodecSetCodecPreferencesConstMeta =>
       const TaskConstMeta(
         debugName: "set_codec_preferences",
         argNames: ["transceiver", "codecs"],

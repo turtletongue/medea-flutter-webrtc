@@ -11,7 +11,9 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_io.dart';
 
 import 'api.dart';
 import 'api/capability.dart';
-import 'api/capability/rtp_codec_capability.dart';
+import 'api/capability/rtp_codec.dart';
+import 'api/capability/rtp_codec/rtcp_feedback.dart';
+import 'api/capability/rtp_codec/scalability_mode.dart';
 import 'api/capability/rtp_header_extension_capability.dart';
 import 'frb_generated.dart';
 import 'lib.dart';
