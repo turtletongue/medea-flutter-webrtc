@@ -698,7 +698,7 @@ impl WebrtcRepository {
                 Ok(Artifact {
                     download_url,
                     name,
-                    digest: release_digest()?.into(),
+                    digest: get_expected_libwebrtc_hash()?.into(),
                     is_wrapped: false,
                 })
             }
@@ -813,7 +813,7 @@ impl WebrtcRepository {
 }
 
 /// Get expected digest of current release archive.
-fn release_digest() -> anyhow::Result<&'static str> {
+fn get_expected_libwebrtc_hash() -> anyhow::Result<&'static str> {
     Ok(match get_target()?.as_str() {
         "aarch64-unknown-linux-gnu" => {
             "2f8a49cea02b6f054d2496d23fe9ae709bb98bd4efe69ba9ca10c4644f77ba71"
