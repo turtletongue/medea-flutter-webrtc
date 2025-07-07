@@ -573,20 +573,21 @@ impl Artifact {
         }
         fs::create_dir_all(&temp_dir)?;
 
-        let mut resp =
-            BufReader::new(reqwest::blocking::get(&self.download_url)?);
-        let mut out_file = BufWriter::new(File::create(&archive)?);
-        let mut hasher = Sha256::new();
+        {
+            let mut resp =
+                BufReader::new(reqwest::blocking::get(&self.download_url)?);
+            let mut out_file = BufWriter::new(File::create(&archive)?);
+            let mut hasher = Sha256::new();
 
-        let mut buffer = [0; 512];
-        loop {
-            let count = resp.read(&mut buffer)?;
-            if count == 0 {
-                out_file.flush()?;
-                break;
+            let mut buffer = [0; 512];
+            loop {
+                let count = resp.read(&mut buffer)?;
+                if count == 0 {
+                    break;
+                }
+                hasher.update(&buffer[0..count]);
+                _ = out_file.write(&buffer[0..count])?;
             }
-            hasher.update(&buffer[0..count]);
-            _ = out_file.write(&buffer[0..count])?;
         }
 
         if self.is_wrapped {
