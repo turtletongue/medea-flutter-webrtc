@@ -161,20 +161,32 @@ use std::{
 
 #[cfg(target_os = "linux")]
 use anyhow::anyhow;
-use anyhow::bail;
+use anyhow::{Context, bail};
 use flate2::read::GzDecoder;
 #[cfg(target_os = "linux")]
 use regex_lite::Regex;
+use serde::Deserialize;
 use sha2::{Digest as _, Sha256};
+use std::borrow::Cow;
 use tar::Archive;
 use walkdir::{DirEntry, WalkDir};
+use zip::ZipArchive;
 
-/// Base URL for the [`libwebrtc-bin`] GitHub release.
+/// Base URL for the [`libwebrtc-bin`] GitHub.
 ///
 /// [`libwebrtc-bin`]: https://github.com/instrumentisto/libwebrtc-bin
-static LIBWEBRTC_URL: &str = "\
-    https://github.com/instrumentisto/libwebrtc-bin/releases/download\
-                                                            /137.0.7151.119";
+static LIBWEBRTC_URL: &str = "https://github.com/instrumentisto/libwebrtc-bin";
+
+/// Release tag for downloading the [`libwebrtc-bin`].
+///
+/// [`libwebrtc-bin`]: https://github.com/instrumentisto/libwebrtc-bin
+static LIBWEBRTC_RELEASE: &str = "137.0.7151.119";
+
+/// Base URL for the [`libwebrtc-bin`] GitHub API.
+///
+/// [`libwebrtc-bin`]: https://github.com/instrumentisto/libwebrtc-bin
+static GITHUB_API_URL: &str =
+    "https://api.github.com/repos/instrumentisto/libwebrtc-bin";
 
 /// URL for downloading `openal-soft` source code.
 static OPENAL_URL: &str =
@@ -297,28 +309,6 @@ fn get_lld_version() -> anyhow::Result<(u8, u8, u8)> {
 /// Returns target architecture to build the library for.
 fn get_target() -> anyhow::Result<String> {
     env::var("TARGET").map_err(Into::into)
-}
-
-/// Returns expected `libwebrtc` archives SHA-256 hashes.
-fn get_expected_libwebrtc_hash() -> anyhow::Result<&'static str> {
-    Ok(match get_target()?.as_str() {
-        "aarch64-unknown-linux-gnu" => {
-            "2f8a49cea02b6f054d2496d23fe9ae709bb98bd4efe69ba9ca10c4644f77ba71"
-        }
-        "x86_64-unknown-linux-gnu" => {
-            "0e5915b7f98dcdd127e7845b05e1687b5819c3037f8ea29708351fc56c6b3868"
-        }
-        "aarch64-apple-darwin" => {
-            "cc581f5e8228e127ca9298855625fdd4f2a802098cb2601eecd121905470b1df"
-        }
-        "x86_64-apple-darwin" => {
-            "0f713b80858e834eca2687b4b18cb72f279265d65835c2b8b4d77883a862bc4b"
-        }
-        "x86_64-pc-windows-msvc" => {
-            "fa08c4aa9bb08cf5aed95a10bfcad15676b3ddbe0856201d436c7c7d25e3210f"
-        }
-        arch => return Err(anyhow::anyhow!("Unsupported target: {arch}")),
-    })
 }
 
 /// Returns [`PathBuf`] to the directory containing the library.
@@ -501,56 +491,107 @@ fn compile_openal() -> anyhow::Result<()> {
 
 /// Downloads and unpacks compiled `libwebrtc` library.
 fn download_libwebrtc() -> anyhow::Result<()> {
-    let manifest_path = PathBuf::from(env::var("CARGO_MANIFEST_DIR")?);
-    let temp_dir = manifest_path.join("temp");
+    let repository = WebrtcRepository::build()?;
+    let artifact = repository.artifact()?;
+
     let lib_dir = libpath()?;
 
-    let tar_file = {
-        let mut name = String::from("libwebrtc-");
-
-        #[cfg(target_os = "windows")]
-        name.push_str("windows-x64.tar.gz");
-        #[cfg(target_os = "linux")]
-        name.push_str("linux-x64.tar.gz");
-
-        match get_target()?.as_str() {
-            "aarch64-apple-darwin" => {
-                name.push_str("macos-arm64.tar.gz");
-            }
-            "x86_64-apple-darwin" => {
-                name.push_str("macos-x64.tar.gz");
-            }
-            _ => (),
-        }
-
-        name
-    };
-    let archive = temp_dir.join(&tar_file);
-    let checksum = lib_dir.join("CHECKSUM");
-    let expected_hash = get_expected_libwebrtc_hash()?;
-
-    // Force download if `INSTALL_WEBRTC=1`.
-    if env::var("INSTALL_WEBRTC").as_deref().unwrap_or("0") == "0" {
-        // Skip download if already downloaded and checksum matches.
-        if fs::metadata(&lib_dir).is_ok_and(|m| m.is_dir())
-            && fs::read(&checksum).unwrap_or_default().as_slice()
-                == expected_hash.as_bytes()
-        {
-            return Ok(());
-        }
-    }
-
-    // Clean up `temp` directory.
-    if temp_dir.exists() {
-        fs::remove_dir_all(&temp_dir)?;
-    }
-    fs::create_dir_all(&temp_dir)?;
-
-    // Download the compiled `libwebrtc` archive.
+    if let Some(artifact) =
+        artifact.download(&lib_dir, lib_dir.join("CHECKSUM"))?
     {
-        let mut resp = BufReader::new(reqwest::blocking::get(format!(
-            "{LIBWEBRTC_URL}/{tar_file}"
-        ))?);
+        artifact.unpack(&lib_dir)?;
+    }
+
+    Ok(())
+}
+
+/// Compression used in the artifact.
+#[derive(Clone, Copy, Debug)]
+enum ArtifactCompression {
+    /// `ZIP` compression.
+    Zip,
+    /// `GZip` compression.
+    GZip,
+}
+
+/// Downloaded artifact.
+struct DownloadedArtifact {
+    /// Inner artifact.
+    artifact: Artifact,
+    /// Path to the archive.
+    path: PathBuf,
+    /// Path to temp directory where downloaded archive is stored.
+    temp_dir: PathBuf,
+    /// Path to checksum of the archive.
+    checksum: PathBuf,
+}
+
+impl DownloadedArtifact {
+    /// Unpack the downloaded `libwebrtc` archive.
+    fn unpack(&self, destination: &PathBuf) -> anyhow::Result<()> {
+        let archive = File::open(&self.path)?;
+
+        match self.artifact.compression {
+            ArtifactCompression::GZip => {
+                Archive::new(GzDecoder::new(archive)).unpack(destination)?;
+            }
+            ArtifactCompression::Zip => {
+                ZipArchive::new(archive)?.extract(destination)?;
+            }
+        }
+
+        // Clean up the downloaded `libwebrtc` archive.
+        fs::remove_dir_all(&self.temp_dir)?;
+
+        // Write checksum of the unpacked archive.
+        fs::write(&self.checksum, self.artifact.digest.as_bytes())?;
+
+        Ok(())
+    }
+}
+
+/// Build artifact from release or workflow run.
+struct Artifact {
+    /// Name of the artifact.
+    name: String,
+    /// Compression algorithm used in archive.
+    compression: ArtifactCompression,
+    /// Hash of archive's content.
+    digest: Cow<'static, str>,
+    /// Url for downloading the archive. It expires in 1 minute.
+    download_url: String,
+}
+
+impl Artifact {
+    /// Download the `libwebrtc` archive.
+    fn download(
+        self,
+        lib_dir: &PathBuf,
+        checksum: PathBuf,
+    ) -> anyhow::Result<Option<DownloadedArtifact>> {
+        let manifest_path = PathBuf::from(env::var("CARGO_MANIFEST_DIR")?);
+        let temp_dir = manifest_path.join("temp");
+        let archive = temp_dir.join(&self.name);
+
+        // Force download if `INSTALL_WEBRTC=1`.
+        if env::var("INSTALL_WEBRTC").as_deref().unwrap_or("0") == "0" {
+            // Skip download if already downloaded and checksum matches.
+            if fs::metadata(lib_dir).is_ok_and(|m| m.is_dir())
+                && fs::read(&checksum).unwrap_or_default().as_slice()
+                    == self.digest.as_bytes()
+            {
+                return Ok(None);
+            }
+        }
+
+        // Clean up `temp` directory.
+        if temp_dir.exists() {
+            fs::remove_dir_all(&temp_dir)?;
+        }
+        fs::create_dir_all(&temp_dir)?;
+
+        let mut resp =
+            BufReader::new(reqwest::blocking::get(&self.download_url)?);
         let mut out_file = BufWriter::new(fs::File::create(&archive)?);
         let mut hasher = Sha256::new();
 
@@ -564,20 +605,227 @@ fn download_libwebrtc() -> anyhow::Result<()> {
             _ = out_file.write(&buffer[0..count])?;
         }
 
-        if format!("{:x}", hasher.finalize()) != expected_hash {
-            bail!("SHA-256 checksum doesn't match");
+        Ok(Some(DownloadedArtifact {
+            path: archive,
+            temp_dir,
+            checksum,
+            artifact: self,
+        }))
+    }
+}
+
+/// Representation of an artifact from GitHub API.
+#[derive(Deserialize)]
+struct ArtifactMetadata {
+    /// Hash of artifact's archive content.
+    digest: Cow<'static, str>,
+    /// Url to REST API for getting artifact's download link.
+    archive_download_url: String,
+}
+
+/// Response from list artifacts endpoint of GitHub API.
+#[derive(Deserialize)]
+struct ArtifactsResponse {
+    /// List of artifacts metadata.
+    artifacts: Vec<ArtifactMetadata>,
+}
+
+/// Representation of a workflow run from GitHub API.
+#[derive(Deserialize)]
+struct WorkflowRun {
+    /// Url of REST API for getting list of artifacts.
+    artifacts_url: String,
+}
+
+/// Response from list workflow runs endpoint of GitHub API.
+#[derive(Deserialize)]
+struct WorkflowRunsResponse {
+    /// List of workflow runs.
+    workflow_runs: Vec<WorkflowRun>,
+}
+
+/// Representation of GitHub repository with build artifacts.
+enum WebrtcRepository {
+    /// Release representation.
+    Release,
+    /// Branch representation.
+    Branch {
+        /// Name of the branch.
+        name: String,
+        /// GitHub token to download the archive.
+        github_token: String,
+    },
+}
+
+impl WebrtcRepository {
+    /// Create a new libwebrtc GitHub repository representation.
+    fn build() -> anyhow::Result<Self> {
+        if let Ok(branch) = env::var("WEBRTC_BRANCH") {
+            return Ok(Self::Branch {
+                name: branch,
+                github_token: env::var("GH_TOKEN").context(
+                    "libwebrtc branch was selected but GH_TOKEN isn't set.",
+                )?,
+            });
+        }
+
+        Ok(Self::Release)
+    }
+
+    /// Get an artifact from the repository.
+    fn artifact(&self) -> anyhow::Result<Artifact> {
+        match self {
+            Self::Release => {
+                let name = Self::archive_name(ArtifactCompression::GZip)?;
+
+                Ok(Artifact {
+                    compression: ArtifactCompression::GZip,
+                    digest: Self::release_digest()?.into(),
+                    download_url: format!(
+                        "{LIBWEBRTC_URL}/releases/download/{LIBWEBRTC_RELEASE}/{name}",
+                    ),
+                    name,
+                })
+            }
+            Self::Branch { name, github_token } => {
+                let client = Self::client()?;
+
+                let workflow_run = Self::workflow_run(&client, name.as_str())?;
+                let metadata = Self::artifact_metadata(&client, &workflow_run)?;
+
+                let response = client
+                    .get(metadata.archive_download_url)
+                    .header("Authorization", format!("Bearer {github_token}"))
+                    .send()?;
+
+                Ok(Artifact {
+                    name: Self::archive_name(ArtifactCompression::Zip)?,
+                    compression: ArtifactCompression::Zip,
+                    digest: metadata
+                        .digest
+                        .split(':')
+                        .next_back()
+                        .ok_or_else(|| anyhow::anyhow!("Got invalid artifact digest from Github API."))?.to_owned()
+                        .into(),
+                    download_url: response.headers().get("Location").ok_or_else(|| anyhow::anyhow!("Location header is not set in response of GitHub API."))?.to_str()?.into(),
+                })
+            }
         }
     }
 
-    // Unpack the downloaded `libwebrtc` archive.
-    let mut archive = Archive::new(GzDecoder::new(File::open(archive)?));
-    archive.unpack(lib_dir)?;
+    /// Set up HTTP client.
+    fn client() -> anyhow::Result<reqwest::blocking::Client> {
+        let mut headers = reqwest::header::HeaderMap::new();
+        headers.insert(reqwest::header::USER_AGENT, "instrumentisto".parse()?);
 
-    // Clean up the downloaded `libwebrtc` archive.
-    fs::remove_dir_all(&temp_dir)?;
+        Ok(reqwest::blocking::Client::builder()
+            .default_headers(headers)
+            .redirect(reqwest::redirect::Policy::none())
+            .build()?)
+    }
 
-    // Write the downloaded checksum.
-    fs::write(&checksum, expected_hash).map_err(Into::into)
+    /// Get latest workflow run from branch of the libwebrtc repository.
+    fn workflow_run(
+        client: &reqwest::blocking::Client,
+        branch: &str,
+    ) -> anyhow::Result<WorkflowRun> {
+        let response = client
+            .get(format!("{GITHUB_API_URL}/actions/runs"))
+            .query(&[
+                ("branch", branch),
+                ("per_page", "1"),
+                ("status", "success"),
+            ])
+            .send()?;
+
+        let mut response: WorkflowRunsResponse = response.json()?;
+
+        response.workflow_runs.pop().ok_or_else(|| anyhow!(
+            "No successful workflow runs found for selected libwebrtc branch."
+        ))
+    }
+
+    /// Get libwebrtc build artifact from wokflow run.
+    fn artifact_metadata(
+        client: &reqwest::blocking::Client,
+        workflow_run: &WorkflowRun,
+    ) -> anyhow::Result<ArtifactMetadata> {
+        let response = client
+            .get(workflow_run.artifacts_url.as_str())
+            .query(&[("name", Self::artifact_name()?), ("per_page", "1")])
+            .send()?;
+
+        let mut response: ArtifactsResponse = response.json()?;
+
+        response.artifacts.pop().ok_or_else(|| anyhow!(
+            "Artifact for current target was not found in selected libwebrtc branch."
+        ))
+    }
+
+    /// Get name of the libwebrtc archive.
+    fn archive_name(
+        compression: ArtifactCompression,
+    ) -> anyhow::Result<String> {
+        let mut name = String::from("libwebrtc-");
+
+        #[cfg(target_os = "windows")]
+        name.push_str("windows-x64");
+        #[cfg(target_os = "linux")]
+        name.push_str("linux-x64");
+
+        match get_target()?.as_str() {
+            "aarch64-apple-darwin" => {
+                name.push_str("macos-arm64");
+            }
+            "x86_64-apple-darwin" => {
+                name.push_str("macos-x64");
+            }
+            _ => (),
+        }
+
+        let suffix = match compression {
+            ArtifactCompression::Zip => ".zip",
+            ArtifactCompression::GZip => ".tar.gz",
+        };
+
+        name.push_str(suffix);
+
+        Ok(name)
+    }
+
+    /// Get expected digest of current release archive.
+    fn release_digest() -> anyhow::Result<&'static str> {
+        Ok(match get_target()?.as_str() {
+            "aarch64-unknown-linux-gnu" => {
+                "2f8a49cea02b6f054d2496d23fe9ae709bb98bd4efe69ba9ca10c4644f77ba71"
+            }
+            "x86_64-unknown-linux-gnu" => {
+                "0e5915b7f98dcdd127e7845b05e1687b5819c3037f8ea29708351fc56c6b3868"
+            }
+            "aarch64-apple-darwin" => {
+                "cc581f5e8228e127ca9298855625fdd4f2a802098cb2601eecd121905470b1df"
+            }
+            "x86_64-apple-darwin" => {
+                "0f713b80858e834eca2687b4b18cb72f279265d65835c2b8b4d77883a862bc4b"
+            }
+            "x86_64-pc-windows-msvc" => {
+                "fa08c4aa9bb08cf5aed95a10bfcad15676b3ddbe0856201d436c7c7d25e3210f"
+            }
+            arch => return Err(anyhow::anyhow!("Unsupported target: {arch}")),
+        })
+    }
+
+    /// Get name of the artifact.
+    fn artifact_name() -> anyhow::Result<&'static str> {
+        Ok(match get_target()?.as_str() {
+            "aarch64-unknown-linux-gnu" => "build-linux-arm64",
+            "x86_64-unknown-linux-gnu" => "build-linux-x64",
+            "aarch64-apple-darwin" => "build-macos-arm64",
+            "x86_64-apple-darwin" => "build-macos-x64",
+            "x86_64-pc-windows-msvc" => "build-windows-x64",
+            arch => return Err(anyhow::anyhow!("Unsupported target: {arch}")),
+        })
+    }
 }
 
 /// Returns a list of all C++ sources that should be compiled.
