@@ -1149,7 +1149,6 @@ dependencies = [
  "regex-lite",
  "reqwest",
  "serde",
- "serde_json",
  "sha2",
  "tar",
  "walkdir",
