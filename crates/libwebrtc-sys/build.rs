@@ -180,7 +180,7 @@ static LIBWEBRTC_URL: &str = "https://github.com/instrumentisto/libwebrtc-bin";
 /// Release tag for downloading the [`libwebrtc-bin`].
 ///
 /// [`libwebrtc-bin`]: https://github.com/instrumentisto/libwebrtc-bin
-static LIBWEBRTC_RELEASE: &str = "137.0.7151.119";
+static LIBWEBRTC_RELEASE: &str = "138.0.7204.92";
 
 /// Base URL for the [`libwebrtc-bin`] GitHub API.
 ///
@@ -812,23 +812,23 @@ impl WebrtcRepository {
     }
 }
 
-/// Get expected digest of current release archive.
+/// Returns expected `libwebrtc` archives SHA-256 hashes.
 fn get_expected_libwebrtc_hash() -> anyhow::Result<&'static str> {
     Ok(match get_target()?.as_str() {
         "aarch64-unknown-linux-gnu" => {
-            "2f8a49cea02b6f054d2496d23fe9ae709bb98bd4efe69ba9ca10c4644f77ba71"
+            "c34f443c583959c1a04f35eb5121c4a137a8cb38b48ba0b13f4b0e381e013e0f"
         }
         "x86_64-unknown-linux-gnu" => {
-            "0e5915b7f98dcdd127e7845b05e1687b5819c3037f8ea29708351fc56c6b3868"
+            "3a9a969f87293f4ffdb7255c464851d716076131679465f4fd16bedffd4dd86c"
         }
         "aarch64-apple-darwin" => {
-            "cc581f5e8228e127ca9298855625fdd4f2a802098cb2601eecd121905470b1df"
+            "ca56ec93a14975d61bf201b52c1307b58894e8b1f5e34aac53c507a8c5546230"
         }
         "x86_64-apple-darwin" => {
-            "0f713b80858e834eca2687b4b18cb72f279265d65835c2b8b4d77883a862bc4b"
+            "29c33f13a2606b783c5e197aa6d29c0b54f593beedc4a92fb2b876f876210003"
         }
         "x86_64-pc-windows-msvc" => {
-            "fa08c4aa9bb08cf5aed95a10bfcad15676b3ddbe0856201d436c7c7d25e3210f"
+            "aa018da90d48e9decac8dae72b98202697869f268fd96e3d7930078e0488c082"
         }
         arch => return Err(anyhow::anyhow!("Unsupported target: {arch}")),
     })
