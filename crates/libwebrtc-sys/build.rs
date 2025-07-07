@@ -152,6 +152,7 @@ use std::ffi::OsString;
 #[cfg(target_os = "macos")]
 use std::process;
 use std::{
+    borrow::Cow,
     env, fs,
     fs::File,
     io::{BufReader, BufWriter, Read as _, Write as _},
@@ -167,7 +168,6 @@ use flate2::read::GzDecoder;
 use regex_lite::Regex;
 use serde::Deserialize;
 use sha2::{Digest as _, Sha256};
-use std::borrow::Cow;
 use tar::Archive;
 use walkdir::{DirEntry, WalkDir};
 use zip::ZipArchive;
@@ -582,6 +582,7 @@ impl Artifact {
         loop {
             let count = resp.read(&mut buffer)?;
             if count == 0 {
+                out_file.flush()?;
                 break;
             }
             hasher.update(&buffer[0..count]);
@@ -688,13 +689,15 @@ impl WebrtcRepository {
         match self {
             Self::Release => {
                 let name = Artifact::archive_name()?;
+                let download_url = format!(
+                    "{LIBWEBRTC_URL}/releases/download\
+                                    /{LIBWEBRTC_RELEASE}/{name}",
+                );
 
                 Ok(Artifact {
-                    download_url: format!(
-                        "{LIBWEBRTC_URL}/releases/download/{LIBWEBRTC_RELEASE}/{name}",
-                    ),
+                    download_url,
                     name,
-                    digest: Self::release_digest()?.into(),
+                    digest: release_digest()?.into(),
                     is_wrapped: false,
                 })
             }
@@ -704,8 +707,10 @@ impl WebrtcRepository {
                 let workflow_run = Self::workflow_run(&client, name.as_str())?;
                 let metadata = Self::artifact_metadata(&client, &workflow_run)?;
 
-                let response =
-                    client.get(metadata.archive_download_url).send()?;
+                let response = client
+                    .get(metadata.archive_download_url)
+                    .query(&[("archive_format", "zip")])
+                    .send()?;
 
                 let mut name = Self::artifact_name()?.to_string();
                 name.push_str(".zip");
@@ -716,9 +721,23 @@ impl WebrtcRepository {
                         .digest
                         .split(':')
                         .next_back()
-                        .ok_or_else(|| anyhow::anyhow!("Got invalid artifact digest from Github API."))?.to_owned()
+                        .ok_or_else(|| {
+                            anyhow::anyhow!(
+                                "Got invalid artifact digest from Github API."
+                            )
+                        })?
+                        .to_owned()
                         .into(),
-                    download_url: response.headers().get("Location").ok_or_else(|| anyhow::anyhow!("Location header is not set in response of GitHub API."))?.to_str()?.into(),
+                    download_url: response
+                        .headers()
+                        .get("Location")
+                        .ok_or_else(|| {
+                            anyhow::anyhow!(
+                                "Got invalid Location from Github API."
+                            )
+                        })?
+                        .to_str()?
+                        .into(),
                     is_wrapped: true,
                 })
             }
@@ -740,7 +759,7 @@ impl WebrtcRepository {
             .build()?)
     }
 
-    /// Get latest workflow run from branch of the libwebrtc repository.
+    /// Get latest workflow run from branch of the `libwebrtc` repository.
     fn workflow_run(
         client: &reqwest::blocking::Client,
         branch: &str,
@@ -773,31 +792,10 @@ impl WebrtcRepository {
 
         let mut response: ArtifactsResponse = response.json()?;
 
-        response.artifacts.pop().ok_or_else(|| anyhow!(
-            "Artifact for current target was not found in selected libwebrtc branch."
-        ))
-    }
-
-    /// Get expected digest of current release archive.
-    fn release_digest() -> anyhow::Result<&'static str> {
-        Ok(match get_target()?.as_str() {
-            "aarch64-unknown-linux-gnu" => {
-                "2f8a49cea02b6f054d2496d23fe9ae709bb98bd4efe69ba9ca10c4644f77ba71"
-            }
-            "x86_64-unknown-linux-gnu" => {
-                "0e5915b7f98dcdd127e7845b05e1687b5819c3037f8ea29708351fc56c6b3868"
-            }
-            "aarch64-apple-darwin" => {
-                "cc581f5e8228e127ca9298855625fdd4f2a802098cb2601eecd121905470b1df"
-            }
-            "x86_64-apple-darwin" => {
-                "0f713b80858e834eca2687b4b18cb72f279265d65835c2b8b4d77883a862bc4b"
-            }
-            "x86_64-pc-windows-msvc" => {
-                "fa08c4aa9bb08cf5aed95a10bfcad15676b3ddbe0856201d436c7c7d25e3210f"
-            }
-            arch => return Err(anyhow::anyhow!("Unsupported target: {arch}")),
-        })
+        response
+            .artifacts
+            .pop()
+            .ok_or_else(|| anyhow!("Artifact was not found in GitHub API."))
     }
 
     /// Get name of the branch artifact.
@@ -811,6 +809,28 @@ impl WebrtcRepository {
             arch => return Err(anyhow::anyhow!("Unsupported target: {arch}")),
         })
     }
+}
+
+/// Get expected digest of current release archive.
+fn release_digest() -> anyhow::Result<&'static str> {
+    Ok(match get_target()?.as_str() {
+        "aarch64-unknown-linux-gnu" => {
+            "2f8a49cea02b6f054d2496d23fe9ae709bb98bd4efe69ba9ca10c4644f77ba71"
+        }
+        "x86_64-unknown-linux-gnu" => {
+            "0e5915b7f98dcdd127e7845b05e1687b5819c3037f8ea29708351fc56c6b3868"
+        }
+        "aarch64-apple-darwin" => {
+            "cc581f5e8228e127ca9298855625fdd4f2a802098cb2601eecd121905470b1df"
+        }
+        "x86_64-apple-darwin" => {
+            "0f713b80858e834eca2687b4b18cb72f279265d65835c2b8b4d77883a862bc4b"
+        }
+        "x86_64-pc-windows-msvc" => {
+            "fa08c4aa9bb08cf5aed95a10bfcad15676b3ddbe0856201d436c7c7d25e3210f"
+        }
+        arch => return Err(anyhow::anyhow!("Unsupported target: {arch}")),
+    })
 }
 
 /// Returns a list of all C++ sources that should be compiled.
