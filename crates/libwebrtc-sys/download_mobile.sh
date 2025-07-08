@@ -53,7 +53,7 @@ if [[ "$WEBRTC_BRANCH" != "" ]] ; then
     unzip ./temp/libwebrtc-bin/libwebrtc-ios.zip -d ./temp/libwebrtc-bin
     cp -r ./temp/libwebrtc-bin/WebRTC.xcframework ./ios
 
-    cd ./example/ios
+    cd ./example/ios || exit
     pod update
   fi
 

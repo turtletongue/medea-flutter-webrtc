@@ -28,8 +28,6 @@ rootProject.allprojects {
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
 
-webrtc_branch = "$System.env.WEBRTC_BRANCH"
-
 android {
     namespace = "com.instrumentisto.medea_flutter_webrtc"
 
@@ -58,6 +56,8 @@ android {
     }
 
     dependencies {
+        def webrtc_branch = "$System.env.WEBRTC_BRANCH"
+
         if (webrtc_branch == "") {
             implementation "com.github.instrumentisto:libwebrtc-bin:138.0.7204.92@aar"
         } else {
