@@ -160,9 +160,11 @@ use std::{
     process::Command,
 };
 
-use anyhow::Context;
+use anyhow::Context as _;
 #[cfg(target_os = "linux")]
 use anyhow::anyhow;
+#[cfg(target_os = "linux")]
+use anyhow::bail;
 use flate2::read::GzDecoder;
 #[cfg(target_os = "linux")]
 use regex_lite::Regex;
@@ -713,11 +715,11 @@ impl WebrtcRepository {
                     .query(&[("archive_format", "zip")])
                     .send()?;
 
-                let mut name = Self::artifact_name()?.to_string();
-                name.push_str(".zip");
+                let mut artifact_name = Self::artifact_name()?.to_owned();
+                artifact_name.push_str(".zip");
 
                 Ok(Artifact {
-                    name,
+                    name: artifact_name,
                     digest: metadata
                         .digest
                         .split(':')
