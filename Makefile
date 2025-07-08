@@ -287,8 +287,7 @@ ifeq ($(shell which flutter_rust_bridge_codegen),)
 	                                          --vers=$(FLUTTER_RUST_BRIDGE_VER)
 else
 ifneq ($(strip $(shell flutter_rust_bridge_codegen --version | cut -d ' ' -f2)),$(FLUTTER_RUST_BRIDGE_VER))
-	cargo install flutter_rust_bridge_codegen --force \
-	                                          --locked \
+	cargo install flutter_rust_bridge_codegen --locked --force \
 	                                          --vers=$(FLUTTER_RUST_BRIDGE_VER)
 endif
 endif
