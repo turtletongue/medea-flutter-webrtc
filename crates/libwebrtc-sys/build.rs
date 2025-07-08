@@ -286,6 +286,7 @@ fn main() -> anyhow::Result<()> {
     println!("cargo:rerun-if-changed=src/bridge.rs");
     println!("cargo:rerun-if-changed=./lib");
     println!("cargo:rerun-if-env-changed=INSTALL_WEBRTC");
+    println!("cargo:rerun-if-env-changed=WEBRTC_BRANCH");
     println!("cargo:rerun-if-env-changed=INSTALL_OPENAL");
 
     Ok(())
