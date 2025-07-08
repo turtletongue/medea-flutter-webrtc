@@ -160,9 +160,9 @@ use std::{
     process::Command,
 };
 
+use anyhow::Context;
 #[cfg(target_os = "linux")]
 use anyhow::anyhow;
-use anyhow::{Context, bail};
 use flate2::read::GzDecoder;
 #[cfg(target_os = "linux")]
 use regex_lite::Regex;
@@ -776,7 +776,7 @@ impl WebrtcRepository {
 
         let mut response: WorkflowRunsResponse = response.json()?;
 
-        response.workflow_runs.pop().ok_or_else(|| anyhow!(
+        response.workflow_runs.pop().ok_or_else(|| anyhow::anyhow!(
             "No successful workflow runs found for selected libwebrtc branch."
         ))
     }
@@ -793,10 +793,9 @@ impl WebrtcRepository {
 
         let mut response: ArtifactsResponse = response.json()?;
 
-        response
-            .artifacts
-            .pop()
-            .ok_or_else(|| anyhow!("Artifact was not found in GitHub API."))
+        response.artifacts.pop().ok_or_else(|| {
+            anyhow::anyhow!("Artifact was not found in GitHub API.")
+        })
     }
 
     /// Get name of the branch artifact.
