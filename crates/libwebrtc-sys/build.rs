@@ -639,7 +639,9 @@ struct ArtifactMetadata {
     archive_download_url: String,
 }
 
-/// Response from list artifacts endpoint of GitHub API.
+/// Response from list artifacts [endpoint][1] of GitHub API.
+///
+/// [1]: https://docs.github.com/en/rest/actions/artifacts
 #[derive(Deserialize)]
 struct ArtifactsResponse {
     /// List of artifacts metadata.
@@ -653,7 +655,9 @@ struct WorkflowRun {
     artifacts_url: String,
 }
 
-/// Response from list workflow runs endpoint of GitHub API.
+/// Response from list workflow runs [endpoint][1] of GitHub API.
+///
+/// [1]: https://docs.github.com/en/rest/actions/workflow-runs
 #[derive(Deserialize)]
 struct WorkflowRunsResponse {
     /// List of workflow runs.
