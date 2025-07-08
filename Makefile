@@ -147,6 +147,7 @@ flutter.test.desktop:
 #	make flutter.test.mobile [device=<device-id>] [debug=(no|yes)]
 
 flutter.test.mobile:
+    bash ./download_mobile_libwebrtc.sh && \
 	cd example/ && \
 	flutter drive --driver=test_driver/integration_driver.dart \
 	              --target=integration_test/webrtc_test.dart \

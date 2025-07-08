@@ -19,11 +19,16 @@ rootProject.allprojects {
         google()
         mavenCentral()
         maven { url 'https://instrumentisto.github.io/libwebrtc-bin/android' }
+        flatDir {
+            dirs "libs"
+        }
     }
 }
 
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
+
+webrtc_branch = "$System.env.WEBRTC_BRANCH"
 
 android {
     namespace = "com.instrumentisto.medea_flutter_webrtc"
@@ -53,6 +58,10 @@ android {
     }
 
     dependencies {
-        implementation "com.github.instrumentisto:libwebrtc-bin:138.0.7204.92@aar"
+        if (webrtc_branch == "") {
+            implementation "com.github.instrumentisto:libwebrtc-bin:138.0.7204.92@aar"
+        } else {
+            implementation(name: "libwebrtc-bin-${webrtc_branch}", ext: 'aar')
+        }
     }
 }
