@@ -558,6 +558,8 @@ impl Artifact {
         let temp_dir = manifest_path.join("temp");
         let archive = temp_dir.join(&self.name);
 
+        println!("ARTIFACT DIGEST: {}", self.digest);
+
         // Force download if `INSTALL_WEBRTC=1`.
         if env::var("INSTALL_WEBRTC").as_deref().unwrap_or("0") == "0" {
             // Skip download if already downloaded and checksum matches.

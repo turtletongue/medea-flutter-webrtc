@@ -240,7 +240,7 @@ ifeq ($(platform),windows)
 endif
 define cargo.build.target
 	$(eval target := $(strip $(1)))
-	cargo build -p medea-flutter-webrtc-native --target $(target) \
+	cargo build -p medea-flutter-webrtc-native --target $(target) -vv \
 		$(if $(call eq,$(debug),no),--release,)
 endef
 
