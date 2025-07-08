@@ -9,6 +9,7 @@ import 'dart:convert';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 import 'api.dart';
+import 'api/media_info.dart';
 import 'api/stats.dart';
 import 'api/stats/ice_role.dart';
 import 'api/stats/rtc_ice_candidate_stats.dart';

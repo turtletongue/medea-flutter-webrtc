@@ -1,5 +1,5 @@
-//! Statistics for the media produced by a [MediaStreamTrack][1]
-//! related to kind of the track.
+//! Statistics for the media produced by a [MediaStreamTrack][1] related to its
+//! kind.
 //!
 //! [1]: https://w3.org/TR/mediacapture-streams#mediastreamtrack
 use libwebrtc_sys as sys;

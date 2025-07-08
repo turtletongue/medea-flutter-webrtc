@@ -1,5 +1,6 @@
 //! API surface and implementation for Flutter.
 
+pub mod media_info;
 pub mod stats;
 
 use std::{
@@ -14,11 +15,14 @@ use std::{
 use flutter_rust_bridge::for_generated::FLUTTER_RUST_BRIDGE_RUNTIME_VERSION;
 use libwebrtc_sys as sys;
 
-pub use self::stats::{
-    CandidateType, IceCandidateStats, IceRole, Protocol, RtcIceCandidateStats,
-    RtcInboundRtpStreamMediaType, RtcMediaSourceStatsMediaType,
-    RtcOutboundRtpStreamStatsMediaType, RtcStats,
-    RtcStatsIceCandidatePairState, RtcStatsType, get_peer_stats,
+pub use self::{
+    media_info::{MediaDeviceInfo, MediaDeviceKind, MediaDisplayInfo},
+    stats::{
+        CandidateType, IceCandidateStats, IceRole, Protocol,
+        RtcIceCandidateStats, RtcInboundRtpStreamMediaType,
+        RtcMediaSourceStatsMediaType, RtcOutboundRtpStreamStatsMediaType,
+        RtcStats, RtcStatsIceCandidatePairState, RtcStatsType, get_peer_stats,
+    },
 };
 // Re-exporting since it is used in the generated code.
 pub use crate::{
@@ -820,19 +824,6 @@ impl From<sys::PeerConnectionState> for PeerConnectionState {
     }
 }
 
-/// Possible kinds of media devices.
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum MediaDeviceKind {
-    /// Audio input device (for example, a microphone).
-    AudioInput,
-
-    /// Audio output device (for example, a pair of headphones).
-    AudioOutput,
-
-    /// Video input device (for example, a webcam).
-    VideoInput,
-}
-
 /// Indicator of the current [MediaStreamTrackState][0] of a
 /// [`MediaStreamTrack`].
 ///
@@ -1027,29 +1018,6 @@ pub struct RtcSessionDescription {
 
     /// Type of this [`RtcSessionDescription`].
     pub kind: SdpType,
-}
-
-/// Information describing a single media input or output device.
-#[derive(Debug)]
-pub struct MediaDeviceInfo {
-    /// Unique identifier for the represented device.
-    pub device_id: String,
-
-    /// Kind of the represented device.
-    pub kind: MediaDeviceKind,
-
-    /// Label describing the represented device.
-    pub label: String,
-}
-
-/// Information describing a display.
-#[derive(Debug)]
-pub struct MediaDisplayInfo {
-    /// Unique identifier of the device representing the display.
-    pub device_id: String,
-
-    /// Title describing the represented display.
-    pub title: Option<String>,
 }
 
 /// [MediaStreamConstraints], used to instruct what sort of

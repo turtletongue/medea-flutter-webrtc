@@ -1,4 +1,4 @@
-//! State of a candidate from the checklist
+//! State of a candidate from a checklist.
 
 use libwebrtc_sys as sys;
 

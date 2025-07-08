@@ -1248,7 +1248,7 @@ impl SseDecode for Vec<String> {
     }
 }
 
-impl SseDecode for Vec<crate::api::MediaDeviceInfo> {
+impl SseDecode for Vec<crate::api::media_info::MediaDeviceInfo> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
@@ -1256,13 +1256,15 @@ impl SseDecode for Vec<crate::api::MediaDeviceInfo> {
         let mut len_ = <i32>::sse_decode(deserializer);
         let mut ans_ = vec![];
         for idx_ in 0..len_ {
-            ans_.push(<crate::api::MediaDeviceInfo>::sse_decode(deserializer));
+            ans_.push(<crate::api::media_info::MediaDeviceInfo>::sse_decode(
+                deserializer,
+            ));
         }
         return ans_;
     }
 }
 
-impl SseDecode for Vec<crate::api::MediaDisplayInfo> {
+impl SseDecode for Vec<crate::api::media_info::MediaDisplayInfo> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
@@ -1270,7 +1272,9 @@ impl SseDecode for Vec<crate::api::MediaDisplayInfo> {
         let mut len_ = <i32>::sse_decode(deserializer);
         let mut ans_ = vec![];
         for idx_ in 0..len_ {
-            ans_.push(<crate::api::MediaDisplayInfo>::sse_decode(deserializer));
+            ans_.push(<crate::api::media_info::MediaDisplayInfo>::sse_decode(
+                deserializer,
+            ));
         }
         return ans_;
     }
@@ -1474,16 +1478,16 @@ impl SseDecode for Vec<crate::api::VideoCodecInfo> {
     }
 }
 
-impl SseDecode for crate::api::MediaDeviceInfo {
+impl SseDecode for crate::api::media_info::MediaDeviceInfo {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
     ) -> Self {
         let mut var_deviceId = <String>::sse_decode(deserializer);
         let mut var_kind =
-            <crate::api::MediaDeviceKind>::sse_decode(deserializer);
+            <crate::api::media_info::MediaDeviceKind>::sse_decode(deserializer);
         let mut var_label = <String>::sse_decode(deserializer);
-        return crate::api::MediaDeviceInfo {
+        return crate::api::media_info::MediaDeviceInfo {
             device_id: var_deviceId,
             kind: var_kind,
             label: var_label,
@@ -1491,29 +1495,29 @@ impl SseDecode for crate::api::MediaDeviceInfo {
     }
 }
 
-impl SseDecode for crate::api::MediaDeviceKind {
+impl SseDecode for crate::api::media_info::MediaDeviceKind {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
     ) -> Self {
         let mut inner = <i32>::sse_decode(deserializer);
         return match inner {
-            0 => crate::api::MediaDeviceKind::AudioInput,
-            1 => crate::api::MediaDeviceKind::AudioOutput,
-            2 => crate::api::MediaDeviceKind::VideoInput,
+            0 => crate::api::media_info::MediaDeviceKind::AudioInput,
+            1 => crate::api::media_info::MediaDeviceKind::AudioOutput,
+            2 => crate::api::media_info::MediaDeviceKind::VideoInput,
             _ => unreachable!("Invalid variant for MediaDeviceKind: {}", inner),
         };
     }
 }
 
-impl SseDecode for crate::api::MediaDisplayInfo {
+impl SseDecode for crate::api::media_info::MediaDisplayInfo {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(
         deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer,
     ) -> Self {
         let mut var_deviceId = <String>::sse_decode(deserializer);
         let mut var_title = <Option<String>>::sse_decode(deserializer);
-        return crate::api::MediaDisplayInfo {
+        return crate::api::media_info::MediaDisplayInfo {
             device_id: var_deviceId,
             title: var_title,
         };
@@ -3301,7 +3305,7 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::IceTransportsType>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::MediaDeviceInfo {
+impl flutter_rust_bridge::IntoDart for crate::api::media_info::MediaDeviceInfo {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
             self.device_id.into_into_dart().into_dart(),
@@ -3312,18 +3316,18 @@ impl flutter_rust_bridge::IntoDart for crate::api::MediaDeviceInfo {
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::MediaDeviceInfo
+    for crate::api::media_info::MediaDeviceInfo
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::MediaDeviceInfo>
-    for crate::api::MediaDeviceInfo
+impl flutter_rust_bridge::IntoIntoDart<crate::api::media_info::MediaDeviceInfo>
+    for crate::api::media_info::MediaDeviceInfo
 {
-    fn into_into_dart(self) -> crate::api::MediaDeviceInfo {
+    fn into_into_dart(self) -> crate::api::media_info::MediaDeviceInfo {
         self
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::MediaDeviceKind {
+impl flutter_rust_bridge::IntoDart for crate::api::media_info::MediaDeviceKind {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         match self {
             Self::AudioInput => 0.into_dart(),
@@ -3334,18 +3338,20 @@ impl flutter_rust_bridge::IntoDart for crate::api::MediaDeviceKind {
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::MediaDeviceKind
+    for crate::api::media_info::MediaDeviceKind
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::MediaDeviceKind>
-    for crate::api::MediaDeviceKind
+impl flutter_rust_bridge::IntoIntoDart<crate::api::media_info::MediaDeviceKind>
+    for crate::api::media_info::MediaDeviceKind
 {
-    fn into_into_dart(self) -> crate::api::MediaDeviceKind {
+    fn into_into_dart(self) -> crate::api::media_info::MediaDeviceKind {
         self
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::MediaDisplayInfo {
+impl flutter_rust_bridge::IntoDart
+    for crate::api::media_info::MediaDisplayInfo
+{
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
             self.device_id.into_into_dart().into_dart(),
@@ -3355,13 +3361,13 @@ impl flutter_rust_bridge::IntoDart for crate::api::MediaDisplayInfo {
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::MediaDisplayInfo
+    for crate::api::media_info::MediaDisplayInfo
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::MediaDisplayInfo>
-    for crate::api::MediaDisplayInfo
+impl flutter_rust_bridge::IntoIntoDart<crate::api::media_info::MediaDisplayInfo>
+    for crate::api::media_info::MediaDisplayInfo
 {
-    fn into_into_dart(self) -> crate::api::MediaDisplayInfo {
+    fn into_into_dart(self) -> crate::api::media_info::MediaDisplayInfo {
         self
     }
 }
@@ -4796,7 +4802,7 @@ impl SseEncode for Vec<String> {
     }
 }
 
-impl SseEncode for Vec<crate::api::MediaDeviceInfo> {
+impl SseEncode for Vec<crate::api::media_info::MediaDeviceInfo> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
@@ -4804,12 +4810,14 @@ impl SseEncode for Vec<crate::api::MediaDeviceInfo> {
     ) {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
-            <crate::api::MediaDeviceInfo>::sse_encode(item, serializer);
+            <crate::api::media_info::MediaDeviceInfo>::sse_encode(
+                item, serializer,
+            );
         }
     }
 }
 
-impl SseEncode for Vec<crate::api::MediaDisplayInfo> {
+impl SseEncode for Vec<crate::api::media_info::MediaDisplayInfo> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
@@ -4817,7 +4825,9 @@ impl SseEncode for Vec<crate::api::MediaDisplayInfo> {
     ) {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
-            <crate::api::MediaDisplayInfo>::sse_encode(item, serializer);
+            <crate::api::media_info::MediaDisplayInfo>::sse_encode(
+                item, serializer,
+            );
         }
     }
 }
@@ -5003,19 +5013,21 @@ impl SseEncode for Vec<crate::api::VideoCodecInfo> {
     }
 }
 
-impl SseEncode for crate::api::MediaDeviceInfo {
+impl SseEncode for crate::api::media_info::MediaDeviceInfo {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
         serializer: &mut flutter_rust_bridge::for_generated::SseSerializer,
     ) {
         <String>::sse_encode(self.device_id, serializer);
-        <crate::api::MediaDeviceKind>::sse_encode(self.kind, serializer);
+        <crate::api::media_info::MediaDeviceKind>::sse_encode(
+            self.kind, serializer,
+        );
         <String>::sse_encode(self.label, serializer);
     }
 }
 
-impl SseEncode for crate::api::MediaDeviceKind {
+impl SseEncode for crate::api::media_info::MediaDeviceKind {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
@@ -5023,9 +5035,9 @@ impl SseEncode for crate::api::MediaDeviceKind {
     ) {
         <i32>::sse_encode(
             match self {
-                crate::api::MediaDeviceKind::AudioInput => 0,
-                crate::api::MediaDeviceKind::AudioOutput => 1,
-                crate::api::MediaDeviceKind::VideoInput => 2,
+                crate::api::media_info::MediaDeviceKind::AudioInput => 0,
+                crate::api::media_info::MediaDeviceKind::AudioOutput => 1,
+                crate::api::media_info::MediaDeviceKind::VideoInput => 2,
                 _ => {
                     unimplemented!("");
                 }
@@ -5035,7 +5047,7 @@ impl SseEncode for crate::api::MediaDeviceKind {
     }
 }
 
-impl SseEncode for crate::api::MediaDisplayInfo {
+impl SseEncode for crate::api::media_info::MediaDisplayInfo {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(
         self,
