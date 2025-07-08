@@ -300,8 +300,8 @@ jobs:
           sudo apt-get install -y libgtk-3-dev libpulse-dev
         if: ${{ matrix.platform == 'linux' }}
 
-      - name: Install `${{ matrix.platform }}` platform dependencies
-      - run: |
+      - name: Install `${{ matrix.platform }}` build dependencies
+        run: |
           sudo apt-get update
           sudo apt-get install -y jq
         if: ${{ matrix.platform == 'android'
