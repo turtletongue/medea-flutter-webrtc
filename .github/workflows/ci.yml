@@ -302,8 +302,7 @@ jobs:
 
       - name: Install `${{ matrix.platform }}` build dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y jq
+          brew install jq
         if: ${{ matrix.platform == 'android'
           || matrix.platform == 'ios' }}
 

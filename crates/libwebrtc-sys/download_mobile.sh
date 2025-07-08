@@ -38,8 +38,6 @@ if [[ "$WEBRTC_BRANCH" != "" ]] ; then
 
   unzip ./temp/libwebrtc-bin.zip -d ./temp/libwebrtc-bin
 
-  echo "Unzipped"
-
   if [[ "$PLATFORM" == "android" ]] ; then
     IMPLEMENTATION="libwebrtc-bin-$WEBRTC_BRANCH"
 
