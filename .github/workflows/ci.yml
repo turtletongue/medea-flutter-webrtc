@@ -2,10 +2,10 @@ name: CI
 
 on:
   push:
-    branches: ["main"]
-    tags: ["*"]
+    branches: [ "main" ]
+    tags: [ "*" ]
   pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -13,6 +13,7 @@ concurrency:
 
 env:
   RUST_BACKTRACE: 1
+  WEBRTC_BRANCH: 137.0.7151.55
 
 jobs:
 
@@ -54,8 +55,8 @@ jobs:
           - macos
           - windows
     runs-on: ${{ (matrix.platform == 'linux' &&   'ubuntu-latest')
-              || (matrix.platform == 'windows' && 'windows-latest')
-              ||                                  'macos-latest' }}
+      || (matrix.platform == 'windows' && 'windows-latest')
+      ||                                  'macos-latest' }}
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@v1
@@ -143,7 +144,7 @@ jobs:
           - macos
           - windows
     runs-on: ${{ (matrix.platform == 'macos' && 'macos-13')
-              ||                                'windows-latest' }}
+      ||                                'windows-latest' }}
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@v1
@@ -205,7 +206,7 @@ jobs:
 
   build-flutter:
     name: flutter build (${{ matrix.platform }})
-    needs: ["build-rust", "build-rust-linux"]
+    needs: [ "build-rust", "build-rust-linux" ]
     strategy:
       fail-fast: false
       matrix:
@@ -214,8 +215,8 @@ jobs:
           - macos
           - windows
     runs-on: ${{ (matrix.platform == 'macos'   && 'macos-latest')
-              || (matrix.platform == 'windows' && 'windows-latest')
-              ||                                  'ubuntu-latest' }}
+      || (matrix.platform == 'windows' && 'windows-latest')
+      ||                                  'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
@@ -250,7 +251,7 @@ jobs:
       - name: Parse release version
         id: release
         run: echo "version=${GITHUB_REF#refs/tags/}"
-             >> $GITHUB_OUTPUT
+          >> $GITHUB_OUTPUT
 
       - name: Ensure CHANGELOG date is today
         run: |
@@ -264,7 +265,7 @@ jobs:
 
   test-flutter:
     name: test (example, ${{ matrix.platform }})
-    needs: ["build-rust", "build-rust-linux"]
+    needs: [ "build-rust", "build-rust-linux" ]
     strategy:
       fail-fast: false
       matrix:
@@ -275,24 +276,24 @@ jobs:
           - macos
           - windows
     runs-on: ${{ (matrix.platform == 'linux' &&   'ubuntu-latest')
-              || (matrix.platform == 'windows' && 'windows-latest')
-              || (matrix.platform == 'ios' &&     'macos-latest')
-              ||                                  'macos-13' }}
+      || (matrix.platform == 'windows' && 'windows-latest')
+      || (matrix.platform == 'ios' &&     'macos-latest')
+      ||                                  'macos-13' }}
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@v1
         with:
           toolchain: stable
         if: ${{ matrix.platform != 'android'
-             && matrix.platform != 'ios' }}
+          && matrix.platform != 'ios' }}
       - run: make rustup.targets only=${{ matrix.platform }}
         if: ${{ matrix.platform != 'android'
-             && matrix.platform != 'ios' }}
+          && matrix.platform != 'ios' }}
 
       - uses: subosito/flutter-action@v2
       - run: flutter config --enable-${{ matrix.platform }}-desktop
         if: ${{ matrix.platform != 'android'
-             && matrix.platform != 'ios' }}
+          && matrix.platform != 'ios' }}
 
       - name: Install `${{ matrix.platform }}` platform dependencies
         run: |
@@ -305,7 +306,7 @@ jobs:
           name: build-rust-${{ matrix.platform }}
           path: ${{ matrix.platform }}/rust/
         if: ${{ matrix.platform != 'android'
-             && matrix.platform != 'ios' }}
+          && matrix.platform != 'ios' }}
 
       - name: Test on `${{ matrix.platform }}` platform with emulator
         uses: reactivecircus/android-emulator-runner@v2
@@ -361,7 +362,7 @@ jobs:
         if: ${{ matrix.platform == 'ios' }}
       - name: Test on `${{ matrix.platform }}` platform with simulator
         run: make flutter.test.mobile device=${{ steps.simulator.outputs.udid }}
-                                      debug=yes
+          debug=yes
         if: ${{ matrix.platform == 'ios' }}
 
       - name: Test on `${{ matrix.platform }}` platform with Xvfb
@@ -371,7 +372,7 @@ jobs:
       - name: Test on `${{ matrix.platform }}` platform
         run: make flutter.test.desktop device=${{ matrix.platform }}
         if: ${{ matrix.platform == 'macos'
-             || matrix.platform == 'windows' }}
+          || matrix.platform == 'windows' }}
 
 
 
@@ -389,8 +390,8 @@ jobs:
           - macos
           - windows
     runs-on: ${{ (matrix.platform == 'macos'   && 'macos-latest')
-              || (matrix.platform == 'windows' && 'windows-latest')
-              ||                                  'ubuntu-latest' }}
+      || (matrix.platform == 'windows' && 'windows-latest')
+      ||                                  'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@v1
@@ -423,9 +424,9 @@ jobs:
   release-dart:
     name: dart pub publish (pub.dev)
     if: ${{ startsWith(github.ref, 'refs/tags/')
-         || github.ref_name == 'main'
-         || (github.event_name == 'pull_request'
-             && github.event.pull_request.head.repo.owner.login == 'instrumentisto') }}
+      || github.ref_name == 'main'
+      || (github.event_name == 'pull_request'
+      && github.event.pull_request.head.repo.owner.login == 'instrumentisto') }}
     needs:
       - build-rust
       - build-rust-linux
@@ -448,11 +449,11 @@ jobs:
       - name: Parse pubspec version
         id: pubspec
         run: echo "version=$(grep -m1 'version:' pubspec.yaml | cut -d' ' -f2)"
-             >> $GITHUB_OUTPUT
+          >> $GITHUB_OUTPUT
       - name: Parse release version
         id: release
         run: echo "version=${GITHUB_REF#refs/tags/}"
-             >> $GITHUB_OUTPUT
+          >> $GITHUB_OUTPUT
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
       - name: Verify release version matches pubspec version
         run: |
@@ -472,12 +473,12 @@ jobs:
       - name: Check whether should be skipped
         id: skip
         run: echo "no=${{ !(
-               (!startsWith(github.ref, 'refs/tags/')
-                && !contains(steps.pubspec.outputs.version, '-'))
-               ||
-               (github.event_name == 'pull_request'
-                && !contains(steps.commit.outputs.message, '[publish]'))
-             ) }}" >> $GITHUB_OUTPUT
+          (!startsWith(github.ref, 'refs/tags/')
+          && !contains(steps.pubspec.outputs.version, '-'))
+          ||
+          (github.event_name == 'pull_request'
+          && !contains(steps.commit.outputs.message, '[publish]'))
+          ) }}" >> $GITHUB_OUTPUT
 
       - uses: subosito/flutter-action@v2
         if: ${{ steps.skip.outputs.no == 'true' }}
@@ -503,7 +504,7 @@ jobs:
           sed -i "s/^version: \(.*\)$/version: \1+rev.${{ steps.commit.outputs.sha }}/g" \
               pubspec.yaml
         if: ${{ steps.skip.outputs.no == 'true'
-             && !startsWith(github.ref, 'refs/tags/') }}
+          && !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Login to pub.dev
         run: |
@@ -523,12 +524,12 @@ jobs:
           rm -rf ~/pub-credentials.json \
                  ${XDG_CONFIG_HOME:-${HOME:-default}}/dart/pub-credentials.json
         if: ${{ always()
-             && steps.skip.outputs.no == 'true' }}
+          && steps.skip.outputs.no == 'true' }}
 
   release-github:
     name: release (GitHub)
     if: ${{ startsWith(github.ref, 'refs/tags/') }}
-    needs: ["release-dart"]
+    needs: [ "release-dart" ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -536,11 +537,11 @@ jobs:
       - name: Parse release version
         id: release
         run: echo "version=${GITHUB_REF#refs/tags/}"
-             >> $GITHUB_OUTPUT
+          >> $GITHUB_OUTPUT
       - name: Parse CHANGELOG link
         id: changelog
         run: echo "link=${{ github.server_url }}/${{ github.repository }}/blob/${{ steps.release.outputs.version }}/CHANGELOG.md#$(sed -n '/^## \[${{ steps.release.outputs.version }}\]/{s/^## \[\(.*\)\][^0-9]*\([0-9].*\)/\1--\2/;s/[^0-9a-z-]*//g;p;}' CHANGELOG.md)"
-             >> $GITHUB_OUTPUT
+          >> $GITHUB_OUTPUT
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
