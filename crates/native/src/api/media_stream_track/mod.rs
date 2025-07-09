@@ -29,7 +29,7 @@ use crate::{
     frb_generated::StreamSink,
     pc::PeerConnectionId,
     renderer::FrameHandler,
-    user_media::TrackOrigin,
+    media::TrackOrigin,
 };
 
 /// Representation of a single media track within a [MediaStream].
