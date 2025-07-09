@@ -136,7 +136,7 @@ jobs:
         with:
           toolchain: stable
 
-      - name: Install dependencies
+      - name: Install Linux dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -148,13 +148,14 @@ jobs:
           sudo update-alternatives --config lld
           sudo update-alternatives --install /usr/bin/ld.lld ld.lld /usr/bin/ld.lld-19 100
           sudo update-alternatives --config ld.lld
-          cargo install cargo-expand
+
+      - run: cargo install cargo-expand
 
       - run: make cargo.gen
 
       - run: make flutter.fmt
 
-      - run: ! git status --short | read -t 1 -N 1
+      - run: git status --short | (! read -t 1 -N 1)
 
 
 
