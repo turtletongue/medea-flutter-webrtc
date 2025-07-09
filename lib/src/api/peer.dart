@@ -16,6 +16,7 @@ import 'bridge/api.dart' as ffi;
 import 'bridge/api/transceiver.dart' as ffi;
 import 'bridge/api/transceiver/direction.dart' as ffi;
 import 'bridge/api/transceiver/init.dart' as ffi;
+import 'bridge/api/stats.dart' as ffi;
 import 'bridge/frb_generated.dart';
 import 'bridge/lib.dart';
 import 'channel.dart';
