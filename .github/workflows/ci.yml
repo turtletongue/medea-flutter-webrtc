@@ -136,6 +136,8 @@ jobs:
         with:
           toolchain: stable
 
+      - run: cargo install cargo-expand
+
       - run: make cargo.gen
 
       - run: make flutter.fmt
