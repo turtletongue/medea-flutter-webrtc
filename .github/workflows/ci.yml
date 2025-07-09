@@ -127,6 +127,21 @@ jobs:
 
       - run: make swift.fmt check=yes dockerized=no
 
+  codegen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+      - uses: dtolnay/rust-toolchain@v1
+        with:
+          toolchain: stable
+
+      - run: make cargo.gen
+
+      - run: make flutter.fmt
+
+      - run: ! git status --short | read -t 1 -N 1
+
 
 
 
