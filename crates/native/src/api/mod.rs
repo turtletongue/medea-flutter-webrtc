@@ -15,8 +15,8 @@ use libwebrtc_sys as sys;
 pub use self::{
     media::{
         AudioConstraints, AudioProcessingConstraints, MediaStreamConstraints,
-        VideoConstraints, enable_fake_media, enumerate_devices, enumerate_displays,
-        is_fake_media,
+        VideoConstraints, enable_fake_media, enumerate_devices,
+        enumerate_displays, is_fake_media,
     },
     media_info::{MediaDeviceInfo, MediaDeviceKind, MediaDisplayInfo},
     stats::{
