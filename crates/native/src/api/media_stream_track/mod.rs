@@ -1,6 +1,6 @@
-//! Representation of the [MediaStreamTrack][1].
+//! Representation of a [MediaStreamTrack][0].
 //!
-//! [1]: https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack
+//! [0]: https://w3.org/TR/mediacapture-streams#dom-mediastreamtrack
 
 pub mod audio_processing_config;
 pub mod media_type;
@@ -27,9 +27,9 @@ use crate::{
         WEBRTC,
     },
     frb_generated::StreamSink,
+    media::TrackOrigin,
     pc::PeerConnectionId,
     renderer::FrameHandler,
-    media::TrackOrigin,
 };
 
 /// Representation of a single media track within a [MediaStream].

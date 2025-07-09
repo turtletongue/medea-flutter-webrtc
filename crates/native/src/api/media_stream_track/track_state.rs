@@ -1,4 +1,4 @@
-//! Current state of the [`MediaStreamTrack`].
+//! Current state of a [`MediaStreamTrack`].
 
 use libwebrtc_sys as sys;
 

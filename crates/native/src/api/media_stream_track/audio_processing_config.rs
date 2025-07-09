@@ -1,4 +1,5 @@
 //! Configuration of audio processing.
+
 use libwebrtc_sys as sys;
 
 #[cfg(doc)]

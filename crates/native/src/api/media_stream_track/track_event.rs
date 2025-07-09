@@ -1,9 +1,9 @@
-//! Representation of state changes in the [`MediaStreamTrack`].
+//! Representation of state changes in a [`MediaStreamTrack`].
 
 #[cfg(doc)]
 use crate::api::MediaStreamTrack;
 
-/// Indicator of the current state of a [`MediaStreamTrack`].
+/// Indication of the current state of a [`MediaStreamTrack`].
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum TrackEvent {
     /// Ended event of the [`MediaStreamTrack`] interface is fired when playback
