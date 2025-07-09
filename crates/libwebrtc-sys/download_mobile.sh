@@ -23,12 +23,22 @@ if [[ "$WEBRTC_BRANCH" != "" ]] ; then
     jq -r '.workflow_runs.[0].artifacts_url'
   )
 
+  if [[ "$ARTIFACTS_URL" == "null" ]] ; then
+    echo "Workflow run wasn't found for libwebrtc-bin branch: '$WEBRTC_BRANCH'"
+    exit 1
+  fi
+
   DOWNLOAD_URL=$(
     curl -A instrumentisto \
          -H "Authorization: Bearer $GH_TOKEN" \
          -s "$ARTIFACTS_URL?name=build-$PLATFORM&per_page=1" |
     jq -r '.artifacts.[0].archive_download_url'
   )
+
+  if [[ "$DOWNLOAD_URL" == "null" ]] ; then
+    echo "Artifact wasn't found for libwebrtc-bin branch: '$WEBRTC_BRANCH'"
+    exit 1
+  fi
 
   mkdir -p ./temp
 
@@ -54,6 +64,7 @@ if [[ "$WEBRTC_BRANCH" != "" ]] ; then
     cp -r ./temp/libwebrtc-bin/WebRTC.xcframework ./ios
 
     cd ./example/ios || exit
+    flutter pub get
     pod update
   fi
 
