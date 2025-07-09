@@ -1,7 +1,7 @@
 //! API surface and implementation for Flutter.
 
-pub mod rtc_rtp_send_parameters;
 pub mod media_info;
+pub mod rtc_rtp_send_parameters;
 pub mod stats;
 
 use std::{
@@ -18,13 +18,13 @@ use libwebrtc_sys as sys;
 
 pub use self::{
     media_info::{MediaDeviceInfo, MediaDeviceKind, MediaDisplayInfo},
+    rtc_rtp_send_parameters::RtcRtpSendParameters,
     stats::{
         CandidateType, IceCandidateStats, IceRole, Protocol,
         RtcIceCandidateStats, RtcInboundRtpStreamMediaType,
         RtcMediaSourceStatsMediaType, RtcOutboundRtpStreamStatsMediaType,
         RtcStats, RtcStatsIceCandidatePairState, RtcStatsType, get_peer_stats,
     },
-    rtc_rtp_send_parameters::RtcRtpSendParameters,
 };
 // Re-exporting since it is used in the generated code.
 pub use crate::{
