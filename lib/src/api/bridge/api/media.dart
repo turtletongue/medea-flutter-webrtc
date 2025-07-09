@@ -5,8 +5,8 @@
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-import '../api.dart';
 import '../frb_generated.dart';
+import 'media_info.dart';
 
 /// Configures media acquisition to use fake devices instead of actual camera
 /// and microphone.
