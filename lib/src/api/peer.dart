@@ -21,6 +21,7 @@ import 'bridge/api/peer/rtc_configuration/ice_transports_type.dart' as ffi;
 import 'bridge/api/peer/rtc_configuration/rtc_ice_server.dart' as ffi;
 import 'bridge/api/peer/rtc_session_description.dart' as ffi;
 import 'bridge/api/peer/video_codec_info.dart' as ffi;
+import 'bridge/api/stats.dart' as ffi;
 import 'bridge/frb_generated.dart';
 import 'bridge/lib.dart';
 import 'channel.dart';
