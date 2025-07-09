@@ -9,15 +9,28 @@ use anyhow::Context as _;
 use derive_more::{AsRef, with_trait::Into as _};
 use libwebrtc_sys as sys;
 
+#[cfg(doc)]
+use super::Track;
 use crate::{
     AudioDeviceId, PeerConnection, VideoDeviceId, api,
     frb_generated::StreamSink,
 };
 
-/// Possible kinds of media track's source.
+/// Possible kinds of media [`Track`]'s source.
 pub enum MediaTrackSource<T> {
+    /// Local source.
     Local(Arc<T>),
-    Remote { mid: String, peer: Weak<PeerConnection> },
+
+    /// Remote sources.
+    Remote {
+        /// [mid] of the source.
+        ///
+        /// [mid]: https://w3.org/TR/webrtc#dom-rtptransceiver-mid
+        mid: String,
+
+        /// [`PeerConnection`] of the source.
+        peer: Weak<PeerConnection>,
+    },
 }
 
 /// [`sys::AudioSourceOnAudioLevelChangeCallback`] unique (per

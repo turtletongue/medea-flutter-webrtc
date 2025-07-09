@@ -68,7 +68,7 @@ impl Webrtc {
             Ok(())
         };
 
-        if let Err(err) = inner_get_media() {
+        if let Err(e) = inner_get_media() {
             for track in tracks {
                 self.dispose_track(
                     TrackOrigin::from(
@@ -80,7 +80,7 @@ impl Webrtc {
                 );
             }
 
-            Err(err)
+            Err(e)
         } else {
             Ok(tracks)
         }
@@ -153,7 +153,7 @@ impl Webrtc {
         }
     }
 
-    /// Creates a new [`VideoTrack`] from the given [`VideoSource`].
+    /// Creates a new [`VideoTrack`] from the provided [`VideoSource`].
     fn create_video_track(
         &self,
         source: Arc<VideoSource>,
@@ -168,7 +168,10 @@ impl Webrtc {
         Ok(api_track)
     }
 
-    /// Creates a new [`VideoSource`] based on the given [`VideoConstraints`].
+    /// Creates a new [`VideoSource`] based on the provided
+    /// [`VideoConstraints`].
+    ///
+    /// [`VideoConstraints`]: api::VideoConstraints
     fn get_or_create_video_source(
         &mut self,
         caps: &api::VideoConstraints,
@@ -187,8 +190,7 @@ impl Webrtc {
                 device_id.into()
             } else {
                 let displays = devices::enumerate_displays();
-                // No device ID is provided, so just pick the first available
-                // device.
+                // No device ID is provided, so pick the first available device.
                 if displays.is_empty() {
                     bail!("Cannot find any available video input displays");
                 }
@@ -220,12 +222,11 @@ impl Webrtc {
                 } else {
                     bail!(
                         "Cannot find video device with the specified ID: \
-                             {device_id}",
+                         {device_id}",
                     );
                 }
             } else {
-                // No device ID is provided, so just pick the first
-                // available device.
+                // No device ID is provided, so pick the first available device.
                 if self.video_device_info.number_of_devices() < 1 {
                     bail!("Cannot find any available video input devices");
                 }
@@ -257,7 +258,7 @@ impl Webrtc {
         Ok(Arc::clone(source))
     }
 
-    /// Creates a new [`AudioTrack`] from the given
+    /// Creates a new [`AudioTrack`] from the provided
     /// [`sys::AudioSourceInterface`].
     fn create_audio_track(
         &self,
@@ -276,8 +277,10 @@ impl Webrtc {
         Ok(api_track)
     }
 
-    /// Creates a new [`sys::AudioSourceInterface`] based on the given
+    /// Creates a new [`sys::AudioSourceInterface`] based on the provided
     /// [`AudioConstraints`].
+    ///
+    /// [`AudioConstraints`]: api::AudioConstraints
     fn get_or_create_audio_source(
         &mut self,
         caps: &api::AudioConstraints,
@@ -285,8 +288,8 @@ impl Webrtc {
         let device_id = if let Some(device_id) = caps.device_id.clone() {
             device_id.into()
         } else {
-            // `AudioDeviceModule` is not capturing anything at the moment,
-            // so we will use first available device (with `0` index).
+            // `AudioDeviceModule` is not capturing anything at the moment, so
+            // the first available device (with `0` index) will be used.
             if self.audio_device_module.recording_devices() < 1 {
                 bail!("Cannot find any available audio input device");
             }
@@ -298,7 +301,7 @@ impl Webrtc {
             self.get_index_of_audio_recording_device(&device_id)?
         else {
             bail!(
-                "Cannot find audio device with the specified ID `{device_id}`",
+                "Cannot find audio device with the specified ID: `{device_id}`",
             );
         };
 
@@ -324,8 +327,9 @@ impl Webrtc {
     }
 
     /// Returns the [readyState][0] property of the media track by its ID and
-    /// media type.
+    /// [`MediaType`].
     ///
+    /// [`MediaType`]: api::MediaType
     /// [0]: https://w3.org/TR/mediacapture-streams#dfn-readystate
     #[must_use]
     pub fn track_state(
@@ -386,7 +390,8 @@ impl Webrtc {
             .map(|t| t.dimensions().height())
     }
 
-    /// Changes the [enabled][1] property of the media track by its ID.
+    /// Changes the [enabled][1] property of the media track by its ID and
+    /// origin.
     ///
     /// [1]: https://w3.org/TR/mediacapture-streams#track-enabled
     pub fn set_track_enabled(
@@ -414,7 +419,9 @@ impl Webrtc {
         }
     }
 
-    /// Clones the specified [`api::MediaStreamTrack`].
+    /// Clones a [`MediaStreamTrack`] by its ID and origin.
+    ///
+    /// [`MediaStreamTrack`]: api::MediaStreamTrack
     #[must_use]
     pub fn clone_track(
         &self,
@@ -512,8 +519,8 @@ impl Webrtc {
     ///
     /// # Warning
     ///
-    /// Returns error message if cannot find any [`AudioTrack`] by the provided
-    /// `id`.
+    /// Returns an error message if cannot find any [`AudioTrack`] by the
+    /// provided `id`.
     pub fn set_audio_level_observer_enabled(
         &self,
         id: String,
@@ -535,8 +542,8 @@ impl Webrtc {
     ///
     /// # Warning
     ///
-    /// Returns error message if cannot find any [`AudioTrack`] or
-    /// [`VideoTrack`] by the specified `id`.
+    /// Returns an error message if cannot find any [`AudioTrack`] or
+    /// [`VideoTrack`] by the provided `id`.
     pub fn register_track_observer(
         &self,
         id: String,
