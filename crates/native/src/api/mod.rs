@@ -4,11 +4,12 @@ pub mod media_info;
 pub mod peer;
 pub mod stats;
 
+#[cfg(doc)]
+use std::sync::mpsc;
 use std::{
     sync::{
         Arc, LazyLock, Mutex,
         atomic::{AtomicBool, Ordering},
-        mpsc,
     },
     time::Duration,
 };
