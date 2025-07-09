@@ -1,7 +1,7 @@
 //! API surface and implementation for Flutter.
 
-pub mod peer;
 pub mod media_info;
+pub mod peer;
 pub mod stats;
 
 use std::{
@@ -18,20 +18,20 @@ use libwebrtc_sys as sys;
 
 pub use self::{
     media_info::{MediaDeviceInfo, MediaDeviceKind, MediaDisplayInfo},
+    peer::{
+        BundlePolicy, IceConnectionState, IceGatheringState, IceTransportsType,
+        PeerConnectionEvent, PeerConnectionState, RtcConfiguration,
+        RtcIceServer, RtcSessionDescription, RtcTrackEvent, SdpType,
+        SignalingState, VideoCodec, VideoCodecInfo, add_ice_candidate,
+        create_answer, create_offer, create_peer_connection,
+        dispose_peer_connection, restart_ice, set_local_description,
+        set_remote_description, video_decoders, video_encoders,
+    },
     stats::{
         CandidateType, IceCandidateStats, IceRole, Protocol,
         RtcIceCandidateStats, RtcInboundRtpStreamMediaType,
         RtcMediaSourceStatsMediaType, RtcOutboundRtpStreamStatsMediaType,
         RtcStats, RtcStatsIceCandidatePairState, RtcStatsType, get_peer_stats,
-    },
-    peer::{
-        BundlePolicy, IceConnectionState, IceGatheringState, IceTransportsType,
-        PeerConnectionEvent, PeerConnectionState, RtcConfiguration, RtcIceServer,
-        RtcSessionDescription, RtcTrackEvent, SdpType, SignalingState, VideoCodec,
-        VideoCodecInfo, add_ice_candidate, create_answer, create_offer,
-        create_peer_connection, dispose_peer_connection, restart_ice,
-        set_local_description, set_remote_description, video_decoders,
-        video_encoders,
     },
 };
 // Re-exporting since it is used in the generated code.
