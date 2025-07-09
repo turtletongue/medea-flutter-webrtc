@@ -1,8 +1,8 @@
 //! API surface and implementation for Flutter.
 
-pub mod transceiver;
 pub mod media_info;
 pub mod stats;
+pub mod transceiver;
 
 use std::{
     sync::{
@@ -29,7 +29,7 @@ pub use self::{
         add_transceiver, get_transceiver_direction, get_transceiver_mid,
         get_transceivers, set_transceiver_direction, set_transceiver_recv,
         set_transceiver_send, stop_transceiver,
-    }
+    },
 };
 // Re-exporting since it is used in the generated code.
 pub use crate::{
