@@ -1949,6 +1949,23 @@ pub fn register_track_observer(
     );
 }
 
+/// Another function that registers an observer to the [`MediaStreamTrack`] events.
+pub fn register_track_observer_alias(
+    cb: StreamSink<TrackEvent>,
+    peer_id: Option<u32>,
+    track_id: String,
+    kind: MediaType,
+) {
+    let track_origin = TrackOrigin::from(peer_id.map(PeerConnectionId::from));
+
+    WEBRTC.lock().unwrap().register_track_observer(
+        track_id,
+        track_origin,
+        kind,
+        cb,
+    );
+}
+
 /// Enables or disables audio level observing of the audio [`MediaStreamTrack`]
 /// with the provided `track_id`.
 pub fn set_audio_level_observer_enabled(
