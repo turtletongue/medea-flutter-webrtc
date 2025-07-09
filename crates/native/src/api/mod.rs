@@ -1,7 +1,7 @@
 //! API surface and implementation for Flutter.
 
-pub mod media_stream_track;
 pub mod media_info;
+pub mod media_stream_track;
 pub mod stats;
 
 use std::{
@@ -17,6 +17,7 @@ use flutter_rust_bridge::for_generated::FLUTTER_RUST_BRIDGE_RUNTIME_VERSION;
 use libwebrtc_sys as sys;
 
 pub use self::{
+    media_info::{MediaDeviceInfo, MediaDeviceKind, MediaDisplayInfo},
     media_stream_track::{
         AudioProcessingConfig, GetMediaError, GetMediaResult, MediaStreamTrack,
         MediaType, NoiseSuppressionLevel, TrackEvent, TrackState, clone_track,
@@ -25,7 +26,6 @@ pub use self::{
         set_audio_level_observer_enabled, set_track_enabled, track_height,
         track_state, track_width, update_audio_processing,
     },
-    media_info::{MediaDeviceInfo, MediaDeviceKind, MediaDisplayInfo},
     stats::{
         CandidateType, IceCandidateStats, IceRole, Protocol,
         RtcIceCandidateStats, RtcInboundRtpStreamMediaType,
