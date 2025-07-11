@@ -9,6 +9,11 @@ import 'dart:convert';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 import 'api.dart';
+import 'api/capability.dart';
+import 'api/capability/rtp_codec.dart';
+import 'api/capability/rtp_codec/rtcp_feedback.dart';
+import 'api/capability/rtp_codec/scalability_mode.dart';
+import 'api/capability/rtp_header_extension_capability.dart';
 import 'api/media_info.dart';
 import 'api/media_stream_track.dart';
 import 'api/media_stream_track/audio_processing_config.dart';
@@ -80,7 +85,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.10.0';
 
   @override
-  int get rustContentHash => -1698989601;
+  int get rustContentHash => 855903889;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -170,11 +175,11 @@ abstract class RustLibApi extends BaseApi {
     required ArcPeerConnection peer,
   });
 
-  Future<RtpCapabilities> crateApiGetRtpReceiverCapabilities({
+  Future<RtpCapabilities> crateApiCapabilityGetRtpReceiverCapabilities({
     required MediaType kind,
   });
 
-  Future<RtpCapabilities> crateApiGetRtpSenderCapabilities({
+  Future<RtpCapabilities> crateApiCapabilityGetRtpSenderCapabilities({
     required MediaType kind,
   });
 
@@ -227,7 +232,7 @@ abstract class RustLibApi extends BaseApi {
 
   Future<void> crateApiSetAudioPlayoutDevice({required String deviceId});
 
-  Future<void> crateApiSetCodecPreferences({
+  Future<void> crateApiCapabilityRtpCodecSetCodecPreferences({
     required ArcRtpTransceiver transceiver,
     required List<RtpCodecCapability> codecs,
   });
@@ -939,7 +944,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "get_peer_stats", argNames: ["peer"]);
 
   @override
-  Future<RtpCapabilities> crateApiGetRtpReceiverCapabilities({
+  Future<RtpCapabilities> crateApiCapabilityGetRtpReceiverCapabilities({
     required MediaType kind,
   }) {
     return handler.executeNormal(
@@ -958,21 +963,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_rtp_capabilities,
           decodeErrorData: null,
         ),
-        constMeta: kCrateApiGetRtpReceiverCapabilitiesConstMeta,
+        constMeta: kCrateApiCapabilityGetRtpReceiverCapabilitiesConstMeta,
         argValues: [kind],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiGetRtpReceiverCapabilitiesConstMeta =>
+  TaskConstMeta get kCrateApiCapabilityGetRtpReceiverCapabilitiesConstMeta =>
       const TaskConstMeta(
         debugName: "get_rtp_receiver_capabilities",
         argNames: ["kind"],
       );
 
   @override
-  Future<RtpCapabilities> crateApiGetRtpSenderCapabilities({
+  Future<RtpCapabilities> crateApiCapabilityGetRtpSenderCapabilities({
     required MediaType kind,
   }) {
     return handler.executeNormal(
@@ -991,14 +996,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_rtp_capabilities,
           decodeErrorData: null,
         ),
-        constMeta: kCrateApiGetRtpSenderCapabilitiesConstMeta,
+        constMeta: kCrateApiCapabilityGetRtpSenderCapabilitiesConstMeta,
         argValues: [kind],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiGetRtpSenderCapabilitiesConstMeta =>
+  TaskConstMeta get kCrateApiCapabilityGetRtpSenderCapabilitiesConstMeta =>
       const TaskConstMeta(
         debugName: "get_rtp_sender_capabilities",
         argNames: ["kind"],
@@ -1428,7 +1433,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<void> crateApiSetCodecPreferences({
+  Future<void> crateApiCapabilityRtpCodecSetCodecPreferences({
     required ArcRtpTransceiver transceiver,
     required List<RtpCodecCapability> codecs,
   }) {
@@ -1449,14 +1454,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: null,
         ),
-        constMeta: kCrateApiSetCodecPreferencesConstMeta,
+        constMeta: kCrateApiCapabilityRtpCodecSetCodecPreferencesConstMeta,
         argValues: [transceiver, codecs],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiSetCodecPreferencesConstMeta =>
+  TaskConstMeta get kCrateApiCapabilityRtpCodecSetCodecPreferencesConstMeta =>
       const TaskConstMeta(
         debugName: "set_codec_preferences",
         argNames: ["transceiver", "codecs"],
