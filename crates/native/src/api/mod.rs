@@ -2,8 +2,8 @@
 
 pub mod capability;
 pub mod media_info;
-pub mod rtc_rtp_encoding_parameters;
 pub mod media_stream_track;
+pub mod rtc_rtp_encoding_parameters;
 pub mod stats;
 
 use std::{
